@@ -11,6 +11,9 @@ const formatNumber = new Intl.NumberFormat("en-US");
 const fmt = (value, digits = 1) => Number(value).toLocaleString("en-US", { maximumFractionDigits: digits });
 const escapeHtml = (value = "") => String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
 const short = (value, head = 6, tail = 4) => value ? `${value.slice(0, head)}…${value.slice(-tail)}` : "—";
+const solscanUrl = (value, type = "account") => `https://solscan.io/${type}/${encodeURIComponent(value)}`;
+const solscanLink = (value, label = short(value), type = "account") =>
+  `<a class="solscan-link" href="${solscanUrl(value, type)}" target="_blank" rel="noreferrer" title="${escapeHtml(value)}">${escapeHtml(label)} ↗</a>`;
 const duration = seconds => {
   const amount = Number(seconds);
   if (!Number.isFinite(amount)) return "—";
@@ -62,8 +65,7 @@ function hydrateSummary() {
   };
   Object.entries(setters).forEach(([name, value]) => document.querySelectorAll(`[data-stat="${name}"]`).forEach(node => node.textContent = value));
   document.querySelector("#generated-date").textContent = new Date(generatedAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  document.querySelector("#profile-address").textContent = profile;
-  document.querySelector("#profile-address").title = profile;
+  document.querySelector("#profile-address").innerHTML = solscanLink(profile, profile);
   document.querySelector("#bar-pre").style.width = `${preRate}%`;
   document.querySelector("#bar-window").style.width = `${timing.CALL_WINDOW / buyers * 100}%`;
   document.querySelector("#bar-post").style.width = `${timing.POST_CALLOUT / buyers * 100}%`;
@@ -106,7 +108,7 @@ function renderTokens() {
   const visible = rows.slice((state.tokenPage - 1) * state.pageSize, state.tokenPage * state.pageSize);
   document.querySelector("#token-table").innerHTML = visible.map(item => `
     <tr>
-      <td class="token-cell"><strong>${escapeHtml(item.symbol || "Unknown")}</strong><small title="${escapeHtml(item.mint)}">${escapeHtml(item.token_name || short(item.mint))}</small></td>
+      <td class="token-cell"><strong>${solscanLink(item.mint, item.symbol || "Unknown", "token")}</strong><small>${solscanLink(item.mint, item.token_name || short(item.mint), "token")}</small></td>
       <td class="mono">${duration(item.secondsToCall)}</td>
       <td class="mono">${formatNumber.format(item.wallet_count || 0)}</td>
       <td class="mono">${fmt(item.supply_percent || 0, 3)}%</td>
@@ -144,7 +146,7 @@ function renderWallets() {
   const visible = rows.slice((state.walletPage - 1) * state.pageSize, state.walletPage * state.pageSize);
   document.querySelector("#wallet-table").innerHTML = visible.map(item => `
     <tr>
-      <td><span class="wallet-address" title="${escapeHtml(item.wallet)}">${escapeHtml(short(item.wallet, 10, 8))}</span></td>
+      <td><span class="wallet-address">${solscanLink(item.wallet, short(item.wallet, 10, 8))}</span></td>
       <td class="mono">${item.token_count}</td>
       <td class="mono">${duration(item.avg_seconds_after_launch)}</td>
       <td class="mono">${item.avg_seconds_after_call < 0 ? `${duration(item.avg_seconds_after_call)} before` : `${duration(item.avg_seconds_after_call)} after`}</td>
@@ -264,10 +266,11 @@ function showNodeDetail(node, edges, groups) {
     edges.some(edge => edge.source === node.id && edge.mint === group.mint));
   const detail = document.querySelector("#network-detail");
   detail.querySelector(".badge").textContent = node.type;
-  detail.querySelector("h3").textContent = node.label || short(node.id, 10, 8);
-  detail.querySelector(":scope > p").textContent = node.type === "SERVICE"
-    ? "Broad exchange/service origin. Shown as funding context but excluded from common-ownership scoring."
-    : `${connected.size} visible connection${connected.size === 1 ? "" : "s"}. ${relatedGroups.length} related funding group${relatedGroups.length === 1 ? "" : "s"}. Address: ${node.id}`;
+  const linkType = node.type === "TOKEN" ? "token" : "account";
+  detail.querySelector("h3").innerHTML = solscanLink(node.id, node.label || short(node.id, 10, 8), linkType);
+  detail.querySelector(":scope > p").innerHTML = node.type === "SERVICE"
+    ? `Broad exchange/service origin. Shown as funding context but excluded from common-ownership scoring. ${solscanLink(node.id, short(node.id, 10, 8), linkType)}`
+    : `${connected.size} visible connection${connected.size === 1 ? "" : "s"}. ${relatedGroups.length} related funding group${relatedGroups.length === 1 ? "" : "s"}. ${solscanLink(node.id, short(node.id, 10, 8), linkType)}`;
 }
 
 initialize();

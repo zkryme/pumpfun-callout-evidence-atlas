@@ -18,6 +18,7 @@
       </a>
       <nav aria-label="Primary navigation">
         <a href="#overview">Overview</a>
+        <a href="#profit-link">Profit link</a>
         <a href="#network">Network</a>
         <a href="#tokens">Tokens</a>
         <a href="#wallets">Wallets</a>
@@ -33,11 +34,11 @@
         <div class="overview-grid">
           <div class="headline-block">
             <p class="eyebrow">PROFILE UNDER REVIEW</p>
-            <h1 id="overview-title">Pre-call networks found.<br /><em>No direct caller → founder link.</em></h1>
-            <p class="lede">Across 97 callouts, 3,098 of 3,102 unique early-buyer wallets were traced through first-in SOL funding. No token founder's traced chain reaches the caller wallet. Three founders share one broad third-hop service-like ancestor with the caller.</p>
+            <h1 id="overview-title">Caller-linked profit wallet found.<br /><em>No direct caller → founder link.</em></h1>
+            <p class="lede">A wallet that directly funded the caller before this dataset pre-bought 11 called tokens and closed all 11 positions profitably. It also transferred SOL directly to the caller during eight token-sale windows. This is a direct economic link—not merely shared service ancestry.</p>
             <div class="finding">
               <span class="finding-label">BOTTOM LINE</span>
-              <p><strong>42 tokens cross the bundle-evidence threshold</strong> after excluding broad exchange and service hubs: 7 confirmed multi-signal bundles and 35 suspected bundles. Creator-linked funding appears on six tokens.</p>
+              <p><strong>The linked wallet recorded an estimated +31.706 SOL in realized token PnL</strong> across the 11 overlapping positions. Separate direct transfers from that wallet to the caller total 82.65 SOL; those transfers are not allocated one-for-one as profit from the individual tokens.</p>
             </div>
           </div>
           <aside class="scope-card">
@@ -57,14 +58,14 @@
           <article class="metric"><span class="metric-index">A</span><strong data-stat="preRate">—</strong><p>of first-50 buyer records occurred before the callout</p></article>
           <article class="metric"><span class="metric-index">B</span><strong data-stat="bundleTokens">—</strong><p>tokens cross the multi-signal bundle threshold</p></article>
           <article class="metric"><span class="metric-index">C</span><strong data-stat="resolved">—</strong><p>unique wallets with first-in funding resolved</p></article>
-          <article class="metric muted"><span class="metric-index">D</span><strong>0</strong><p>founders whose traced funding chain reaches the caller</p></article>
+          <article class="metric"><span class="metric-index">D</span><strong>+31.71</strong><p>SOL estimated realized PnL in the directly caller-linked wallet</p></article>
         </div>
 
         <div class="attribution-panel" aria-label="Caller to founder attribution result">
           <div>
             <div class="section-kicker"><span>Attribution</span> Caller ↔ token founders</div>
-            <h2>Zero caller links. One old swap-service ancestor.</h2>
-            <p>The caller was first funded through <code>CLiX…P19X → 5zKx…KJyJ → G2Yx…Lwd3t</code>. The founders of <strong>Dawn</strong>, <strong>spy</strong>, and <strong>CHONK</strong> also trace to <code>G2Yx…Lwd3t</code>, a wallet widely attributed by third-party investigators to ChangeNOW / SimpleSwap.</p>
+            <h2>Zero caller → founder links. One old swap-service ancestor.</h2>
+            <p>The caller was first funded through <a class="solscan-link" href="https://solscan.io/account/CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X" target="_blank" rel="noreferrer"><code>CLiX…P19X</code></a> → <a class="solscan-link" href="https://solscan.io/account/5zKxnTh4o2dXL1tmXpbPz9efCcc4c3z1Bva8N5UzKJyJ" target="_blank" rel="noreferrer"><code>5zKx…KJyJ</code></a> → <a class="solscan-link" href="https://solscan.io/account/G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t" target="_blank" rel="noreferrer"><code>G2Yx…Lwd3t</code></a>. The first wallet in that chain is now the direct profit-link finding below. Separately, the founders of <strong>Dawn</strong>, <strong>spy</strong>, and <strong>CHONK</strong> also trace to the broad third-hop service-like wallet.</p>
           </div>
           <dl>
             <div><dt>Caller → founder</dt><dd>0</dd></div>
@@ -72,7 +73,7 @@
             <div><dt>Shared ancestor</dt><dd>3 founders</dd></div>
             <div><dt>Dataset fanout</dt><dd>55 chains / 55 tokens</dd></div>
           </dl>
-          <p class="attribution-caveat"><strong>Deeper check:</strong> 55 wallets with this ancestor produced 124 early-buyer records. Their first-funding events were 156–867 days before the observed buys (median 249 days; zero within 30 days). Across all 97 launches, neither <code>G2Yx…Lwd3t</code> nor any wallet in the caller's traced chain sent a founder SOL during the 30 days before launch. A separate Helius sample showed 87 counterparties among the hub's latest 100 outbound transfers. This fits exchange-like distribution, not launch prefunding.</p>
+          <p class="attribution-caveat"><strong>Founder distinction:</strong> 55 wallets with the service-like ancestor produced 124 early-buyer records. Their first-funding events were 156–867 days before the observed buys (median 249 days; zero within 30 days). Across all 97 launches, neither <a class="solscan-link" href="https://solscan.io/account/G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t" target="_blank" rel="noreferrer"><code>G2Yx…Lwd3t</code></a> nor any wallet in the caller's traced chain sent founder SOL during the 30 days before launch. This still fits exchange-like distribution, not founder prefunding.</p>
         </div>
 
         <div class="timing-panel">
@@ -91,9 +92,51 @@
         </div>
       </section>
 
+      <section id="profit-link" class="section profit-link" aria-labelledby="profit-title">
+        <div class="section-heading">
+          <div><div class="section-kicker"><span>02</span> Direct economic link</div><h2 id="profit-title">Funding → pre-call buys → profitable exits → caller transfers</h2></div>
+          <p>The strongest path found so far joins the caller to a repeat pre-call buyer with direct, signed on-chain transactions.</p>
+        </div>
+
+        <div class="evidence-chain" aria-label="Caller-linked wallet evidence chain">
+          <article><span>1 / FUNDED CALLER</span><strong>10.4246774 SOL</strong><p><a class="solscan-link" href="https://solscan.io/account/CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X" target="_blank" rel="noreferrer">CLiX…P19X</a> directly funded <a class="solscan-link" href="https://solscan.io/account/6yVb4pxNwDfr6rovwNnBg3SyKSvDcHGD4WdFPN1JJBqm" target="_blank" rel="noreferrer">the caller</a> on Aug. 25, three days before the first callout in the dataset. <a class="solscan-link" href="https://solscan.io/tx/3RAhK1cbjwp7ZUHkuioSMsfSi5mRPY8PWTmuDBr5TrP8BUpKZAk7EMU7bHR3B9QcXBUoftcQGBvHsrHe97vFHNzp" target="_blank" rel="noreferrer">Open funding transaction ↗</a></p></article>
+          <article><span>2 / TRADED AHEAD</span><strong>11 tokens</strong><p>The linked wallet bought before the public call in all 11 overlapping tokens, then fully closed every reconstructed position inside the 24-hour analysis window.</p></article>
+          <article><span>3 / REALIZED</span><strong>+31.706297 SOL</strong><p>13.342655 SOL of recorded buy cash flow became 45.048952 SOL of recorded sale cash flow. Every one of the 11 reconstructed positions was profitable.</p></article>
+          <article><span>4 / SENT TO CALLER</span><strong>82.65 SOL</strong><p>Thirteen direct System Program transfers reached the caller during eight token-sale windows. This is direct economic linkage, but the total includes broader wallet activity and is not assigned as token profit one-for-one.</p></article>
+        </div>
+
+        <div class="profit-summary">
+          <div><span>Profitable positions</span><strong>11 / 11</strong></div>
+          <div><span>Median first exit vs. call</span><strong>+87 sec</strong></div>
+          <div><span>Direct caller transfers</span><strong>13 txs</strong></div>
+          <div><span>Sale windows with transfers</span><strong>8 / 11</strong></div>
+        </div>
+
+        <div class="table-shell profit-table-shell">
+          <table class="profit-table">
+            <thead><tr><th>Token</th><th>Spent</th><th>Received</th><th>Est. realized PnL</th><th>First exit vs. call</th><th>First sale</th></tr></thead>
+            <tbody>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/25GrKYrc3y4LZmmuhppYgFRCKb7JyZ6grum4WhLYvA1z" target="_blank" rel="noreferrer">DRAKE</a></td><td>1.073069</td><td>3.521020</td><td class="profit-positive">+2.447951</td><td>+864 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/3eqh921jHGsQ6c5joofgrnJAxmmDN8zeE3UFGy1o48DkLVm8pLKRuokoN7XUg1pxh5Prj5iDmGuSKdxKDuT2KhQK" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN" target="_blank" rel="noreferrer">Rowdy</a></td><td>0.904106</td><td>5.688769</td><td class="profit-positive">+4.784663</td><td>+12 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/2rkCPNhka1cSN3KwWqxpHbFk3nG5W1UPrWEJq7cE1PFBBUZXrmpG833xZsMuXDFt9Poa8paTcC7SnErLVEzLo3Ve" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH" target="_blank" rel="noreferrer">NEVER</a></td><td>0.761444</td><td>4.289633</td><td class="profit-positive">+3.528189</td><td>+289 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/5qpRKy9eatUbkv3K7oEooZWxY8fkrcut1Q8wFwShFkEKawr8k3kn7AACijSZorKs6k4dhNsA5JHqELAmgdyVwBkr" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva" target="_blank" rel="noreferrer">AlxCooks</a></td><td>1.853769</td><td>2.230459</td><td class="profit-positive">+0.376690</td><td>+87 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/8aiMh7i51uhBxG6nvxdMsD7DsVjjSTE7XTXgD5oNkyTTTSCqGWGZoHfW1vMEJc4ruws9ux1Q6acLMLda1ocZwTT" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ" target="_blank" rel="noreferrer">Knox</a></td><td>1.062519</td><td>5.134160</td><td class="profit-positive">+4.071641</td><td>−27 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/2CVnQynMV9QmFuzqeQZTWJtTuFNHPuembAKW9cLdDyu6jjpasdJyzBzdCuA7XNyBFYhV3xWgE7XZmM5diupyhFZp" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/7HiD5rzoZxAYXEJ8Z4t3WgM8VE1iSKWJdxPPyEdDNzwN" target="_blank" rel="noreferrer">BRUNO</a></td><td>1.458144</td><td>6.399912</td><td class="profit-positive">+4.941768</td><td>+41 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/FxNZqmXYjivVEjoyAxvmGZ6XQdVSPnbzsQKo2NjFGcQy5kUswT4n52kpFxkzxiBMTM5fGxcMdxiWP6LgQt7y51v" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/9PNfxvTARzdxvQas2uknW57bnfMCS1dxW1He7rPbuhuQ" target="_blank" rel="noreferrer">AI</a></td><td>1.853769</td><td>3.926230</td><td class="profit-positive">+2.072461</td><td>−64 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/5T1qxaqGui2WXctFddF3A8QaotnybhRghZ9iBZNQw72MLRarxT6bCh8uzGdkqvioXJABo1kmrj8oVCUSU1gaKT3o" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/BE5ciZmcADAX78u2a1GrFiPMPC3rNXtdPGUrhzWB4k5d" target="_blank" rel="noreferrer">SI</a></td><td>0.904147</td><td>4.130368</td><td class="profit-positive">+3.226220</td><td>+495 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/2creFgSYdv7HdFeb76oCs6LSRg9ZczoJybFNHYT1DaLppCu88qpNYvwRWEDC4EoBpYgMe48ABgfs6DVWmsf2EUbi" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump" target="_blank" rel="noreferrer">JADOODOO</a></td><td>1.566650</td><td>1.603848</td><td class="profit-positive">+0.037198</td><td>+1,040 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/4voxZdFfdEE6Z4mzyuW5BfAwstFqbU4PX25M75xU3gSo4Hx9bgQWat68g1HLuyU5vb9JsVYvfvxk3qTkBEi25G73" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U" target="_blank" rel="noreferrer">quarantinu</a></td><td>0.842519</td><td>4.987728</td><td class="profit-positive">+4.145209</td><td>−104 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/2mLLyqfEUqBvkZxMBkLWrYEhoL8y3dFb8ARnpAkXGZcbhMii9ki8hnDKZAkKZCv4MJmXN6MTu7X7gWGSjQMHewZo" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+              <tr><td><a class="solscan-link" href="https://solscan.io/token/UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR" target="_blank" rel="noreferrer">Binturong</a></td><td>1.062519</td><td>3.136826</td><td class="profit-positive">+2.074307</td><td>+276 sec</td><td><a class="solscan-link" href="https://solscan.io/tx/4LT6sHpx4BF4riPsPCpxTdykhyAmByQbPQCFdR4VzombLYBuFYdBxGj2beSoGR1wZwAkXznNWiySP1sXvfpyWSvM" target="_blank" rel="noreferrer">Solscan ↗</a></td></tr>
+            </tbody>
+            <tfoot><tr><th>Total</th><th>13.342655</th><th>45.048952</th><th class="profit-positive">+31.706297</th><th colspan="2">24-hour reconstruction</th></tr></tfoot>
+          </table>
+        </div>
+        <p class="profit-caveat"><strong>Interpretation boundary:</strong> the repeated pre-call overlap, direct initial funding, direct return transfers, and profitable exits establish a strong on-chain economic link. They do not by themselves prove the two wallets have the same real-world owner. Negative exit timing means the wallet’s first observed sale began shortly before the public call.</p>
+      </section>
+
       <section id="network" class="section network" aria-labelledby="network-title">
         <div class="section-heading">
-          <div><div class="section-kicker"><span>02</span> Funding network</div><h2 id="network-title">Explore the linked-wallet map</h2></div>
+          <div><div class="section-kicker"><span>03</span> Funding network</div><h2 id="network-title">Explore the linked-wallet map</h2></div>
           <p>Green hubs are concentrated funding sources. Gray hubs are broad exchange or service origins retained for context but excluded from ownership scoring.</p>
         </div>
         <div class="network-toolbar">
@@ -120,7 +163,7 @@
 
       <section id="tokens" class="section explorer" aria-labelledby="tokens-title">
         <div class="section-heading">
-          <div><div class="section-kicker"><span>03</span> Token explorer</div><h2 id="tokens-title">Inspect all 97 callouts</h2></div>
+          <div><div class="section-kicker"><span>04</span> Token explorer</div><h2 id="tokens-title">Inspect all 97 callouts</h2></div>
           <p>Timing-cluster labels are investigative signals. They are not declarations that wallets share an owner.</p>
         </div>
         <div class="toolbar">
@@ -139,7 +182,7 @@
 
       <section id="wallets" class="section explorer" aria-labelledby="wallets-title">
         <div class="section-heading">
-          <div><div class="section-kicker"><span>04</span> Recurring buyers</div><h2 id="wallets-title">Wallets appearing across tokens</h2></div>
+          <div><div class="section-kicker"><span>05</span> Recurring buyers</div><h2 id="wallets-title">Wallets appearing across tokens</h2></div>
           <p>Ranked by recurrence. Negative call-relative timing means the wallet bought before the public call.</p>
         </div>
         <div class="toolbar">
@@ -160,9 +203,9 @@
         <div class="case-label">CASE STUDY / 01</div>
         <div class="case-grid">
           <div>
-            <div class="section-kicker"><span>CHONK</span> 5pSE…UVZd</div>
+            <div class="section-kicker"><span>CHONK</span> <a href="https://solscan.io/token/5pSEZw1iytqYznD7crsGyKNek7q5JkjBqj2KmfqxUVZd" target="_blank" rel="noreferrer">5pSE…UVZd ↗</a></div>
             <h2 id="case-title">A compressed launch window with no proven common funder.</h2>
-            <p class="lede">All first 50 observed buyers entered before the call. The largest same-slot group contained six trades, while 29 wallets formed timing clusters. The creator wallet also recorded 91.44 SOL of parsed inbound activity from 11 sources in the hour before launch; known Raydium and Jupiter authorities appear among those sources, and neither the caller nor G2Yx appears. Transaction-type filtering is required before treating that activity as prefunding.</p>
+            <p class="lede">All first 50 observed buyers entered before the call. The largest same-slot group contained six trades, while 29 wallets formed timing clusters. The creator wallet also recorded 91.44 SOL of parsed inbound activity from 11 sources in the hour before launch; known Raydium and Jupiter authorities appear among those sources, and neither <a class="solscan-link" href="https://solscan.io/account/6yVb4pxNwDfr6rovwNnBg3SyKSvDcHGD4WdFPN1JJBqm" target="_blank" rel="noreferrer">the caller</a> nor <a class="solscan-link" href="https://solscan.io/account/G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t" target="_blank" rel="noreferrer">G2Yx…Lwd3t</a> appears. Transaction-type filtering is required before treating that activity as prefunding.</p>
           </div>
           <div class="case-stats">
             <div><span>Launch to call</span><strong>152.328s</strong></div>
@@ -178,7 +221,7 @@
 
       <section id="methodology" class="section methodology" aria-labelledby="method-title">
         <div class="section-heading">
-          <div><div class="section-kicker"><span>05</span> Method & boundaries</div><h2 id="method-title">What the evidence can—and cannot—say</h2></div>
+          <div><div class="section-kicker"><span>06</span> Method & boundaries</div><h2 id="method-title">What the evidence can—and cannot—say</h2></div>
         </div>
         <div class="method-grid">
           <article><span>01</span><h3>Collect calls</h3><p>Normalize 97 profile activity records and resolve each token’s mint, creator, launch time, and call time.</p></article>
@@ -193,7 +236,7 @@
       </section>
 
       <section id="downloads" class="section downloads" aria-labelledby="downloads-title">
-        <div><div class="section-kicker"><span>06</span> Evidence files</div><h2 id="downloads-title">Take the underlying records with you.</h2><p>CSV and graph exports are included with the static dashboard for independent review.</p></div>
+        <div><div class="section-kicker"><span>07</span> Evidence files</div><h2 id="downloads-title">Take the underlying records with you.</h2><p>CSV and graph exports are included with the static dashboard for independent review.</p></div>
         <div class="download-list">
           <a href="/downloads/calls.csv" download><span>calls.csv<small>97 normalized callouts</small></span><b>↓</b></a>
           <a href="/downloads/early_buyers.csv" download><span>early_buyers.csv<small>4,850 buyer records</small></span><b>↓</b></a>
@@ -202,6 +245,9 @@
           <a href="/downloads/shared_funding_groups.csv" download><span>shared_funding_groups.csv<small>concentrated and service-like hubs</small></span><b>↓</b></a>
           <a href="/downloads/caller_creator_links.csv" download><span>caller_creator_links.csv<small>direct and upstream attribution checks</small></span><b>↓</b></a>
           <a href="/downloads/caller_founder_ancestry.csv" download><span>caller_founder_ancestry.csv<small>caller-to-founder chain and shared-ancestor test</small></span><b>↓</b></a>
+          <a href="/downloads/caller_funder_pnl.csv" download><span>caller_funder_pnl.csv<small>11 linked-wallet position reconstructions</small></span><b>↓</b></a>
+          <a href="/downloads/caller_funder_sales.csv" download><span>caller_funder_sales.csv<small>underlying linked-wallet sale records</small></span><b>↓</b></a>
+          <a href="/downloads/caller_funder_cleanup.csv" download><span>caller_funder_cleanup.csv<small>post-sale transfers and direct caller links</small></span><b>↓</b></a>
           <a href="/data/analysis.json" download><span>analysis.json<small>complete structured snapshot</small></span><b>↓</b></a>
         </div>
       </section>
