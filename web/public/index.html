@@ -33,8 +33,8 @@
         <div class="overview-grid">
           <div class="headline-block">
             <p class="eyebrow">PROFILE UNDER REVIEW</p>
-            <h1 id="overview-title">Pre-call networks found.<br /><em>No caller funding.</em></h1>
-            <p class="lede">Across 97 callouts, 3,098 of 3,102 unique early-buyer wallets were traced to their first inbound SOL funding. The evidence reveals concentrated linked-wallet clusters, but no buyer funding path from the caller wallet.</p>
+            <h1 id="overview-title">Pre-call networks found.<br /><em>No direct caller → founder link.</em></h1>
+            <p class="lede">Across 97 callouts, 3,098 of 3,102 unique early-buyer wallets were traced through first-in SOL funding. No token founder's traced chain reaches the caller wallet. Three founders share one broad third-hop service-like ancestor with the caller.</p>
             <div class="finding">
               <span class="finding-label">BOTTOM LINE</span>
               <p><strong>42 tokens cross the bundle-evidence threshold</strong> after excluding broad exchange and service hubs: 7 confirmed multi-signal bundles and 35 suspected bundles. Creator-linked funding appears on six tokens.</p>
@@ -57,7 +57,22 @@
           <article class="metric"><span class="metric-index">A</span><strong data-stat="preRate">—</strong><p>of first-50 buyer records occurred before the callout</p></article>
           <article class="metric"><span class="metric-index">B</span><strong data-stat="bundleTokens">—</strong><p>tokens cross the multi-signal bundle threshold</p></article>
           <article class="metric"><span class="metric-index">C</span><strong data-stat="resolved">—</strong><p>unique wallets with first-in funding resolved</p></article>
-          <article class="metric muted"><span class="metric-index">D</span><strong data-stat="callerLinks">—</strong><p>early buyers funded by the caller wallet</p></article>
+          <article class="metric muted"><span class="metric-index">D</span><strong>0</strong><p>founders whose traced funding chain reaches the caller</p></article>
+        </div>
+
+        <div class="attribution-panel" aria-label="Caller to founder attribution result">
+          <div>
+            <div class="section-kicker"><span>Attribution</span> Caller ↔ token founders</div>
+            <h2>Zero caller links. One old swap-service ancestor.</h2>
+            <p>The caller was first funded through <code>CLiX…P19X → 5zKx…KJyJ → G2Yx…Lwd3t</code>. The founders of <strong>Dawn</strong>, <strong>spy</strong>, and <strong>CHONK</strong> also trace to <code>G2Yx…Lwd3t</code>, a wallet widely attributed by third-party investigators to ChangeNOW / SimpleSwap.</p>
+          </div>
+          <dl>
+            <div><dt>Caller → founder</dt><dd>0</dd></div>
+            <div><dt>Founder chain → caller</dt><dd>0</dd></div>
+            <div><dt>Shared ancestor</dt><dd>3 founders</dd></div>
+            <div><dt>Dataset fanout</dt><dd>55 chains / 55 tokens</dd></div>
+          </dl>
+          <p class="attribution-caveat"><strong>Deeper check:</strong> 55 wallets with this ancestor produced 124 early-buyer records. Their first-funding events were 156–867 days before the observed buys (median 249 days; zero within 30 days). Across all 97 launches, neither <code>G2Yx…Lwd3t</code> nor any wallet in the caller's traced chain sent a founder SOL during the 30 days before launch. A separate Helius sample showed 87 counterparties among the hub's latest 100 outbound transfers. This fits exchange-like distribution, not launch prefunding.</p>
         </div>
 
         <div class="timing-panel">
@@ -147,7 +162,7 @@
           <div>
             <div class="section-kicker"><span>CHONK</span> 5pSE…UVZd</div>
             <h2 id="case-title">A compressed launch window with no proven common funder.</h2>
-            <p class="lede">All first 50 observed buyers entered before the call. The largest same-slot group contained six trades, while 29 wallets formed timing clusters. This is consistent with coordinated early access, but the evidence does not establish common control.</p>
+            <p class="lede">All first 50 observed buyers entered before the call. The largest same-slot group contained six trades, while 29 wallets formed timing clusters. The creator wallet also recorded 91.44 SOL of parsed inbound activity from 11 sources in the hour before launch; known Raydium and Jupiter authorities appear among those sources, and neither the caller nor G2Yx appears. Transaction-type filtering is required before treating that activity as prefunding.</p>
           </div>
           <div class="case-stats">
             <div><span>Launch to call</span><strong>152.328s</strong></div>
@@ -186,6 +201,7 @@
           <a href="/downloads/suspected_bundles.csv" download><span>suspected_bundles.csv<small>classification evidence</small></span><b>↓</b></a>
           <a href="/downloads/shared_funding_groups.csv" download><span>shared_funding_groups.csv<small>concentrated and service-like hubs</small></span><b>↓</b></a>
           <a href="/downloads/caller_creator_links.csv" download><span>caller_creator_links.csv<small>direct and upstream attribution checks</small></span><b>↓</b></a>
+          <a href="/downloads/caller_founder_ancestry.csv" download><span>caller_founder_ancestry.csv<small>caller-to-founder chain and shared-ancestor test</small></span><b>↓</b></a>
           <a href="/data/analysis.json" download><span>analysis.json<small>complete structured snapshot</small></span><b>↓</b></a>
         </div>
       </section>

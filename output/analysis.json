@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-06T14:48:39.080323+00:00",
+  "generated_at": "2026-10-06T15:00:38.670859+00:00",
   "profile": "6yVb4pxNwDfr6rovwNnBg3SyKSvDcHGD4WdFPN1JJBqm",
   "source_status": {
     "pump_fun": "available",
     "helius_transfers": "available",
-    "solscan": "not checked"
+    "solscan": "Solscan Pro unavailable (None): solscan monitor/usage: <urlopen error [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions>"
   },
   "limitations": [
     "Four unique early-buyer wallets had no qualifying first-in SOL transfer before their first observed buy.",
@@ -31,7 +31,10 @@
     "suspicious_shared_funding_groups": 48,
     "service_like_shared_funding_groups": 378,
     "caller_linked_buyers": 0,
-    "creator_linked_buyers": 5
+    "creator_linked_buyers": 5,
+    "founders_reaching_caller": 0,
+    "founders_sharing_caller_ancestor": 3,
+    "founders_sharing_nonservice_caller_ancestor": 0
   },
   "calls": [
     {
@@ -3851,7 +3854,7 @@
       "first_seen": "2024-05-06T01:35:54Z",
       "last_seen": "2026-03-06T05:41:38Z",
       "confidence": "MEDIUM",
-      "label": "",
+      "label": "Reported ChangeNOW / SimpleSwap hot wallet",
       "service_like": true
     },
     {
@@ -4271,7 +4274,7 @@
       "first_seen": "2025-06-15T22:27:32Z",
       "last_seen": "2026-04-13T21:19:49Z",
       "confidence": "HIGH",
-      "label": "",
+      "label": "Reported ChangeNOW / SimpleSwap hot wallet",
       "service_like": true
     },
     {
@@ -52153,7 +52156,7 @@
       "mint": "6gKx5EMvnymTVz2JgFhJAqpGxTYaBdVsaLb9YfPfvg4Y",
       "token": "AMERICACOIN",
       "funder": "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t",
-      "label": "",
+      "label": "Reported ChangeNOW / SimpleSwap hot wallet",
       "buyer_count": 2,
       "pre_call_count": 2,
       "first_seconds_relative_to_call": -569.809,
@@ -52504,7 +52507,7 @@
       "mint": "5DoZAeBkoci5t5zPhUiuhQFjuzYTfkSv5Seojsxppump",
       "token": "BOLD",
       "funder": "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t",
-      "label": "",
+      "label": "Reported ChangeNOW / SimpleSwap hot wallet",
       "buyer_count": 2,
       "pre_call_count": 2,
       "first_seconds_relative_to_call": -309.383,
@@ -53323,7 +53326,7 @@
       "mint": "3GeNgcFpMwH9ts5b3W3jddtfwhwAURaykTy8YjtrGQWT",
       "token": "Memeworld",
       "funder": "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t",
-      "label": "",
+      "label": "Reported ChangeNOW / SimpleSwap hot wallet",
       "buyer_count": 2,
       "pre_call_count": 2,
       "first_seconds_relative_to_call": -213.298,
@@ -54559,6 +54562,50 @@
       "buy_signature": "5MzEMRLSKRXeAF8ozV3q95C7ArByPvFdq5D8ADvXxFuzkHB3MghBTTMNf2dvyeUioLEhfgu84nD9tAXrp9xxcTRo",
       "seconds_relative_to_call": -229.101,
       "timing_class": "PRE_CALLOUT"
+    }
+  ],
+  "caller_founder_ancestry": [
+    {
+      "mint": "5L6As5obMTXxKwjmGBy1LTRwW2Hm1PjSK18JhETrpump",
+      "token": "Dawn",
+      "creator": "4Ku2W1ZapnRZWhp3rBP9Rf5JehTm6pSfwkSsBhYrCkij",
+      "relationship": "SHARED_ANCESTOR",
+      "common_wallet": "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t",
+      "creator_depth": 3,
+      "caller_depth": 3,
+      "service_like": true,
+      "fanout_wallets": 55,
+      "fanout_tokens": 55,
+      "creator_funding_signature": "2GGvSYf6eYWjz3Xcn49MH1nxZF5bATSavbEcgeYuvnmYVX5QD7D98t6pYWwhtLyXjvwDpMdqhDm9gvHdBSL3dsEn",
+      "creator_funding_timestamp": "2025-11-10T00:25:34Z"
+    },
+    {
+      "mint": "Er5RuNhTEwJH5dHv9c3YGATjgkLCETH4dKazntyWEtXY",
+      "token": "spy",
+      "creator": "CzbN6T1gKkKutvuPXcxNmV8FLqzjsDWebWmg9o8e2ZbU",
+      "relationship": "SHARED_ANCESTOR",
+      "common_wallet": "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t",
+      "creator_depth": 1,
+      "caller_depth": 3,
+      "service_like": true,
+      "fanout_wallets": 55,
+      "fanout_tokens": 55,
+      "creator_funding_signature": "2g8v4QTC8r5KTH9MrgSpc3pgssmRCYk6fsptsiiR7S5VhZ9c1emiUARxPP5eu35EwLR799tBGRkuody9yCRdiTJS",
+      "creator_funding_timestamp": "2025-06-15T22:27:32Z"
+    },
+    {
+      "mint": "5pSEZw1iytqYznD7crsGyKNek7q5JkjBqj2KmfqxUVZd",
+      "token": "CHONK",
+      "creator": "6nU2L7MQVUWjtdKHVpuZA9aind73nd3rXC4YFo8KQCy4",
+      "relationship": "SHARED_ANCESTOR",
+      "common_wallet": "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t",
+      "creator_depth": 1,
+      "caller_depth": 3,
+      "service_like": true,
+      "fanout_wallets": 55,
+      "fanout_tokens": 55,
+      "creator_funding_signature": "4K3zdsThb22m4y5F3tLW1p6bQvvFgutgrD7NwYGWXrM6MrdRhv8Mi5sfijW7jRfj5JAdUxyTjiVk7SuNm78M3dRT",
+      "creator_funding_timestamp": "2025-12-14T00:37:00Z"
     }
   ]
 }

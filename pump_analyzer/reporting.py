@@ -16,6 +16,7 @@ KNOWN_ADDRESS_LABELS = {
     "2ojv9BAiHUrvsm9gxDe7fJSzbNZSJcxZvf8dqmWGHG8S": "Binance Exchange",
     "iGdFcQoyR2MwbXMHQskhmNsqddZ6rinsipHc4TNSdwu": "Bybit Wallet 10",
     "AxiomRXZAq1Jgjj9pHmNqVP7Lhu67wLXZJZbaK87TTSk": "Axiom trading infrastructure",
+    "G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t": "Reported ChangeNOW / SimpleSwap hot wallet",
 }
 
 
@@ -130,6 +131,8 @@ class Reporter:
         funder_tokens: dict[tuple[str, str], set[str]] = defaultdict(set)
         funder_wallets: dict[tuple[str, str], set[str]] = defaultdict(set)
         funder_times: dict[tuple[str, str], list[int]] = defaultdict(list)
+        all_funder_tokens: dict[str, set[str]] = defaultdict(set)
+        all_funder_wallets: dict[str, set[str]] = defaultdict(set)
         for r in funding:
             mint_rows = self.db.conn.execute(
                 "SELECT mint FROM early_buyers WHERE wallet=?", (r["buyer"],)
@@ -138,7 +141,9 @@ class Reporter:
             key = (r["funder"], ftype)
             for mint_row in mint_rows:
                 funder_tokens[key].add(mint_row["mint"])
+                all_funder_tokens[r["funder"]].add(mint_row["mint"])
             funder_wallets[key].add(r["buyer"])
+            all_funder_wallets[r["funder"]].add(r["buyer"])
             if r.get("timestamp"):
                 funder_times[key].append(r["timestamp"])
         cross_funders = []
@@ -225,6 +230,59 @@ class Reporter:
                    "funding_signature", "buy_signature", "seconds_relative_to_call",
                    "timing_class"], linked_funding)
 
+        # Test the central attribution question separately from buyer clustering:
+        # does a token creator's first-in SOL ancestry reach the caller, or share
+        # an upstream source with the caller? Shared high-fanout service origins
+        # are retained, but explicitly marked so they are not treated as proof of
+        # common ownership.
+        caller_chain = funding_by_buyer.get(self.profile, [])
+        caller_ancestors = {edge["funder"]: edge for edge in caller_chain}
+        service_by_funder: dict[str, bool] = defaultdict(bool)
+        fanout_by_funder: dict[str, tuple[int, int]] = {
+            funder: (len(all_funder_wallets[funder]), len(tokens))
+            for funder, tokens in all_funder_tokens.items()
+        }
+        for row in cross_funders:
+            service_by_funder[row["funder"]] = (
+                service_by_funder[row["funder"]] or bool(row["service_like"])
+            )
+        founder_ancestry = []
+        for call in calls:
+            creator = call.get("creator")
+            if not creator:
+                continue
+            for edge in funding_by_buyer.get(creator, []):
+                relationship = None
+                caller_depth = ""
+                if edge["funder"] == self.profile:
+                    relationship = "REACHES_CALLER"
+                    caller_depth = 0
+                elif edge["funder"] in caller_ancestors:
+                    relationship = "SHARED_ANCESTOR"
+                    caller_depth = caller_ancestors[edge["funder"]]["depth"]
+                if not relationship:
+                    continue
+                fanout_wallets, fanout_tokens = fanout_by_funder.get(edge["funder"], (0, 0))
+                founder_ancestry.append({
+                    "mint": call["mint"],
+                    "token": call.get("symbol") or call.get("token_name") or "",
+                    "creator": creator,
+                    "relationship": relationship,
+                    "common_wallet": edge["funder"],
+                    "creator_depth": edge["depth"],
+                    "caller_depth": caller_depth,
+                    "service_like": service_by_funder[edge["funder"]],
+                    "fanout_wallets": fanout_wallets,
+                    "fanout_tokens": fanout_tokens,
+                    "creator_funding_signature": edge.get("signature") or "",
+                    "creator_funding_timestamp": iso_ms(edge.get("timestamp")),
+                })
+        csv_write(self.output_dir / "caller_founder_ancestry.csv",
+                  ["mint", "token", "creator", "relationship", "common_wallet",
+                   "creator_depth", "caller_depth", "service_like", "fanout_wallets",
+                   "fanout_tokens", "creator_funding_signature",
+                   "creator_funding_timestamp"], founder_ancestry)
+
         by_wallet: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for r in buyers:
             by_wallet[r["wallet"]].append(r)
@@ -260,7 +318,8 @@ class Reporter:
 
         analysis = self._analysis_json(calls, buyers, funding, bundle_rows,
                                        cross_funders, recurring_buyers,
-                                       shared_funding_groups, linked_funding)
+                                       shared_funding_groups, linked_funding,
+                                       founder_ancestry)
         (self.output_dir / "analysis.json").write_text(
             json.dumps(analysis, ensure_ascii=False, indent=2), encoding="utf-8"
         )
@@ -273,7 +332,8 @@ class Reporter:
                        funding: list[dict[str, Any]], bundles: list[dict[str, Any]],
                        funders: list[dict[str, Any]], recurring: list[dict[str, Any]],
                        shared_groups: list[dict[str, Any]],
-                       linked_funding: list[dict[str, Any]]) -> dict[str, Any]:
+                       linked_funding: list[dict[str, Any]],
+                       founder_ancestry: list[dict[str, Any]]) -> dict[str, Any]:
         analyzed = [c for c in calls if c.get("token_status") == "complete"]
         bundles_only = [b for b in bundles if b["bundle_status"] in
                         ("SUSPECTED_BUNDLE", "CONFIRMED_BUNDLE")]
@@ -317,6 +377,14 @@ class Reporter:
                                               if r["link_type"].startswith("CALLER")}),
                 "creator_linked_buyers": len({r["buyer"] for r in linked_funding
                                                if r["link_type"].startswith("CREATOR")}),
+                "founders_reaching_caller": len({r["creator"] for r in founder_ancestry
+                                                  if r["relationship"] == "REACHES_CALLER"}),
+                "founders_sharing_caller_ancestor": len({r["creator"] for r in founder_ancestry
+                                                          if r["relationship"] == "SHARED_ANCESTOR"}),
+                "founders_sharing_nonservice_caller_ancestor": len({
+                    r["creator"] for r in founder_ancestry
+                    if r["relationship"] == "SHARED_ANCESTOR" and not r["service_like"]
+                }),
             },
             "calls": [{k: v for k, v in row.items() if k not in ("raw_json", "evidence_json")}
                       for row in calls],
@@ -325,6 +393,7 @@ class Reporter:
             "recurring_buyers": recurring,
             "shared_funding_groups": shared_groups,
             "caller_creator_links": linked_funding,
+            "caller_founder_ancestry": founder_ancestry,
         }
 
     def _bubblemap(self, calls_by_mint: dict[str, dict[str, Any]],

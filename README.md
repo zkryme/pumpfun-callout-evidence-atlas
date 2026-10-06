@@ -54,5 +54,7 @@ reruns resume completed work.
 
 ## Outputs
 
+`caller_founder_ancestry.csv` isolates the caller-to-token-founder attribution test. It distinguishes a chain that reaches the caller from a merely shared upstream ancestor and flags high-fanout service-like sources.
+
 See `output/` for the required CSVs, `analysis.json`, `report.md`,
 `funding_graph.graphml`, and `funding_graph.json`.
