@@ -1,0 +1,1830 @@
+# Pump.fun Callout Funding-Infrastructure Analysis
+
+## Executive summary
+
+- Calls retrieved from Pump.fun: **97**.
+- Tokens fully analyzed: **97**.
+- Tokens with corroborated launch-bundle evidence: **42**.
+- Tokens with timing-only coordinated early-buyer clusters: **54**.
+- Tokens with multiple early wallets sharing a verified direct funder: **42**.
+- Repeated direct/root funders across tokens: **285**.
+- Buyer wallets recurring across called tokens: **639**.
+- Early-buy timing counts: `{"CALL_WINDOW": 16, "POST_CALLOUT": 17, "PRE_CALLOUT": 4817}`.
+
+The report distinguishes same-slot or same-transaction launch activity from shared funding. A launch cluster is not described as a confirmed bundle unless multiple independent signals support it.
+
+**Solscan status:** not checked
+
+Where transaction-level funding evidence could not be retrieved, the result is **UNKNOWN**, not clean. Every available signature is retained in the CSV, SQLite database, raw cache, and graph exports.
+
+The strongest repeated-buyer signal is `nya666pQkP3PzWxi7JngU3rRMHuc7zbLK8c8wxQ4qpT`, which appeared among the first 50 buyers on **29** called tokens, averaging **4.345s after launch** and **-3590.480s relative to the call**.
+The callout wallet itself appeared among the first 50 buyers on **24** called tokens, averaging **49.583s after launch** and **141.553s before its callouts**.
+
+**Bottom line:** on-chain trade and funding evidence shows highly recurrent early-buyer infrastructure and concentrated shared-funding groups across these calls. No traced buyer was funded by the caller wallet. Creator-linked funding was observed for a small subset; exchange and service hubs are not treated as common ownership.
+
+## Per-token results
+
+| Token | Mint | Call Time | Launch Δ | Bundle/coordination | Bundle % | Shared Funder | Timing | Confidence |
+|---|---|---:|---:|---|---:|---|---|---|
+| SPEEDRUN | `4sjtHGeAKP6DoMUdvFqQuiYKhhPpwa9XCxUyuFD2pump` | 2026-08-28T15:29:18.163000Z | 857.2s | CONFIRMED_BUNDLE | 94.5457% | C4eNLxxC7XLUivghMi35YUeSfvACgnvKB18115uPUqjg | PRE_CALLOUT | CONFIRMED |
+| MARIO | `7Q9VxTczrzgvjXWbJJZibR7hbYAohngsNsuEhdEcpump` | 2026-08-29T18:07:30.018000Z | 57.0s | COORDINATED_EARLY_BUYERS | 74.9810% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Dawn | `5L6As5obMTXxKwjmGBy1LTRwW2Hm1PjSK18JhETrpump` | 2026-08-30T05:19:21.229000Z | 1740.2s | COORDINATED_EARLY_BUYERS | 72.2132% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| chimp | `CSLP8Vp7u9hrXQi7crPXqCp7BaJaG4JrNxqvR3jDpump` | 2026-08-31T11:05:44.192000Z | 242.2s | CONFIRMED_BUNDLE | 60.4417% | CJCUQo5EV7QGgWhG1RmgdYAFCWeXSAPKr4LMU6nqBqwT | PRE_CALLOUT | HIGH |
+| puter | `4GRTznsfLTRqaB2uMAFmmgaWtvfVyBb4qCsTjskUpump` | 2026-08-31T12:27:03.619000Z | 245.6s | COORDINATED_EARLY_BUYERS | 57.1231% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| rollie | `DQ2H7qcj262RAKfSxGYeL7cYJq54mVdXe4gYxUwxpump` | 2026-08-31T12:57:43.420000Z | 150.4s | COORDINATED_EARLY_BUYERS | 59.1940% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| happiness | `7xXo3JYBqzh6D91XRppzFRLfw8wJHypeukGaNWwKgZ8m` | 2026-08-31T19:21:29.047000Z | 632.0s | COORDINATED_EARLY_BUYERS | 36.0421% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Bert | `28HydoWU7TZQxWiVQxGZyspE3qgWdCHToNDVgLoNpump` | 2026-09-01T11:48:16.189000Z | 160.2s | COORDINATED_EARLY_BUYERS | 37.6137% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| WARRIORS | `6wSQipxdE9Suf8tVNaCEbcqavUbLT7gL9tibpm3Jpump` | 2026-09-01T12:49:29.688000Z | 224.7s | SUSPECTED_BUNDLE | 56.4601% | DsMFNuYhbHP6m4x3XEHV36SjXQV68WLgXPwqmPLDRsAN | PRE_CALLOUT | HIGH |
+| HackINU | `4prKtarobdhYDY4Hu3uGZMx7Je4HqPJeLVyxN6m4Ld3T` | 2026-09-01T14:11:37.296000Z | 373.3s | COORDINATED_EARLY_BUYERS | 51.1603% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| RALPHIE | `F59cEB3A7RAKHGtkvR577swnPSP6EsdaBoL5AcVZpump` | 2026-09-02T12:19:59.922000Z | 2265.9s | COORDINATED_EARLY_BUYERS | 51.2031% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| HOME | `EoKqyKksc4ekiPVuBD9FiztYQHkV59x8KTcZ3ReLpump` | 2026-09-02T13:13:47.125000Z | 723.1s | SUSPECTED_BUNDLE | 67.6884% | suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK | PRE_CALLOUT | CONFIRMED |
+| HOPE | `Ajz86fyiygsv8kZkUyDxogxkz5VfKRs4HTEABVTfpump` | 2026-09-02T17:06:30.583000Z | 810.6s | CONFIRMED_BUNDLE | 69.1451% | 8bpe4gWuAvniwHt8mxtzrKn7ixLviePa8ymb6PP8ftXc | PRE_CALLOUT | CONFIRMED |
+| Benny | `FuF2M5T79HJdpJUbp46qwWssLXQ1Xjf1yiNSfyo5UEGC` | 2026-09-03T11:23:40.610000Z | 665.6s | COORDINATED_EARLY_BUYERS | 30.7004% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| WIF | `8G7aM6Gco4fHjVpmVvUdVvhKMKaWXJEqkCKRvPdepump` | 2026-09-03T13:13:02.498000Z | 1599.5s | COORDINATED_EARLY_BUYERS | 39.4817% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| PAIRLESS | `BmU6YJP2YCAo8sc2dkeR8KjvF3rGFBHZL25ejysppump` | 2026-09-03T14:57:07.732000Z | 290.7s | SUSPECTED_BUNDLE | 74.4006% | 3Q3pUQ5fkRjJFaMEuH7j3NQut3SuMRhASU6BRAgwsKMV | PRE_CALLOUT | HIGH |
+| cwoin | `8qT3o4k4aUmyLrgd7hHYmVxin3kFhQ9QsXdSXTP6pump` | 2026-09-03T15:44:59.146000Z | 268.1s | SUSPECTED_BUNDLE | 73.7797% | 9pnhstim5NP4b7JPzC9sxm38cwLtdvP2yh3XucuebUj3 | PRE_CALLOUT | HIGH |
+| ASSTRA | `AmWCcDf6tG7zB3VPeDVjeXL5N567fXAiHcTKw3xXpump` | 2026-09-03T18:18:30.782000Z | 605.8s | COORDINATED_EARLY_BUYERS | 68.9007% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| POKE | `B3xU49SW3khA7m5Lgata2fmPxZeQRuaJbCruPsVDpump` | 2026-09-03T18:49:58.373000Z | 366.4s | COORDINATED_EARLY_BUYERS | 50.5298% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| ARCADE.GOV | `CHygERrxnc5QByNCwxUNSMhP7tKJA7rh6hNBdJ2spump` | 2026-09-03T21:21:39.307000Z | 1035.3s | COORDINATED_EARLY_BUYERS | 50.9808% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| MEMES | `9CzNGAEutxKHJ5CwYC5Lk8X8YzgYrQnvKChP2BFEpump` | 2026-09-04T13:06:58.280000Z | 683.3s | SUSPECTED_BUNDLE | 64.5599% | HHASXvWLFRSwRBNQgEuhU3d3x2GU63y2crpJcwBKtppX | PRE_CALLOUT | HIGH |
+| hood | `AbpJywMWmkf1MFonRddPVogSwPPZHB9pG4x2nKb1YaPn` | 2026-09-04T13:40:18.393000Z | 357.4s | COORDINATED_EARLY_BUYERS | 60.5361% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| rubenhood | `13V3CbY7Q7AXnf24FMsUaQrmLxnRU4Md9phDEWZvpump` | 2026-09-04T14:13:47.812000Z | 482.8s | COORDINATED_EARLY_BUYERS | 80.3256% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| LOOONG | `D4aEpQLW45YnWrBmztcpJHqabbPtFe9F9PTv8Umvpump` | 2026-09-05T17:07:02.070000Z | 3757.1s | COORDINATED_EARLY_BUYERS | 60.8848% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| TOLY | `DTm66ivA96mhuQnqTy1cv7uELS4MHdYtpbRGJdW9t7Fn` | 2026-09-05T19:10:08.504000Z | 220.5s | COORDINATED_EARLY_BUYERS | 68.1709% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| PUMPLOYEE | `3coFBLantjJkMRmzaQ4znMQQzfqFYTyBeNhdXYAzpump` | 2026-09-05T20:27:15.115000Z | 609.1s | COORDINATED_EARLY_BUYERS | 61.0570% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Memeworld | `3GeNgcFpMwH9ts5b3W3jddtfwhwAURaykTy8YjtrGQWT` | 2026-09-06T13:28:08.298000Z | 220.3s | COORDINATED_EARLY_BUYERS | 20.9992% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| PUMPFOLIO | `xeKm1qmxyHLJZLdwKpsZdx5UFtYyb124GTWRZWypump` | 2026-09-07T13:13:56.771000Z | 192.8s | SUSPECTED_BUNDLE | 71.2302% | J6EJ6hXMjbHKpxj7e7gtWW1uiC41FsKZMKTRca9cvmBw | PRE_CALLOUT | CONFIRMED |
+| AMERICACOIN | `6gKx5EMvnymTVz2JgFhJAqpGxTYaBdVsaLb9YfPfvg4Y` | 2026-09-07T14:55:35.809000Z | 576.8s | SUSPECTED_BUNDLE | 50.1960% | JDBT5koS1f9qPVcujCmDxGpSn1U7qFYYbY1aae6vG2gS | PRE_CALLOUT | CONFIRMED |
+| Rentosertib | `7271ZR6GBzaGqdtP28ZqZ5BKRt2ziu4AnPnVCAL7pump` | 2026-09-07T15:44:29.671000Z | 1161.7s | COORDINATED_EARLY_BUYERS | 71.9160% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| POOP | `BUPNYwndVGfzVb6RG6q2PX53VdAimw2Mi98QxqeWpump` | 2026-09-07T17:39:34.540000Z | 981.5s | SUSPECTED_BUNDLE | 54.5462% | 7uqNU9d8KPRFATwkxMySWwyQUEjxuuxNRCYoTSej8KYp | PRE_CALLOUT | HIGH |
+| FART | `2A6sLqrw8WN6KkgnCsN4xJkyAowBZHr2H9xQ4u3Mpump` | 2026-09-08T11:04:44.614000Z | 825.6s | COORDINATED_EARLY_BUYERS | 55.2460% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| SLOP | `4n32UBFWKJNPQayeN25GrLJHswbja41XFMxebcg9pump` | 2026-09-08T12:54:50.717000Z | 905.7s | SUSPECTED_BUNDLE | 29.5030% | 8deJ9xeUvXSJwicYptA9mHsU2rN2pDx37KWzkDkEXhU6 | PRE_CALLOUT | HIGH |
+| G | `hHc9579gpKUnvYvgcKyjdpe1UhmfVfGzGwMQCADpump` | 2026-09-08T13:47:28.073000Z | 92635.1s | SUSPECTED_BUNDLE | 59.8534% | PMJA8UQDyWTFw2Smhyp9jGA6aTaP7jKHR7BPudrgyYN | PRE_CALLOUT | HIGH |
+| Memecoin  | `HJPjdsDmcvgCj4MV3NvqCWd78qDP8BMzGfrsk4Nbpump` | 2026-09-08T15:27:36.749000Z | 1162.7s | COORDINATED_EARLY_BUYERS | 61.1720% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| WATCHING | `5o9sE9FEVC12zWBd2zqPXAhoVyRiNjGfaYX6hS3Ppump` | 2026-09-08T16:38:24.573000Z | 302.6s | COORDINATED_EARLY_BUYERS | 75.0589% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Nasdih | `6VMsrZvNaSzddT6vkY6dEDoFMeK5EoHD4KCAycfQpump` | 2026-09-08T17:05:52.819000Z | 271.8s | SUSPECTED_BUNDLE | 69.4124% | DGFW1Effv88XzXkgfgyoFfmefzEU5Pp9zWJACBmCSh8K | PRE_CALLOUT | CONFIRMED |
+| CONDOM | `7aLLQRBpGCaSLmmHGf34MGtbdtTumiB14d14TtDnpump` | 2026-09-08T18:13:45.352000Z | 223.4s | COORDINATED_EARLY_BUYERS | 75.4287% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Adam | `GL7M1C4QeLoURyexYgdhuP8SvaPh5LHQLRqKha3epump` | 2026-09-08T18:40:46.153000Z | 109.2s | COORDINATED_EARLY_BUYERS | 93.2258% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Wen | `44s336LDz8bXp4rpxy1qwUfysZ4THjpReQWTKQg7pump` | 2026-09-09T15:55:56.219000Z | 247.2s | SUSPECTED_BUNDLE | 75.3376% | PMJA8UQDyWTFw2Smhyp9jGA6aTaP7jKHR7BPudrgyYN | PRE_CALLOUT | CONFIRMED |
+| cat | `6sFMbTF2VTzutzKekenJujFZBqb4TiBZJKfyLMUbpump` | 2026-09-09T16:44:19.477000Z | 341.5s | COORDINATED_EARLY_BUYERS | 62.5369% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Hoodlana | `H9GGsNc7vA4hN13N1oU4itq8x3mrdZBdw2XdK3Mipump` | 2026-09-09T16:56:42.723000Z | 143.7s | COORDINATED_EARLY_BUYERS | 79.1659% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Bliss | `67afrnTxo8DVc52Uev61Yo4Yr9BGQpRw1RpPMWcx42La` | 2026-09-09T17:48:06.136000Z | 285.1s | NO_MULTI_SIGNAL_EVIDENCE | 68.0023% | UNKNOWN | PRE_CALLOUT | LOW |
+| groinbase | `EkTkjVEfhvgkoCwheMTnr8mhEmJ6Q7ZR8q7ZMCcnpump` | 2026-09-09T19:21:45.321000Z | 164.3s | COORDINATED_EARLY_BUYERS | 60.6132% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| ASS | `3vfxnHSCS139RZiw6MPZaEvhySnjbEi81GuF5EdNpump` | 2026-09-10T11:31:55.762000Z | 880.8s | COORDINATED_EARLY_BUYERS | 60.8096% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| KIRK | `JAqRn24FuQ5MFReXNgXb8uFej5vHJDxhVtebpQvHTQZy` | 2026-09-10T12:15:26.749000Z | 414.7s | CONFIRMED_BUNDLE | 42.5874% | FcZ2LoVNYvdva15Wkg3FbRHrbTma2UrW8B5eDQc4WJre | PRE_CALLOUT | CONFIRMED |
+| BOLD | `5DoZAeBkoci5t5zPhUiuhQFjuzYTfkSv5Seojsxppump` | 2026-09-10T13:11:37.383000Z | 315.4s | COORDINATED_EARLY_BUYERS | 67.7442% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Erika | `sMe5iUcgTe4VXmg4WaShF5kuk6GmcKF3y4HqKGZpump` | 2026-09-10T17:11:37.458000Z | 384.5s | COORDINATED_EARLY_BUYERS | 53.5103% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| casino | `2BucyGvsg9wwTwsaFsEUFgdphrCtp94pDRtHowJUpump` | 2026-09-10T18:46:30.887000Z | 920.9s | SUSPECTED_BUNDLE | 66.9393% | DsMFNuYhbHP6m4x3XEHV36SjXQV68WLgXPwqmPLDRsAN | PRE_CALLOUT | HIGH |
+| bundloor | `9hAojtonqe4RUQarvUYZhFqC99VK1S3LCewYkSjnpump` | 2026-09-12T12:40:02.927000Z | 191.9s | COORDINATED_EARLY_BUYERS | 49.1863% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Pearl | `9mqJNDG2squcqZt2zC7cWWNtVozUbQUnzVnP1jG6pump` | 2026-09-13T16:52:57.263000Z | 271.3s | COORDINATED_EARLY_BUYERS | 59.5270% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| ASS | `7p4MwwkUaMv4gBThVkW46QjwVaosaUrccbFV1MbXpump` | 2026-09-13T19:44:31.901000Z | 190.9s | COORDINATED_EARLY_BUYERS | 34.9115% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| 21 | `4kkrecvSVnnkK3RZcJ85tNFiZu9pWg584yHjNCqEpump` | 2026-09-14T10:03:57.476000Z | 295.5s | SUSPECTED_BUNDLE | 41.9068% | 5vw3atpao8BifitJHxhns7B7NrsNbmLyiBYXfLDSjbLr | PRE_CALLOUT | HIGH |
+| つむぎ | `F41TwidZvJJcsx9c2BMwS6eH9W6HcUT4LzPmGvK9WU6N` | 2026-09-15T12:36:30.159000Z | 338.2s | COORDINATED_EARLY_BUYERS | 12.7176% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| FOOL | `5nnWe5SCBaNMC3oNiR7utth6kx3mH1dhmCarjDb91shW` | 2026-09-15T15:24:33.367000Z | 164.4s | COORDINATED_EARLY_BUYERS | 58.0007% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| 🟢 | `dy6zeSw9j2zHprXLwk1uUGAD4d2HF5R3pAFrL6bRAKs` | 2026-09-15T16:08:34.584000Z | 386.6s | COORDINATED_EARLY_BUYERS | 40.4788% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| vibedog | `2Tiw1Tna3kAut868cjXuKoyrv8U8gi1YjTaXw7Czpump` | 2026-09-15T16:34:54.372000Z | 112.4s | COORDINATED_EARLY_BUYERS | 58.4678% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| ANON | `9ek8utEujXFmiM9wXcWKPF18y57PmeG8rsiBZGzzpump` | 2026-09-15T17:25:52.813000Z | 146.8s | SUSPECTED_BUNDLE | 34.5973% | 71Zqe4aVMmucqrx3sBmsE9Sw8CKPgM57AjSixzeG6Yty | PRE_CALLOUT | HIGH |
+| Dumbocrat | `4ZUjJ5EJbwfh7teotB29uHc1SC3SiqbrkwJoNgsxibbU` | 2026-09-15T20:01:15.679000Z | 201.7s | COORDINATED_EARLY_BUYERS | 54.2485% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| clockinu | `DkDwxjD5JFK7hd7qUNHqNaTeqDGcZ1ia3Y6E7EUiehEn` | 2026-09-16T13:40:29.962000Z | 822.0s | SUSPECTED_BUNDLE | 9.6587% | 5MT5KH1Gn7hdmtpMxCtqUsco5DGRgCwGDe6t47SvKT6 | PRE_CALLOUT | CONFIRMED |
+| Drake | `AgB5SxiP1DFZbW9uDAH7s8Mhv1HF21nJv67tnAAYpump` | 2026-09-16T13:54:59.303000Z | 104.3s | SUSPECTED_BUNDLE | 90.1151% | suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK | PRE_CALLOUT | HIGH |
+| spy | `Er5RuNhTEwJH5dHv9c3YGATjgkLCETH4dKazntyWEtXY` | 2026-09-17T13:02:15.307000Z | 150.3s | COORDINATED_EARLY_BUYERS | 43.7602% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| ACHIEVEMENTS | `CziyAr14UNUrfkxpioWSumkLXMwWnDWN2bu2WR5ao7kc` | 2026-09-17T13:51:20.917000Z | 404.9s | COORDINATED_EARLY_BUYERS | 65.1133% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| feecat | `omskHvyNvQSn3PFak3E8JHQJeSVJFsrc6izWT12pump` | 2026-09-17T14:59:37.101000Z | 218.1s | CONFIRMED_BUNDLE | 60.1649% | 4kAsV9ZBCZV6dvgpxxf5Yes2ZKUQ42nJvbwYUeUR9PhS | PRE_CALLOUT | CONFIRMED |
+| Normie | `3uYT8w1FxasDGmM4WDG5kXu6D9BGvyP3iEfPJEVb6ewT` | 2026-09-17T16:23:30.568000Z | 139.6s | COORDINATED_EARLY_BUYERS | 46.7750% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| honse | `BZYpLHhui3qRNokWFg2JcX8CYtMqzWHR5R4xowjcbPqh` | 2026-09-19T14:36:26.297000Z | 55.3s | SUSPECTED_BUNDLE | 69.2406% | 3Q3pUQ5fkRjJFaMEuH7j3NQut3SuMRhASU6BRAgwsKMV | PRE_CALLOUT | CONFIRMED |
+| ACORNELIUS | `9xhMStAAufkH5jA5nevaGy6M9fCsQ74BZnsXyo93DkfA` | 2026-09-19T15:15:06.580000Z | 162.6s | SUSPECTED_BUNDLE | 50.9942% | 6kbLaokSE3pR3XX8ZzAFjtY7xkem7QRheJM9PZdJjjJV | PRE_CALLOUT | HIGH |
+| goldfish | `55bKo8bj1YVEgsbwkkd4Nwu7JhaZF9trUgbvpZ3YeVCA` | 2026-09-21T11:18:29.452000Z | 255.5s | COORDINATED_EARLY_BUYERS | 51.2162% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| TIMUR | `ASftCNtzPNmK3nMDvpQNvpLauKS45Vkq7kwTPutqUBL1` | 2026-09-22T12:42:42.368000Z | 634.4s | SUSPECTED_BUNDLE | 58.8341% | BHzUgVfdVVVqZF86v9S6aye8tizs4d8cZdAFXG6ku2EG | PRE_CALLOUT | HIGH |
+| Pochi | `2iSB473Z7L2ndpWs3n22tb7H3KSGpswDTH3jP7qCCAZT` | 2026-09-22T14:29:44.962000Z | 1182.0s | COORDINATED_EARLY_BUYERS | 54.6400% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| PLAN | `47r9YPDeTVpwHjAakoVgnzNTJRChXC8f4KSUqMbEsBbM` | 2026-09-22T20:55:31.809000Z | 132.8s | COORDINATED_EARLY_BUYERS | 69.0302% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| GIGACAT | `GKTxLXsmkjLDo89XmPa5htwK7sAzdqZ3jmfV6gaTvK67` | 2026-09-23T12:25:15.049000Z | 96.0s | SUSPECTED_BUNDLE | 61.2611% | QT3EFRuVnCV9aVMgZrAsfbqBo4LqYkQp4EAPKY5kYLk | PRE_CALLOUT | CONFIRMED |
+| AURACAT | `21XJbyQWEhmeoxKRHdGrEjetSfHopvtp68LWzdvT471M` | 2026-09-23T15:55:17.758000Z | 282.8s | SUSPECTED_BUNDLE | 53.8906% | 3t9t1Q98Z5edthGo3cQXPhuL1Y8tPmWryqWQcK3gWe8k | PRE_CALLOUT | HIGH |
+| ACTX | `GfqKCwNeAdHHi97AmgCLP5qrwcSJRDdyZ1huiU6xUXTz` | 2026-09-23T16:31:50.164000Z | 93.2s | CONFIRMED_BUNDLE | 65.1345% | Hmc2dLxZZ4xfHqn2wFCTBu11oCpYiuwsj23JBjJmD4ni | PRE_CALLOUT | CONFIRMED |
+| CHONK | `5pSEZw1iytqYznD7crsGyKNek7q5JkjBqj2KmfqxUVZd` | 2026-09-24T16:48:46.328000Z | 152.3s | COORDINATED_EARLY_BUYERS | 78.5492% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Rowdy | `3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN` | 2026-09-25T16:11:52.883000Z | 90.9s | SUSPECTED_BUNDLE | 47.5409% | DhqjSn3wgTMAua6Cd9DHSZUtLuXMsyqky7Hy4mgtxvN6 | PRE_CALLOUT | CONFIRMED |
+| NEVER | `69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH` | 2026-09-26T12:46:09.362000Z | 216.4s | SUSPECTED_BUNDLE | 32.5235% | DhqjSn3wgTMAua6Cd9DHSZUtLuXMsyqky7Hy4mgtxvN6 | PRE_CALLOUT | CONFIRMED |
+| Memes | `7dACCWZXF4Lr9ftxFpi7TJk7a3hcPpUwGPAcTuXDpump` | 2026-09-28T18:54:14.624000Z | 97.6s | CONFIRMED_BUNDLE | 62.6789% | 4kAsV9ZBCZV6dvgpxxf5Yes2ZKUQ42nJvbwYUeUR9PhS | PRE_CALLOUT | HIGH |
+| BBB | `rMPLDvnn6KR773WNhZvtFNcgFwnRkc7UbPkUaiMpump` | 2026-09-29T11:32:26.347000Z | 1035.3s | SUSPECTED_BUNDLE | 75.3802% | BHzUgVfdVVVqZF86v9S6aye8tizs4d8cZdAFXG6ku2EG | PRE_CALLOUT | CONFIRMED |
+| DRAKE | `25GrKYrc3y4LZmmuhppYgFRCKb7JyZ6grum4WhLYvA1z` | 2026-09-29T12:43:30.551000Z | 143.6s | SUSPECTED_BUNDLE | 65.7261% | DhqjSn3wgTMAua6Cd9DHSZUtLuXMsyqky7Hy4mgtxvN6 | PRE_CALLOUT | HIGH |
+| MARTIN | `49aM4HrGABwG9F8iAn385zzcsS6mxHEFY8YN3H7y1Cd9` | 2026-09-29T16:00:36.969000Z | 238.0s | COORDINATED_EARLY_BUYERS | 79.2721% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| HERZOGIAN | `5Sg1vv51KGCSDF2gBHgbNATCEXFjYtVhWgztNUwtgJYD` | 2026-09-30T13:42:22.120000Z | 207.1s | SUSPECTED_BUNDLE | 63.5424% | HUgpmqL6r4Z4iEZiVuNZ6J6QnAsSZpsL8giVyVtz3QhT | PRE_CALLOUT | HIGH |
+| JADOODOO | `DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump` | 2026-09-30T15:44:35.892000Z | 100.9s | SUSPECTED_BUNDLE | 59.3692% | HLFNxeqTwD25mYoEYT7mMnRAuQrUMZ98Gaji1vgVzDsh | PRE_CALLOUT | CONFIRMED |
+| SI | `BE5ciZmcADAX78u2a1GrFiPMPC3rNXtdPGUrhzWB4k5d` | 2026-10-01T13:07:06.421000Z | 83.4s | COORDINATED_EARLY_BUYERS | 51.5780% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| BTC | `8ypYfW5cjafrfAZij8TZj5SFHAbPNpiRio96LMzypDkn` | 2026-10-01T13:50:09.782000Z | 168.8s | COORDINATED_EARLY_BUYERS | 42.6226% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Binturong | `UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR` | 2026-10-02T15:42:16.079000Z | 161.1s | SUSPECTED_BUNDLE | 53.7655% | 5ZtzVYRuF7sEhot31S68xHRCKDMkDdFtTp1iujTRjowV | PRE_CALLOUT | HIGH |
+| bid | `EHUzmwAzmUix7TkwVr7b16U9ChJDr3RpjfXshR5swy5j` | 2026-10-02T18:38:13.101000Z | 229.1s | COORDINATED_EARLY_BUYERS | 72.5852% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| Knox | `6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ` | 2026-10-03T14:59:45.073000Z | 210.1s | SUSPECTED_BUNDLE | 67.0407% | G83xr8WJL8BTvWVwSmmcnwvEbjitD8ZDZVKAVHi6tian | PRE_CALLOUT | HIGH |
+| Somalia | `G9r7nnHSgvb7LUfCE8kavRaKokEMMYBjVHGKvQ6dpump` | 2026-10-03T16:22:05.285000Z | 859.3s | COORDINATED_EARLY_BUYERS | 81.2726% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| AI | `9PNfxvTARzdxvQas2uknW57bnfMCS1dxW1He7rPbuhuQ` | 2026-10-03T17:58:58.595000Z | 94.6s | COORDINATED_EARLY_BUYERS | 60.1576% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| AlxCooks | `6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva` | 2026-10-03T19:11:00.378000Z | 105.4s | COORDINATED_EARLY_BUYERS | 40.6574% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| quarantinu | `H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U` | 2026-10-05T10:34:23.488000Z | 404.5s | SUSPECTED_BUNDLE | 66.3180% | EsynuVtJPpuU8xxmKnRF5mcJCyN19wh3CfNngEw4C2rM | PRE_CALLOUT | CONFIRMED |
+| KWIF | `57ANN8dAbPX8x1BEFFwzBttkzwpKZBEiJkdiWSzVNQvS` | 2026-10-05T13:18:59.802000Z | 151.8s | COORDINATED_EARLY_BUYERS | 57.9193% | UNKNOWN | PRE_CALLOUT | MEDIUM |
+| BRUNO | `7HiD5rzoZxAYXEJ8Z4t3WgM8VE1iSKWJdxPPyEdDNzwN` | 2026-10-05T17:59:58.381000Z | 151.4s | SUSPECTED_BUNDLE | 86.1247% | EsynuVtJPpuU8xxmKnRF5mcJCyN19wh3CfNngEw4C2rM | PRE_CALLOUT | HIGH |
+| Craig | `5o43e7gYZWFNEpdqkegHY6LXkhMXB1z6f7d6TAVGEMTM` | 2026-10-06T10:54:04.554000Z | 146.6s | SUSPECTED_BUNDLE | 58.3703% | PMJA8UQDyWTFw2Smhyp9jGA6aTaP7jKHR7BPudrgyYN | PRE_CALLOUT | HIGH |
+| dabcat | `5EZ7yagvcsHcwH3e17khLwGzhFrCsx7CKS7ZN6J6i4Lh` | 2026-10-06T11:35:32.206000Z | 688.2s | SUSPECTED_BUNDLE | 79.0312% | G83xr8WJL8BTvWVwSmmcnwvEbjitD8ZDZVKAVHi6tian | PRE_CALLOUT | HIGH |
+| MEMETARD | `7mRDn1rAqjwFQXacodr1UmkNdvAGPbtNP9k5jvBZqt9J` | 2026-10-06T12:47:37.481000Z | 60.5s | SUSPECTED_BUNDLE | 53.5859% | 3Q3pUQ5fkRjJFaMEuH7j3NQut3SuMRhASU6BRAgwsKMV | PRE_CALLOUT | CONFIRMED |
+
+## Repeated Direct Funders
+
+- `5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9`: 94 tokens, 349 early wallets.
+- `iGdFcQoyR2MwbXMHQskhmNsqddZ6rinsipHc4TNSdwu`: 90 tokens, 130 early wallets.
+- `FpfsHusKvqc9LhupVPB1R67HuCiWDKrZMN4SJitrMdTj`: 48 tokens, 10 early wallets.
+- `6LY1JzAFVZsP2a2xKrtU6znQMQ5h4i7tocWdgrkZzkzF`: 46 tokens, 44 early wallets.
+- `is6MTRHEgyFLNTfYcuV4QBWLjrZBfmhVNYR6ccgr8KV`: 42 tokens, 43 early wallets.
+- `F7p3dFrjRTbtRp8FRF6qHLomXbKRBzpvBLjtQcfcgmNe`: 40 tokens, 37 early wallets.
+- `BmFdpraQhkiDQE6SnfG5omcA1VwzqfXrwtNYBwWTymy6`: 39 tokens, 39 early wallets.
+- `ASTyfSima4LLAdDgoFGkgqoKowG1LZFDr9fAQrg7iaJZ`: 37 tokens, 33 early wallets.
+- `Biw4eeaiYYYq6xSqEd7GzdwsrrndxA8mqdxfAtG3PTUU`: 34 tokens, 34 early wallets.
+- `AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51`: 32 tokens, 36 early wallets.
+- `FBvxneTq8dY7WKxj924CseuveWzDL5tN9JuSW3S9nJkN`: 30 tokens, 9 early wallets.
+- `3F2uT3Yo4AqRi3KnDDjSRq4uSS5xo1DKfurYrLPkXd7G`: 29 tokens, 2 early wallets.
+- `u6PJ8DtQuPFnfmwHbGFULQ4u4EgjDiyYKjVEsynXq2w`: 27 tokens, 31 early wallets.
+- `AxiomRXZAq1Jgjj9pHmNqVP7Lhu67wLXZJZbaK87TTSk`: 27 tokens, 21 early wallets.
+- `G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t`: 25 tokens, 17 early wallets.
+- `8mowmVCEewZ9W2cEaQyQeQEeSxhGr1hvRviLwozwNtBt`: 24 tokens, 30 early wallets.
+- `CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X`: 24 tokens, 3 early wallets.
+- `D89hHJT5Aqyx1trP6EnGY9jJUB3whgnq3aUvvCqedvzf`: 21 tokens, 23 early wallets.
+- `DQ5JWbJyWdJeyBxZuuyu36sUBud6L6wo3aN1QC1bRmsR`: 21 tokens, 16 early wallets.
+- `Dv34prGm2BT7Ph2n6qKLgzeLgjnii87RJJ7Db6ZQQvKM`: 20 tokens, 30 early wallets.
+- `AobVSwdW9BbpMdJvTqeCN4hPAmh4rHm7vwLnQ5ATSyrS`: 20 tokens, 11 early wallets.
+- `5F1seMKUqSNhv45f6FhB2cFmgJbk8U1avJw7M6TexUq1`: 19 tokens, 25 early wallets.
+- `A77HErqtfN1hLLpvZ9pCtu66FEtM8BveoaKbbMoZ4RiR`: 19 tokens, 23 early wallets.
+- `GJRs4FwHtemZ5ZE9x3FNvJ8TMwitKTh21yxdRPqn7npE`: 19 tokens, 15 early wallets.
+- `D4YBDBbhbTwfSTPaYPhZ2giiaNKD9qbzRzLMubT4WMoj`: 19 tokens, 11 early wallets.
+- `46Zk9VL676HwJTMWrhFTxLdFeP1oL4vsCwRnK9g2HMbj`: 19 tokens, 7 early wallets.
+- `Fi3kigPLsFtSvq7N1KBtz51C8Gc8XyMFWhYjbRkaFMxS`: 19 tokens, 1 early wallets.
+- `FpwQQhQQoEaVu3WU2qZMfF1hx48YyfwsLoRgXG83E99Q`: 18 tokens, 16 early wallets.
+- `Fhbh1DTUDKt6qu9zVg8Q5VgnZa1WWWbxBxG6pCoJoggA`: 18 tokens, 9 early wallets.
+- `FWznbcNXWQuHTawe9RxvQ2LdCENssh12dsznf4RiouN5`: 18 tokens, 6 early wallets.
+- `9BhkaAybG824w5Hk2A1Np22ZwYN74f6kisJtLEK9C6Ns`: 18 tokens, 2 early wallets.
+- `Ez2jYoXp45DZxr7JVhiqbDNirgBT37MErjZGxA8jZkTf`: 18 tokens, 1 early wallets.
+- `HKVWNVvThgGpRTQiALg3VQ4F9dQGLUhdm3jJFhdZrx1j`: 18 tokens, 1 early wallets.
+- `5g7yNHyGLJ7fiQ9SN9mf47opDnMjc585kqXWt6d7aBWs`: 17 tokens, 17 early wallets.
+- `9obNtb5GyUegcs3a1CbBkLuc5hEWynWfJC6gjz5uWQkE`: 17 tokens, 14 early wallets.
+- `8d9aV5LRyFV17xm3EBhaWbXv6vYMF8AerZCPPCN3EAGj`: 17 tokens, 6 early wallets.
+- `2AQdpHJ2JpcEgPiATUXjQxA8QmafFegfQwSLWSprPicm`: 16 tokens, 14 early wallets.
+- `4BANhFgDVFh9WL8MDb3jbYS1D7oW9LaoWaPAMpV65kbU`: 16 tokens, 4 early wallets.
+- `6ED9YuJXMRjUCEYWQGbbsy8fXW9ae9WtpDHYGEoKstjV`: 16 tokens, 2 early wallets.
+- `AvmoaxAG6Uwh1f9HjrxdNzc78ach9SkZp9nLpeoChQBa`: 16 tokens, 1 early wallets.
+- `791eGAi3H3KjFPq9Fg9nwLk46UxYACcPGLJKtAzvx87Y`: 15 tokens, 23 early wallets.
+- `B48kNVXs4YK4amkBCH2XokQiv1SeiVQGHDR17xDeKAAn`: 15 tokens, 18 early wallets.
+- `H8sMJSCQxfKiFTCfDR3DUMLPwcRbM61LGFJ8N4dK3WjS`: 15 tokens, 14 early wallets.
+- `2ccgxuZv5NEngCwWqj6zjwxHWVc8RDwXgMUfUnmpTYHQ`: 15 tokens, 3 early wallets.
+- `599zpgHycc7uyWBgnhhsRSVXAfGDPWaameLkwUnTGd1k`: 15 tokens, 2 early wallets.
+- `GnWFhrfgciKVoqgAqarwWEQ79NuD2LnRd9EEYaB1kUoc`: 15 tokens, 2 early wallets.
+- `8nNrb4fxH7DDfSe5MMV3TibWF6ZgWA6jqTAVydePXJyz`: 15 tokens, 1 early wallets.
+- `5ndLnEYqSFiA5yUFHo6LVZ1eWc6Rhh11K5CfJNkoHEPs`: 14 tokens, 9 early wallets.
+- `3Le7cTELrgoSX51gRZagrueWsm4fPJWMa64sXAqYcJk9`: 14 tokens, 2 early wallets.
+- `ByV1UsQzksXJ8MG3rNFwDnaTTbHk9iThWc12nEVKjdHL`: 14 tokens, 1 early wallets.
+- `Cc3bpPzUvgAzdW9Nv7dUQ8cpap8Xa7ujJgLdpqGrTCu6`: 13 tokens, 15 early wallets.
+- `4NyK1AdJBNbgaJ9EsKz3J4rfeHsuYdjkTPg3JaNdLeFw`: 13 tokens, 10 early wallets.
+- `9999huSCf6QpepPHQVFLZ9smhsbwkV4XWPLboiy9qqRj`: 13 tokens, 1 early wallets.
+- `DPqsobysNf5iA9w7zrQM8HLzCKZEDMkZsWbiidsAt1xo`: 12 tokens, 14 early wallets.
+- `AaZkwhkiDStDcgrU37XAj9fpNLrD8Erz5PNkdm4k5hjy`: 12 tokens, 11 early wallets.
+- `Aeubzk4q2GST66a17h2ssFX1podokjNX8jGAzim9dPAi`: 12 tokens, 1 early wallets.
+- `CuCApcakpKR5c2a2JnqYqmiKBNeiDhx2R6QccX4DeMfy`: 12 tokens, 1 early wallets.
+- `Fdw2m5S1sHPHn1hvtCpEYSDCadTDQWCMvPgZ8P5EJz75`: 12 tokens, 1 early wallets.
+- `H7sWT7eP83vkim7Gp81qsPwQzuzJK3E6Ps9KLbUezoCc`: 11 tokens, 18 early wallets.
+- `C5EMTGGE87SqLyuvhShLDMj2jUBwqBLJAZF6ybK8Jyqw`: 11 tokens, 3 early wallets.
+- `BTLG71P7eH7hxT4MMv1DUaSkH6G2aYp7hRKqocjeYrSy`: 11 tokens, 2 early wallets.
+- `4whAbL6cygyPpydKjemp2wr4ZvspWe4BPiBPPxYwTZKo`: 11 tokens, 1 early wallets.
+- `5zKxnTh4o2dXL1tmXpbPz9efCcc4c3z1Bva8N5UzKJyJ`: 11 tokens, 1 early wallets.
+- `Gu9viX22AFFtn7JH34exTTX6c743zkBV9qR5JdPMfaVH`: 11 tokens, 1 early wallets.
+- `CSEncqtqbmNRjve42sNnbs5cCSmrjUNsAEwc17XY2RCs`: 10 tokens, 10 early wallets.
+- `4bHUoZY36hmtW1FbJ1XJ5umWmFWXxx9voAe94M8PWNpL`: 10 tokens, 4 early wallets.
+- `WLZG31XNaD3GmdRW1GphLTLbWfh7REDQfYCURuxzAhU`: 10 tokens, 3 early wallets.
+- `Hq3n2r7hZWUXCxUpqxzZiAh1Yt9dfvUyLj1sebXqFAe1`: 10 tokens, 2 early wallets.
+- `ArRdqGfyY38dD9GrZfbr88HPTNN3NL9WQxG9LTsW6mxh`: 10 tokens, 1 early wallets.
+- `brobiNWSf8UAeWph1RY555JwgLo5WUPT7ncLQVmSiMW`: 10 tokens, 1 early wallets.
+- `5TjSh51DeZfDF2mWTYPDWzJhYkNkMQk3ZHfq13JaKHkf`: 9 tokens, 10 early wallets.
+- `5bb5kQKhp4zT3MYuFp7QSpkvJkghfLp6yjQbvTDLK2vy`: 9 tokens, 3 early wallets.
+- `26tJwK8BF8hTwd4wxJPPubHLb6dH8uq6owQT4FFLsHtZ`: 9 tokens, 1 early wallets.
+- `FGMJAT3Yrouh1eTWpAzNUfToupBggySqTUe8VfnJquVg`: 9 tokens, 1 early wallets.
+- `HLY1sYoeGPh8JxpsWy3K328dSb2gCBxGWiuWGMmNaNMD`: 9 tokens, 1 early wallets.
+- `cPabHQWcAH3PZu6qha2Tk8Zn9s1eD14GUZLb8ar2Gzs`: 9 tokens, 1 early wallets.
+- `6MQJCAvWhP5XH1kHY1ZfXm59RKTbL6vkpKFiFPyXugyk`: 8 tokens, 2 early wallets.
+- `J6DdwTar52hc1Bk7idh8c4wJ8XwHkH2tkyHimXtKJuBk`: 8 tokens, 2 early wallets.
+- `2vRhXKm7w5VMhSMHLHKA3Hb6YUneKMDxj68xTPYiwZB9`: 8 tokens, 1 early wallets.
+- `A7Gr6Z7hjM7TxokyohE9X9G6MeYVwuimXzLkkj66hKDh`: 8 tokens, 1 early wallets.
+- `FMftf5KTGDHua5i7yw9qdGMoSUDzdurQNrDno22ZXGXx`: 8 tokens, 1 early wallets.
+- `Hy3KPgfw7GVQgWixY3s3y6HFczSQhrKiZK6A7dWxCCyB`: 8 tokens, 1 early wallets.
+- `54Pz1e35z9uoFdnxtzjp7xZQoFiofqhdayQWBMN7dsuy`: 7 tokens, 7 early wallets.
+- `BDuAJGTuPcUgfxWyKJVrWPASRyVTT8iTEc3j6xXPt1My`: 7 tokens, 2 early wallets.
+- `3ReqHX4KZGTxNRbgTWqJUurACmKhpJ1QVjL9PETt871E`: 7 tokens, 1 early wallets.
+- `4zAhesR8L36ULUXY33Ny85R7MWsELENCWkNfr2tJTYfr`: 7 tokens, 1 early wallets.
+- `7QpPsdPgZFnuNWJTSopvKjh7dvxVj4iTw7VF2MNJdMFp`: 7 tokens, 1 early wallets.
+- `85yes56w1NijxFwDbLeEJnKsUUzibLr6nwE1YsHwgVkB`: 7 tokens, 1 early wallets.
+- `DzRqREhHeiSVpGSurhnHvyqoFrweh99u9yUSdXL6CQft`: 7 tokens, 1 early wallets.
+- `EWdAgcTdywcj5JxK4PEB4wN9zW2vtJDDrZcjbCUo3QaL`: 7 tokens, 1 early wallets.
+- `Egq3yfEVJHvKtX6ETbaUXSSNXPLidb4DuvMKuRFRHA8Z`: 7 tokens, 1 early wallets.
+- `FMdL2mr1qVgxata25DLtR1Um7zdfKRC2vV4oV9HPJcb`: 7 tokens, 1 early wallets.
+- `GpWzQoGQRY5Lcb4NTeZvb2HjCcG5y8Wy46TBejzZu18g`: 7 tokens, 1 early wallets.
+- `DwdrYTtTWHfnfJBiN2RH6EgPbquDQLjZTfTwpykPEq1g`: 6 tokens, 6 early wallets.
+- `BY4StcU9Y2BpgH8quZzorg31EGE4L1rjomN8FNsCBEcx`: 6 tokens, 5 early wallets.
+- `AxiomRYAid8ZDhS1bJUAzEaNSr69aTWB9ATfdDLfUbnc`: 6 tokens, 4 early wallets.
+- `6aa89USZ9fwM1xAqgwh1kb7pnsuh58ohzBxBnJVtfokZ`: 6 tokens, 2 early wallets.
+- `BThY85WeRSHgwuuj2SPFN4MAzBdc3Mcs5VDwQPe2EtSJ`: 6 tokens, 2 early wallets.
+- `2WiR5hyhLbpwkrZg2ZmhrwusVKFK2FdY4C81JiNY5L97`: 6 tokens, 1 early wallets.
+- `2a7uAn7EvxZcn4cq5FrmQwPyCxmuur5DkbRuiFwFv2Za`: 6 tokens, 1 early wallets.
+- `3KKiingTj7vuJ6JSoqopnHDSdFiXkKHrxM1gZyPjrQNE`: 6 tokens, 1 early wallets.
+- `3t57E5DkEYVahjqSUjS9uDw5kzfhw85FZk7tLzm1jhnJ`: 6 tokens, 1 early wallets.
+- `4frBKrDzR63R8jAnZDkLTYRzUVByax6duBSruHeqdyv4`: 6 tokens, 1 early wallets.
+- `6VzXcLk9rCLDHgRBmUGKK8HY2KvhHmR4pZPCxi4tA1kx`: 6 tokens, 1 early wallets.
+- `6d9uznGiDAwkgVKFiReWgSp2RGtpuZ4gGbwjdNBi8EuA`: 6 tokens, 1 early wallets.
+- `9AWUjwAQeb8ENB2sMwKH1oSER2Wx6va3XpiXoF1D31Nk`: 6 tokens, 1 early wallets.
+- `ARM8eBW9m4pb5TqhoCqyUx628cBuDhWqte6dHnMk5UqM`: 6 tokens, 1 early wallets.
+- `AzCkcwXgMmAS29uzFA15BBhW8y8MB8sTrEbNzY28pAZU`: 6 tokens, 1 early wallets.
+- `BigrT9DAnXnzVNFQPg3VF4WvyGyifFtFMVALPVsLnvTu`: 6 tokens, 1 early wallets.
+- `D5Koegb2gqSwX8Gp6ze7V2Q8jKxnwHP6rCX7D2cdTJAL`: 6 tokens, 1 early wallets.
+- `FMw5ksDXzAF1XAVcNwbZVfKJoG1H4Xa7PCFp8oEKTAKr`: 6 tokens, 1 early wallets.
+- `GeEwmJoPmvT7pjR7s7W1wLu98M978k4aR9oMD2JEyF4q`: 6 tokens, 1 early wallets.
+- `GzGqsLiS3PDWNXDJesw1hA9qZSmkopUJvjJwvzPTxAKm`: 6 tokens, 1 early wallets.
+- `HRCKY85VmMySEkkAdR9LtMs5BGinCyiHhTbnv4DNpBFG`: 6 tokens, 1 early wallets.
+- `NajoJR4TibdKnVmz4rNGiNVz2jrrYc5AXm5XbiBkpXH`: 6 tokens, 1 early wallets.
+- `abc1LFfHbjZDCYS6Zrqqb5MLQHTvrr5PYuGKFw1vYuQ`: 6 tokens, 1 early wallets.
+- `2snHHreXbpJ7UwZxPe37gnUNf7Wx7wv6UKDSR2JckKuS`: 5 tokens, 5 early wallets.
+- `8QCVZ7KL65pBhUxbvfwbyyg4ronxNAEXbDrGLYLrRNn5`: 5 tokens, 5 early wallets.
+- `AC5RDfQFmDS1deWZos921JfqscXdByf8BKHs5ACWjtW2`: 5 tokens, 5 early wallets.
+- `bcnzSs3F6F3MG7utvEQHpd8A53nRBM8ZM4TfEs2Zmcp`: 5 tokens, 5 early wallets.
+- `2Hgx1GjKRuH9H21Fzz7uGiqh1Fcz3wMP5PmgpDbyDDYp`: 5 tokens, 4 early wallets.
+- `66D1Lth3Qkgoh9Jj8uSWYASv8WnycTQkXXMct36bxJaL`: 5 tokens, 4 early wallets.
+- `2Ujy5SeyUretAdeoK6uPtu8UnGoizJncMWQn21cP3CVj`: 5 tokens, 1 early wallets.
+- `3Fpi2fKrkcYVMwZGqPJojJfbakJAqwCjQUbHoA2xGnRc`: 5 tokens, 1 early wallets.
+- `6TFjhks9MsKxgxw26MYzqY6ZF7G9pbKL4VyEjmJ48S7i`: 5 tokens, 1 early wallets.
+- `812SJrzYAc5X9inUdsRNz2Zr2yz6RPkLHJQMxugPqv5N`: 5 tokens, 1 early wallets.
+- `8Woxk2SLysxYaMja2Ew4DvEVFNVRGC7rniqEkNcAhUmq`: 5 tokens, 1 early wallets.
+- `8wD8FiqixA7whqeHLV84wMEGg8Uw2gXbB3ZpDzHqZFWN`: 5 tokens, 1 early wallets.
+- `94RUpZL8F2o5stNnqKnYLNgAcQJYPy5h444Ui9GkUsJL`: 5 tokens, 1 early wallets.
+- `AKS98rbZY8WD7W1ZPZqsbrWBLQKE68Go6aDnUznRJHEo`: 5 tokens, 1 early wallets.
+- `AStWR8n4R4zE5gQaagdgB6zqjE6jUwo6yFhr2SSDZxqu`: 5 tokens, 1 early wallets.
+- `Anva6JEutaUxW9JDp2WZ9yq8yHFUpaBrV2BXshQHVJMf`: 5 tokens, 1 early wallets.
+- `BLbboRQ2eWXAuno6BGQjRiKeW51cCEe6SaC92CghBog1`: 5 tokens, 1 early wallets.
+- `BoduAmZsXFZZMPXWC53uJJACJENzNt2HtZGbQtQhMWfE`: 5 tokens, 1 early wallets.
+- `ByJ7XAjpjGAiE4jJHVZESFpKj9cC3Cma9YAcTTkAkJQz`: 5 tokens, 1 early wallets.
+- `CEvz7hRVoYqWxQTFZVPFk2NPFdsyEJ7MmHrJigZLReTz`: 5 tokens, 1 early wallets.
+- `CsWMAj1XMK9bCZHjXM7eaYw3era7apSUcG43EZtiy85u`: 5 tokens, 1 early wallets.
+- `F6XJTh93VGFcbnf2FJmyR6f3y2HZsav25EeEaZosYouk`: 5 tokens, 1 early wallets.
+- `Fn8WJ5afkGJp424indxe9jqNZDjbUDPsMcCm3tP8HEeP`: 5 tokens, 1 early wallets.
+- `Tjex5mpL36DEjqGyxKMdmBmXwCnCstsbmCRre1Bdime`: 5 tokens, 1 early wallets.
+- `eHgWQRohuMfdxPuXUhgMswMs3zbXMKtRRzKkNde76X5`: 5 tokens, 1 early wallets.
+- `xgCByZAn5PP5ogNnm5ztgSF5xynZq1q6f5ovSMQ5EwX`: 5 tokens, 1 early wallets.
+- `DhqjSn3wgTMAua6Cd9DHSZUtLuXMsyqky7Hy4mgtxvN6`: 4 tokens, 27 early wallets.
+- `2UL8hbNaoErAYNePqgQYPP9yDCDRZGWbzKW4krLqkhNL`: 4 tokens, 4 early wallets.
+- `ABNL41SwMLVRaCq6okEWsWyvLwm56nazUNwMrTHgmuyf`: 4 tokens, 4 early wallets.
+- `ALpUXHw8v739Dkt4oS8sjew1V8ymm7Bb7UKpJ6S4VAb7`: 4 tokens, 4 early wallets.
+- `CdcVvn23Bzxj14ibBe7xRcK3g8QbrcXKYYQpqkTrW1KG`: 4 tokens, 4 early wallets.
+- `DAqCpTpQN1JNCDYLXWir28q1J2eXSufiNNADsSnUQTBZ`: 4 tokens, 4 early wallets.
+- `DoAsxPQgiyAxyaJNvpAAUb2ups6rbJRdYrCPyWxwRxBb`: 4 tokens, 4 early wallets.
+- `FfxU1AEhdz2q16TAmzgG6wdYP3NKsFz5gkYt4DprYBsH`: 4 tokens, 4 early wallets.
+- `G9X7F4JzLzbSGMCndiBdWNi5YzZZakmtkdwq7xS3Q3FE`: 4 tokens, 4 early wallets.
+- `J1BDJEdvTmmcjeTMVTHLPaaNvuQ3mdxeuWEM1YyMksLy`: 4 tokens, 4 early wallets.
+- `95ipm63sgxs1oHtn9rHfuvPKRRA6ZGeL7yBni8aynDW5`: 4 tokens, 3 early wallets.
+- `CyBiGyD1EunXXrNRsu6pKkCQPTbdZ9UTsxAum9twRcSt`: 4 tokens, 3 early wallets.
+- `4Ri6Rd7zN6M6H8jF3vPc6MqnmFioVcPaizZt3crLVGXd`: 4 tokens, 2 early wallets.
+- `7uqNU9d8KPRFATwkxMySWwyQUEjxuuxNRCYoTSej8KYp`: 4 tokens, 2 early wallets.
+- `8RvtT8189KpAq5MkXGVHFn6LdZpxq9PkvDeAvs1g5Yj4`: 4 tokens, 2 early wallets.
+- `8TQq9tVnqaaLYjiQNbQ1E1MLBkBGAffbrba5QdCj3pw8`: 4 tokens, 2 early wallets.
+- `9xziNSwNxLEKPruLBbYNvcyctmFz79cL3uc5smUj14Ym`: 4 tokens, 2 early wallets.
+- `2i2WFxcBj2ah7iLowGnZkeEVdXvWR2xpJXXGqEA85y2R`: 4 tokens, 1 early wallets.
+- `2qo8jvuc49pFmTjmUHLiARSV6ppPTaE7gw27ZJ6DnNZy`: 4 tokens, 1 early wallets.
+- `3mtA8kFb8h5gDSR8HGMEKuQ1yah8wAViJQ3HzPdUr1EW`: 4 tokens, 1 early wallets.
+- `3zWgc3dLpQKZWFv1vQYU7utE7GJ44kEXmurYbSRQXMMa`: 4 tokens, 1 early wallets.
+- `7r5K1W2SpmDoZ7y87QtSPovw93u3bse1cg8N8WaN8ym9`: 4 tokens, 1 early wallets.
+- `8NmNgDKZYiqHfB4hgCcg2iYMi6UFcBCsvnatuVBqgZYG`: 4 tokens, 1 early wallets.
+- `8TuTs4KCzRQZNuiJZaEG2JikytsockR4tg4qAQxqt3YL`: 4 tokens, 1 early wallets.
+- `8bwEbwjMpgyUSk2ngD8TjofqgrejGLjpHCHftM4SET68`: 4 tokens, 1 early wallets.
+- `9XTR2ddvo5486pVtBmd52z8dcpMwsR4GTjRz4XL9oYT6`: 4 tokens, 1 early wallets.
+- `9Xj7aXj37aREWyyBSYFKYvZjSqwgsUoo9grVomJU8gku`: 4 tokens, 1 early wallets.
+- `AKdUe9zfRoAytCeNLzF7Kz8Deh4yFZRySQ2Rx4wVMucc`: 4 tokens, 1 early wallets.
+- `AafSV3e1bdTKteo9NpQg9iuLWHK5pG7hJSUYdzCZHQaE`: 4 tokens, 1 early wallets.
+- `AeEz9p5AdV4LwqmNXD7d2v5ZDwLcLdt9GuTUWKEmC8qp`: 4 tokens, 1 early wallets.
+- `C7BZwDSbAcytCHn1iVULbLFLebe5hcDVcuGfLkSsYowa`: 4 tokens, 1 early wallets.
+- `Cq1WshUES6mMLZYnkaiy63k9QmN53cEwpomuL2iGdwLN`: 4 tokens, 1 early wallets.
+- `E39Wqhe1w8wWz7gyoNFnHU8BdpL2GXRNYaGMEUyJHomG`: 4 tokens, 1 early wallets.
+- `EC1SJENgWiuJBnQ1Jwj939fHw9cnsMb39oiFDomNZTYh`: 4 tokens, 1 early wallets.
+- `EzUGhcucx8XJrnmfaBxhNyissC4KfboubodSDp7rkRkK`: 4 tokens, 1 early wallets.
+- `Fd2NAQHYYdHLMzAubLrGxWogop3EoUCNxwouvGwT4ACJ`: 4 tokens, 1 early wallets.
+- `Fkq1moifJz9WcFNMZ3AMnDQEjVyAZ6EzQxBSEgubiuEk`: 4 tokens, 1 early wallets.
+- `HHDZ65tY9cayPykLunUazf4zPcFmzSWZKHRDmV4f4CVn`: 4 tokens, 1 early wallets.
+- `Hnb17TVQHomunFBxSWDoTLiKPKefaogHDpM8R1NUHYeU`: 4 tokens, 1 early wallets.
+- `HpDE9s5Y6Ed3PxMDuwMBZRLnWFv6uLYZ2cCr9rU2ECnM`: 4 tokens, 1 early wallets.
+- `J7pHJSM3SSzjFGs1bV4DQa7ADkj84ynEtFBL92rQjUXF`: 4 tokens, 1 early wallets.
+- `Vs8mZKY6huXzXHRZ8XRegA7oAt5Fc27gcdpJg256JJi`: 4 tokens, 1 early wallets.
+- `QT3EFRuVnCV9aVMgZrAsfbqBo4LqYkQp4EAPKY5kYLk`: 3 tokens, 4 early wallets.
+- `7w75fZ3y3S2HeG6C9JFRVkLpob4Jf3bhGugkuVGtPMWD`: 3 tokens, 3 early wallets.
+- `EMXJqHznGSnSzeMyigBGQNEFw4EeaNDbj1UwaFTpp3sg`: 3 tokens, 3 early wallets.
+- `GCRJD52pGwcCSs4oswYxTBCPatxY1P6WpxCC9R9zty6r`: 3 tokens, 3 early wallets.
+- `HBxZShcE86UMmF93KUM8eWJKqeEXi5cqWCLYLMMhqMYm`: 3 tokens, 3 early wallets.
+- `2Kr5MG6mkBXWUGXkYVJxmgSR5sLaFmkkHGEQDUujmNKS`: 3 tokens, 2 early wallets.
+- `3Q3pUQ5fkRjJFaMEuH7j3NQut3SuMRhASU6BRAgwsKMV`: 3 tokens, 2 early wallets.
+- `4Eye49HG88GRDC4gwz3ezyG4TjJgoadHRpB4hpM24Lew`: 3 tokens, 2 early wallets.
+- `5Nq49Jd7VopaAqwmhA4sVor9btjUdJ1grF5kNy7DvzoV`: 3 tokens, 2 early wallets.
+- `5ZtzVYRuF7sEhot31S68xHRCKDMkDdFtTp1iujTRjowV`: 3 tokens, 2 early wallets.
+- `6MaqJPii4YWZfokkVFU9YH1tAeVayEV8ubBrRTt1xNZG`: 3 tokens, 2 early wallets.
+- `6dUaYX9Z6aQPY66BgD4yzu1saifGAZLrhQqF9BugJxJ1`: 3 tokens, 2 early wallets.
+- `93xp5iGTMw6SKXsjnSKmCHNuZ78MncihFoHrZXdqqivi`: 3 tokens, 2 early wallets.
+- `BHzUgVfdVVVqZF86v9S6aye8tizs4d8cZdAFXG6ku2EG`: 3 tokens, 2 early wallets.
+- `Bney7YfJwsNimbSYFzMimsCrZB78f41eazqMJei6iWZP`: 3 tokens, 2 early wallets.
+- `G83xr8WJL8BTvWVwSmmcnwvEbjitD8ZDZVKAVHi6tian`: 3 tokens, 2 early wallets.
+- `PMJA8UQDyWTFw2Smhyp9jGA6aTaP7jKHR7BPudrgyYN`: 3 tokens, 2 early wallets.
+- `2RLMU5oeepXyQ98u6vG6Ssusr4ZRFRH7RxDWvkAEcDi5`: 3 tokens, 1 early wallets.
+- `3AgQMVQ7QyXmwfEcz8UXaGyHRmFuYnnYsaTKvAr6XTi6`: 3 tokens, 1 early wallets.
+- `3ivfH1naWt6KcmAfXz7Sk235qsgn3aN6aMeFroaaGDCq`: 3 tokens, 1 early wallets.
+- `3pipuMLaV85fAtxYWJkmpFnPfsKeacyZVLgsAJ799LTz`: 3 tokens, 1 early wallets.
+- `4DiNzHdJiSBNXyYwv2V3VrfdSQ19KpX9PTsdom8uSFE8`: 3 tokens, 1 early wallets.
+- `4GcCNFbMnCw1GX157hHCYyrSZFoxbWBdPbvZMboZHGfV`: 3 tokens, 1 early wallets.
+- `4domd1azK6PRgeZD5bnGxrkf2KzBJmoq8U9aNDSGimRR`: 3 tokens, 1 early wallets.
+- `4jqn2zUtoLPqJQJctojVgXMnBEgPpkZMHhki6JP55snq`: 3 tokens, 1 early wallets.
+- `4vUhZCb8FHDUtVrY7Ud2jrQ4TgfEXMvq1s4KP5thj197`: 3 tokens, 1 early wallets.
+- `5DvkepygZ2reBb36dDHFGcJgLKCq4sBJGGme5k5Zcv56`: 3 tokens, 1 early wallets.
+- `5bf8yayaK5gSLxLY48ryuqrBpmrxVPrDzwLXE5u3Dj48`: 3 tokens, 1 early wallets.
+- `66tLEBatrZdSivwLHT1BbJYrW6mWE5yQDoCbmHDVQu7A`: 3 tokens, 1 early wallets.
+- `6gvSkLMB6j2dJwrcFVaTLnY4Jes3FKBdv62gxWFwjhUn`: 3 tokens, 1 early wallets.
+- `6hh9uNdE2idxjZ2SUit4M2z2tGKe14sNsLiN6tZNNfew`: 3 tokens, 1 early wallets.
+- `6xzdsrRyYvwu5M3z5cZFCDPfWzV1TZ1R19Anfz5NBNq7`: 3 tokens, 1 early wallets.
+- `7KV697MNagyACpt45qe74oMq4D4SFDW8Sd6TJYLSLDtk`: 3 tokens, 1 early wallets.
+- `7Vb6UZnndLUKx5pUwrzgPThRyo7tMnwZAZzgsZ67BqzL`: 3 tokens, 1 early wallets.
+- `7fUaeJtTSg9NcgerLpbByEAwsGyu2goXC4r3j439v4am`: 3 tokens, 1 early wallets.
+- `7moqFjvm2MwAiMtCZoqYoTAPzRBxxMRT2ddyHThQuWjr`: 3 tokens, 1 early wallets.
+- `7xVkXKdtCzprmLBMHuMVdM61AN1sgfgL6cGBZnNv6MWX`: 3 tokens, 1 early wallets.
+- `86W2aDu27zrxRhyb7iahuFBhisnLhEkJu7HGepEeWKwB`: 3 tokens, 1 early wallets.
+- `8YyVbhWWkoXZu4Az3b9QbgB4KY4FkCijFoyKB4LKaKv7`: 3 tokens, 1 early wallets.
+- `8h9qMcPD6EddExbrgaxWNh966WvWZVC8LtwoWYzM7mUV`: 3 tokens, 1 early wallets.
+- `8pmpt8nouiuNc3QWsJ8JMJ9NpjhrftetBirjoZzdg2vQ`: 3 tokens, 1 early wallets.
+- `8wggdJR2DnU6bnkRMD5ZPuppwWESa8mRcUpLG9iah9FV`: 3 tokens, 1 early wallets.
+- `91CJryJVoj7uwaeXikhcGktKk7yvPZRk7ua6Yz9furpb`: 3 tokens, 1 early wallets.
+- `99RvUgWCWZVmV1f68AJS43eLn24uugEtiq7Xx1LiyobK`: 3 tokens, 1 early wallets.
+- `9UEU5WSTcMfnuLZ2KFmSRpatYfabp4kaaBRZZwpRbRNA`: 3 tokens, 1 early wallets.
+- `9UY5ewzDsCbaybQEXRJ4woHy2UatvQnXjGSAELTiSMGC`: 3 tokens, 1 early wallets.
+- `9tbGNjKTcJiYNE8rnCBxnD9kateC7eeposZrzD35d5wt`: 3 tokens, 1 early wallets.
+- `A6jd66HXfccpoJFMr1AMzYDLM5EdJpHh72qWXxvqTzJ9`: 3 tokens, 1 early wallets.
+- `AcxSZuEJanntTJLKBNWmVrQNVourKhwLHehLbDLdQLUv`: 3 tokens, 1 early wallets.
+- `AsoixsLotjvqdo1tu2CfXga1YpHmc2ZQoS1gAuv6x9ig`: 3 tokens, 1 early wallets.
+- `BKZdjzgsvGyukhsFpUBV5nbwVUQfn6Y3hsnG7GNp2G83`: 3 tokens, 1 early wallets.
+- `Bcn2qwBC6nqnD2FcXxHjGNeQaWjqghwJcGFnQJHbej91`: 3 tokens, 1 early wallets.
+- `Bf6ZTJ5wrKk73N8Zsq4BSxF11gj3jF6jgqqdueLB2LS7`: 3 tokens, 1 early wallets.
+- `Bo1CP6htwmeb7KdS7FqFCGiAGytY9amm6gzHuBGTQNyz`: 3 tokens, 1 early wallets.
+- `BvXctj4DfHHLRUR6TCduTnPcjEG8y9UGQpnfWsMFpL1i`: 3 tokens, 1 early wallets.
+- `C8kdWFw16jtmVuS8mTcTknyp3XhNdmKm6cwKhhfh3LLr`: 3 tokens, 1 early wallets.
+- `CWEd7BM7SBUE7qnmMD56mUpjprCxPm775VPs9aGPdqSq`: 3 tokens, 1 early wallets.
+- `D8otN5fvJxSa4uYZSVyD8mcKNbvygBuDUx6V14KLry5U`: 3 tokens, 1 early wallets.
+- `Dyn24wGvD4TuB2uJofAbMy1daS2tnaQPMaQyHnwXxsMk`: 3 tokens, 1 early wallets.
+- `EGjaj49NJXJTS6ekHFYZhzCPNrq4Nadbbt2h8RHqdRWc`: 3 tokens, 1 early wallets.
+- `ErCFj962LNokSLesjFtHjvh8DoXD23P866zJsMS61KZ2`: 3 tokens, 1 early wallets.
+- `Ew9xCvSGkzTLSsuBR4cwN8bnFwK6dmVMoHarrqVQfJ6f`: 3 tokens, 1 early wallets.
+- `EyDaZgLDSfT5GYvvfGcDaQ9oCMrNbXP9yqMUnYooQYHM`: 3 tokens, 1 early wallets.
+- `FkGedMtvTxECqNaCyhuVMBVxx1aFDdrKDoR2mrXUHjww`: 3 tokens, 1 early wallets.
+- `GRFXCu8vhHbDz5NMwyab9LrYNaMgunMfwKB7281mpiAa`: 3 tokens, 1 early wallets.
+- `GYxtyhiD92WDbUxbGMtCmyTpwXejXFWrSjNEhFtCk5aZ`: 3 tokens, 1 early wallets.
+- `HLtEGYa9yQZdhK6xGA2BA6qqQh4FxLBajdEMcUzmrPrt`: 3 tokens, 1 early wallets.
+- `HS2MU94rj7bvjafDV3vkmiNQZfFUPPZsM3As8U9TME2Z`: 3 tokens, 1 early wallets.
+- `HSGt4LrgzToJp3hoGVFkEkD8Ru8gdJnQLZdz4icngrkG`: 3 tokens, 1 early wallets.
+- `HmnZtJPCcguuuZUxGhNd4hK1QNw11iBpRHzwJf6gaE1B`: 3 tokens, 1 early wallets.
+- `HptqceDZkTdBuErSag8pjmGb9ScozyT9nZiRWPniSDCi`: 3 tokens, 1 early wallets.
+- `HwEKcgZhVgyQMsw12eQH3JLotGBxqVdbiTEbHeFATXPR`: 3 tokens, 1 early wallets.
+- `J1mUTNN7cdPwCgBjjU3E6wnzk6dq1g8aME8o1esZ2wTT`: 3 tokens, 1 early wallets.
+- `J2L495ZPcJ6Btuyd4YqXz5uw7hpKiQXGcLvALwumabED`: 3 tokens, 1 early wallets.
+- `UUUU14F4t4BMN5D9NLWmxJfmZzTLEgtb11Gats6z69U`: 3 tokens, 1 early wallets.
+- `jHtGznWGEkWy3dQEfyyaKBrnZYVexVowU8iB5cauGLU`: 3 tokens, 1 early wallets.
+- `otkKFLrUvvpc22sX4Qm97cdrp9m5qYExD5LKakC97DM`: 3 tokens, 1 early wallets.
+- `rN2LtkfeC59LkAA9joNN1mJawUemeYvzCXsc4qgFZ3i`: 3 tokens, 1 early wallets.
+- `J6EJ6hXMjbHKpxj7e7gtWW1uiC41FsKZMKTRca9cvmBw`: 2 tokens, 3 early wallets.
+- `2hBhRbTDVy7RLhUbTCvCeWxtbbGqQACiFoF2xMf7usY5`: 2 tokens, 2 early wallets.
+- `43DbAvKxhXh1oSxkJSqGosNw3HpBnmsWiak6tB5wpecN`: 2 tokens, 2 early wallets.
+- `47QXPVyPDanybG9xCeCuSL3m6ZsZ6Xb4y7svjxK1frLZ`: 2 tokens, 2 early wallets.
+- `4BqQmoJ6gq6QJ1H6ZybmoAQSb2vjfiojV9rYhk2DbFio`: 2 tokens, 2 early wallets.
+- `4PY3MLrKPV4H3k477XYNC5ngGnYivstKhjc4e28ajYRu`: 2 tokens, 2 early wallets.
+- `4gKjjye5GDXR15s1VgB3ZMKVBf97H4DUfAZcst4KSRdW`: 2 tokens, 2 early wallets.
+- `4iieWMwLjxHpZLfChMTwJaaBnRUVAFQFpFfTuZ7rFLSb`: 2 tokens, 2 early wallets.
+- `4kAsV9ZBCZV6dvgpxxf5Yes2ZKUQ42nJvbwYUeUR9PhS`: 2 tokens, 2 early wallets.
+- `4rGB1UgqUBYKX6sLo8ZTapdFdn7WPZgut14dHKdvjVbZ`: 2 tokens, 2 early wallets.
+- `4raqd4tCEnm2yGeUocVqPgN2MPB1W6A3EZfC8LoMChvf`: 2 tokens, 2 early wallets.
+- `5VCwKtCXgCJ6kit5FybXjvriW3xELsFDhYrPSqtJNmcD`: 2 tokens, 2 early wallets.
+- `5njZuDSS2WTFkvWWsgv8Q4TfQBuCASKJAztc5yF2qLWZ`: 2 tokens, 2 early wallets.
+- `61fkjGWxFmEtsUDk8pjRwqg2fxbGtweMZpuahRqKC3j6`: 2 tokens, 2 early wallets.
+- `6tckHFBpiJ8YgYN8FUskvtvTpXQZ55g5LHeo1kvELoDQ`: 2 tokens, 2 early wallets.
+- `7HeD6sLLqAnKVRuSfc1Ko3BSPMNKWgGTiWLKXJF31vKM`: 2 tokens, 2 early wallets.
+- `87GLAadaA31EpMH6hTTDFVsiiCfkXEZfdAQ3akPo6zVU`: 2 tokens, 2 early wallets.
+- `8d9FNC7AgKLTCPKNd3MMkLLXZYLmiYFYR3vfXMBNJVNx`: 2 tokens, 2 early wallets.
+- `9CfqJYBkFoQrc7tStTR8GvqKkaP6Zsf4SPy1ewoEgWbV`: 2 tokens, 2 early wallets.
+- `9D8xSHWqF9NJWqCtn3rNxYEox63aCbWxYzTMfMur7Cc9`: 2 tokens, 2 early wallets.
+- `9cDDJ5g2wPqVZUZwpPuwqzxN7ouvc6QFauFwrX2TTTAX`: 2 tokens, 2 early wallets.
+- `9eQEiRSJ3ffjgbFRtX9qaxJ5M8SGUPBwmdj6WLGzWF66`: 2 tokens, 2 early wallets.
+- `BdZBQGZ3icyTGyhmQnzTpnWmQjDmHbGpmenWN6QPNipE`: 2 tokens, 2 early wallets.
+- `BpMhT2ZK88W5m6XEd95PDDMqiAbGuiwNVAiKYAeECYjf`: 2 tokens, 2 early wallets.
+- `CJCUQo5EV7QGgWhG1RmgdYAFCWeXSAPKr4LMU6nqBqwT`: 2 tokens, 2 early wallets.
+- `DGFW1Effv88XzXkgfgyoFfmefzEU5Pp9zWJACBmCSh8K`: 2 tokens, 2 early wallets.
+- `DhEsUaJkT1DzkFUWLCkU21VruJQZk1es4zBRhU9QjK9R`: 2 tokens, 2 early wallets.
+- `DsMFNuYhbHP6m4x3XEHV36SjXQV68WLgXPwqmPLDRsAN`: 2 tokens, 2 early wallets.
+- `EYn7hBrbB5QppFqHruc96uMQTMiRVn5TFP2mHbuSDhL2`: 2 tokens, 2 early wallets.
+- `EsynuVtJPpuU8xxmKnRF5mcJCyN19wh3CfNngEw4C2rM`: 2 tokens, 2 early wallets.
+- `FBfQEqTqKRDaPx8tdMnYfbF7GJESqpVq1h1YY4kUWnys`: 2 tokens, 2 early wallets.
+- `GXne39ift2dcXrV85sqcHS6vLBJXMMAShmEZH75YFfi3`: 2 tokens, 2 early wallets.
+- `HYkyzabqDL6ZKzmDvRrFkTbKBSgW7EYPdAcNznX6347L`: 2 tokens, 2 early wallets.
+- `HetaPyWvKKNswrcbSG9uVGiwfdpUwosdsuuoaHncudaE`: 2 tokens, 2 early wallets.
+- `Hmc2dLxZZ4xfHqn2wFCTBu11oCpYiuwsj23JBjJmD4ni`: 2 tokens, 2 early wallets.
+- `HsFQKgHiSh4nYDcApQiGuormM6bxKyFRK7dtYmxkszcL`: 2 tokens, 2 early wallets.
+- `suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK`: 2 tokens, 2 early wallets.
+- `21NRwg2NZFEYyrvCxYXtx9cU5TabMkuXrzApAr7tt7XT`: 2 tokens, 1 early wallets.
+- `2AEYXLsvbZ24UFvWvYocaafx7ig7LSj32rvUA9z2JtQ9`: 2 tokens, 1 early wallets.
+- `2BRbsWadYFHXaFpW9x1EdmNuaHeSzgYwfq5DsXaBehBD`: 2 tokens, 1 early wallets.
+- `2BjxxWBnqQr37RTeBJs4azzbGc8iRHQU2zJaZNem89qm`: 2 tokens, 1 early wallets.
+- `2KPYyESKbTKpCwVtVBChk6N1whXtRiD6YYFvSBe2Mk4r`: 2 tokens, 1 early wallets.
+- `2M1zhZqN1ahRzNxn6zrYu8QBomsj5iX67Mn28WF43ZM7`: 2 tokens, 1 early wallets.
+- `2SNH1HtPHSXmyAEsM61FfLqz7xJXxCm2ur5UYpbrfqgc`: 2 tokens, 1 early wallets.
+- `2SkV88PoqCgigc6AHArQYAffi4xrMzxihEhYt6ghKfMt`: 2 tokens, 1 early wallets.
+- `2TR35vZ2gaNdHm5gmpvXARz8Sr84jpz9TjLuHwAHYpx6`: 2 tokens, 1 early wallets.
+- `2UYEBF1wXNDhcsjgRBvG8sp7aWRLbzF3MXU8hdn2yNpU`: 2 tokens, 1 early wallets.
+- `2fg5QD1eD7rzNNCsvnhmXFm5hqNgwTTG8p7kQ6f3rx6f`: 2 tokens, 1 early wallets.
+- `2nvBrX3EdKqhpqUMAhCu3LcEDno1tkbn8A95aGAocUNQ`: 2 tokens, 1 early wallets.
+- `2rV4Noxv419KXFXwBZGmNocF6Bfn8FwFCzqHXxeS6Vmg`: 2 tokens, 1 early wallets.
+- `3DBkcC9mBpLjWufzD2RwRVrLHbeoZtoEpZxTTwkuJG7e`: 2 tokens, 1 early wallets.
+- `3LFzzenBs2uCE1PSqEGdpmT7kKPyHB5B3yFtpr3kgpAY`: 2 tokens, 1 early wallets.
+- `3NMn55RxcRyxvnRwz7dbXhHc4UQMdDhXtAu9sh7fU3nh`: 2 tokens, 1 early wallets.
+- `3SmnSapyT84wx74x5iJyf73UXS16i5nwaaFaLFtKKuxJ`: 2 tokens, 1 early wallets.
+- `3ajGGwXj4TgjgdW4hH6ALxGptUevgMb52Dxehu8Dzuxq`: 2 tokens, 1 early wallets.
+- `3b99xDNuMHxr9WHpMrpagH5ktBRKScyEA79sU57GimTH`: 2 tokens, 1 early wallets.
+- `3bSg6cJYt3SAxykHS5YgEHUS4DhTHHVYJFfh8PAQaAfy`: 2 tokens, 1 early wallets.
+- `3bjQeHurKbSR3bHXuKdLTLrFsxwysLLk8JS9EChgi4LG`: 2 tokens, 1 early wallets.
+- `3kBtcWLX3aaXEVG5dF6Nicg3dK3dB3GbRnkYSQm2Goz5`: 2 tokens, 1 early wallets.
+- `3u5RzXNjpi6MCV2BwVETc6rPkTk8PEYrmvpefqpgti6P`: 2 tokens, 1 early wallets.
+- `3xYfhqySdnV8aJvkXnhRRpKJjV4ske3YnjVzEcJw99L5`: 2 tokens, 1 early wallets.
+- `3zwCG3LbU7wPyPa6A4Ly7g7Ru4yC55tRotBtJeMzeq2t`: 2 tokens, 1 early wallets.
+- `48uyC7N8JA7GUqhCX5KHgksAqu8BYoTmiLGLQx78ETpf`: 2 tokens, 1 early wallets.
+- `4JmWfDRwEajVhbG1xVNWv2w3JgDvMq1Xj9ggQSJYtCoL`: 2 tokens, 1 early wallets.
+- `4VeDzmJ4LMPmd8CjhtnSMD7WEPYcD5N76gqQWvyE2rkt`: 2 tokens, 1 early wallets.
+- `4ZD9Jhp3JtJY6NEEWJQaEpZkw8vpJu2qT4rnPibm37ct`: 2 tokens, 1 early wallets.
+- `4bKW14YxGjLKqjRZCxyXPpNn46CmNdsCr1t7aSPiM3Ek`: 2 tokens, 1 early wallets.
+- `4f6ZJzTf8Sq3MSjtP9A94R8RDPksM7xwZ4ZNBYjsqepo`: 2 tokens, 1 early wallets.
+- `4kgP66iRUa4fv7Td77cuuii2baAzZtzPEy13QvTQ9TGq`: 2 tokens, 1 early wallets.
+- `4qtuaSHasndpa2nDJcWAmKKfgCZr8LLth83i3RfUNkvo`: 2 tokens, 1 early wallets.
+- `4r2Xk65EPbgGWUJ2GqspnMoqBsTJKsaTJCi5TFwsnZLC`: 2 tokens, 1 early wallets.
+- `53JXZS48ijb5iFr2KSo44gdBszE7t9gwYaqPx2yBza9Y`: 2 tokens, 1 early wallets.
+- `5AgJ3GpTnBwFhxUQzYNFmcCmXe27UkYMW25xzGmahPax`: 2 tokens, 1 early wallets.
+- `5EekJWsm3rgCzxtjpkUmxej7hz9EjTp6bo2wgMpKLtVP`: 2 tokens, 1 early wallets.
+- `5MFAw5y4yJ2ZRUJRZfjcCtDZQiLk3RaVP7G4Eg141dxV`: 2 tokens, 1 early wallets.
+- `5REmXqXpb3pci2zMgENAhWE2Ke8uSze5EUnFfFGTgyoA`: 2 tokens, 1 early wallets.
+- `5XauEY7xQQoH8QhfckTYR7dgiGSgi4fT2XN8NUguS75u`: 2 tokens, 1 early wallets.
+- `5o9TUc1XFGqW1w3jQG5AhJzh7DapiZXpWEpW2dyHfkSt`: 2 tokens, 1 early wallets.
+- `615ZwKY3zWTYTW1eAUrapDshBziKBiTSNgM2heWc4kwj`: 2 tokens, 1 early wallets.
+- `62jHHJcdJCAqwE5bBuWQfpfSQyiXyTRpPpTHxXn8wvp4`: 2 tokens, 1 early wallets.
+- `6DdSk3tSwjkLsMwESZN9SYpGuUkVYv76bDhUbztWc8ao`: 2 tokens, 1 early wallets.
+- `6Jmo6giE6mWTf1pFxbv4hSS5JSunXaMeqdwxi6otd3o9`: 2 tokens, 1 early wallets.
+- `6QNhUZmRrZh9KLgz4RaNEsnv6VnZLVadH1dbdJzcufVG`: 2 tokens, 1 early wallets.
+- `6YJ3g2x4panVdaxSKbRJZJDdh4AWWSVdRhvaWbMM7Bx8`: 2 tokens, 1 early wallets.
+- `6aRA5ria2P3qmMMadA6zs1R6QTFxxpXUBUEp35gR8Ax6`: 2 tokens, 1 early wallets.
+- `6hVFtyYLovFvsigSquo3wqef54m6tFFFJPzxMv7ZZnGN`: 2 tokens, 1 early wallets.
+- `6p8N4RHeaJMyVNaDuLjCeuJBgyhCCCh4BjsceP3BYFJ5`: 2 tokens, 1 early wallets.
+- `6tzfeomWmTybfVEf2aQ4yWHbHZMDhBfYzs6GkkS9oN2v`: 2 tokens, 1 early wallets.
+- `6xmGtMvbphSMax45f8qcepv2LPeLPrgxVSzNSd3BFDX1`: 2 tokens, 1 early wallets.
+- `73LrpdfjZF8E7unF5x1GHpcTvSX5SisSu6FTUqY4gofp`: 2 tokens, 1 early wallets.
+- `75N7DwtstWsc7oHE4KCynyAkwLwoReCgvvuaMthrXPso`: 2 tokens, 1 early wallets.
+- `7FWLMbttY6xeNZNfAsy9dscNgny7K6j2SvRmMSXtQ7ng`: 2 tokens, 1 early wallets.
+- `7G1Lxn6ahKg8PQFiJoZyZSt9JSZ1egB2dy9VeBYAghMz`: 2 tokens, 1 early wallets.
+- `7HvrZKuescAny7bYoFv4v7uwWqdPAbPWcCD95Z7g4zh1`: 2 tokens, 1 early wallets.
+- `7JULSQyxhhTBzKjbAuDuxYYvcM4QgbkxErTRA5oz6pVg`: 2 tokens, 1 early wallets.
+- `7PZyFCPKadHRFYVauXXuytrDAX9dM9X1PEkESnUtMhMV`: 2 tokens, 1 early wallets.
+- `7QVBbxMFdH7H8GaA9ohwpRBGqUMdrTTDQ5asNrF2s3Rf`: 2 tokens, 1 early wallets.
+- `7WFh9CcdP2uZHCEntLhbcU4DxSQUuys5YMWaSETgsCFB`: 2 tokens, 1 early wallets.
+- `7WGp6ZkX8JoKs8msMWzKQpDNTT7cQKQLVEtnR1aGDrFm`: 2 tokens, 1 early wallets.
+- `7q9ub58kXjXyaL8wURekkE2wVFDEmpFkyc3rr4yuCPxL`: 2 tokens, 1 early wallets.
+- `7wu4hpm8YBna94TSMBXrrYKDKPWqeFrJMYus9rKTzBeM`: 2 tokens, 1 early wallets.
+- `8RSK6oMRHGfTXm3oKHTpWUACHRvug4xGFjFCCKvGz5Zi`: 2 tokens, 1 early wallets.
+- `8thfjPKZQfWnG6NaYmN3deaXo6pMenEnnbuPRhzMmhBX`: 2 tokens, 1 early wallets.
+- `96rzLGhSUrUgw6Ai7WeuztWtJyyxdEKfAgKtFDg7Ae7c`: 2 tokens, 1 early wallets.
+- `9EdU9aj697y8ft9emnYGT4r1NUYFYtBNYSiDgDvXF6X`: 2 tokens, 1 early wallets.
+- `9KprMcpEmKZzjVXtGtLYQ9PFWivhj5toeU8pVVptDpQX`: 2 tokens, 1 early wallets.
+- `9QmhozJJdNkbGYYfFiyyExPTLi71g9P4fuGnHEqbJRY8`: 2 tokens, 1 early wallets.
+- `9UMT5rc1XhzqeMwNyxMAeR8Nq3FJ3RZzGzY9M4z7PmCu`: 2 tokens, 1 early wallets.
+- `9Uemm2d9nUkXBpPPYS8v3ALwethTRxCtre3CeVtmJunb`: 2 tokens, 1 early wallets.
+- `9agdHSZFfFpMBaWkdosM2CCEEjxozPc6sRrrmZgYrddm`: 2 tokens, 1 early wallets.
+- `9cvQRvZJ9JkxSoS5G1oq2112UmfddB3gPbozHuf8SBPW`: 2 tokens, 1 early wallets.
+- `9ksCj1TDT7z1f7vWzpd9JCYx3xJ3GkPwuNAZmoU2KsoV`: 2 tokens, 1 early wallets.
+- `9s4C4BjHoKtSwp5PgEtowSTWzxkmpA1nFsvJDNT1gQ9j`: 2 tokens, 1 early wallets.
+- `9sBMHMKXsrjwZjZKFwNzgJPpBsv16UCTba249FxtpWNw`: 2 tokens, 1 early wallets.
+- `A2JJrxHVxuAZUFSYX8ibMD5iFK1UEpetUEkW4wMeQbkK`: 2 tokens, 1 early wallets.
+- `A6TC5g9zvgFEfghfVbHFVYTEVjotmjkpmpuaApJNmW3v`: 2 tokens, 1 early wallets.
+- `AJmbna9ftuv9GtS8SAgBbJpWJpURrUJueLqwnCq2D8iC`: 2 tokens, 1 early wallets.
+- `AQ46kfYT3hW28Xg5gWHrJkzFSz1oGWBHC3FsTbqgMEco`: 2 tokens, 1 early wallets.
+- `AdnSEqnsrUsCNwVTw8bbfVfGJug9BKB8DgRzZAjrDhzY`: 2 tokens, 1 early wallets.
+- `AmN88ff21osxR5CWnawN3GWDbpKtReCzDABdGWQvdLyB`: 2 tokens, 1 early wallets.
+- `Ax6x5J8axuofRwPNEPkLsd3HnyTJJ8RPHtoALtWawqMK`: 2 tokens, 1 early wallets.
+- `BFoNkyQstuDmPg9iF3Jj5RqDqWDzAQRMYSphVhHwrMxt`: 2 tokens, 1 early wallets.
+- `BMTPXLDFpUCBbTm1iyLe7gWXxNMnG2Zc1xQFoha2dhPY`: 2 tokens, 1 early wallets.
+- `BV3oEDcQB5XGpZ2pmC9yk385YeZfzfAkpyD7nUN5BYXJ`: 2 tokens, 1 early wallets.
+- `BYqcsDN5spc54VRezXCrjHcxfg9pbiGMYD3NJ65vMin8`: 2 tokens, 1 early wallets.
+- `Bev8STF3nRAUNVunKDBCPmYv9K6Gr1XQE1HvfhX5DuRT`: 2 tokens, 1 early wallets.
+- `BuaZosYJeooUaFiupEmd6YCNojJGY2AJnSrZVhZHSmdR`: 2 tokens, 1 early wallets.
+- `ByXfi6NMiKXFEyR4RaFrXrkqbNMRBU63xeKThB7rKVfb`: 2 tokens, 1 early wallets.
+- `Bzjwvz9XDG7hpzKjBuMn8iuZ7BU6cjSqkfduCNDgvNc7`: 2 tokens, 1 early wallets.
+- `CPMAPMdw3UoWJUUccUa7PJfWEnmTDVuFEeRvbdkKfLe4`: 2 tokens, 1 early wallets.
+- `CTfmUVKVRrVLMBssybWstPsVKdDVrwUB1nX7CrmGDh1G`: 2 tokens, 1 early wallets.
+- `CqZKq8ekXG9CbBdtJNBU71rgy1W5156yw1LGvZriRmgy`: 2 tokens, 1 early wallets.
+- `D8uk51fwP8N8RR7Mb7R1XMRCkUdiQCrm8KePA3JDXJ1h`: 2 tokens, 1 early wallets.
+- `DHL9hiHLmRR4kQb1Y513W6BRss6yxzwkR6vLN85SzGDu`: 2 tokens, 1 early wallets.
+- `DbQ6ALE8LRhrNY7GZRY3fDf8S2oxpVmPaPrSs9q3XwB3`: 2 tokens, 1 early wallets.
+- `DbkCBqE29XoUk7fiuSR3cDkmDkELLF6f9g5YimeDjDL3`: 2 tokens, 1 early wallets.
+- `DzB5e5wJLGDEm3R95xdoSZD8MfWtC8T52ZreJYXqZHj8`: 2 tokens, 1 early wallets.
+- `E6dTSmM57h33wCzw2tqPbFYudUzS1zjwLHciysNhQV9p`: 2 tokens, 1 early wallets.
+- `EBNpfTHHU3bJdxHA3ktiKs2MUA66UwEFsmhNGDJbkaPb`: 2 tokens, 1 early wallets.
+- `EXueF6jatgRR3Dneof9ipvNxKnuAGM5HKZefUs8Ue3zJ`: 2 tokens, 1 early wallets.
+- `Ed8bLexkxP9UsJ4CrZyR22KyVUU72AEaL6RM2PSGcbwq`: 2 tokens, 1 early wallets.
+- `EkuXDEQKrBTqfadB1SecQ4WTLoVj4n2zNua9wUi7z5Wr`: 2 tokens, 1 early wallets.
+- `Eowmf2TxKyuagquWhF7QxWQKPMoYnprSmP4oXVrTe7dq`: 2 tokens, 1 early wallets.
+- `Epar4HNMGciNE53R2TsKR9xFb8TR9HaXhQYq8mxALedC`: 2 tokens, 1 early wallets.
+- `FAiw9NfTwvR3iiudfdRFkGwcYgYdPAmov68xgBZpwV74`: 2 tokens, 1 early wallets.
+- `FLzmJWsaUf1K2C2AUEWrepnzvnntfJPPVx67FEhBzuVu`: 2 tokens, 1 early wallets.
+- `FPz9HZv346Cv556ujDfdcdta5wQ4o9yopvmBCoHz44Dx`: 2 tokens, 1 early wallets.
+- `FS4kgJwxj2Z2Dq2D4rQ348BvBHC2dP9n7x9D4yK2ZPAS`: 2 tokens, 1 early wallets.
+- `FZpXAr3MNrTund754aMj95eXtQXCTN9eV43we8Lf8NNY`: 2 tokens, 1 early wallets.
+- `FeUFS2buvs1TzijbD4CzRWkziWfzJ49kcPFqi4EYQp2M`: 2 tokens, 1 early wallets.
+- `FsxdGbUT9kziKdez5fCpaBBJ8FDKXkqjGwaGuo2Mq3M`: 2 tokens, 1 early wallets.
+- `Fta3fmTRZvoT8WPX2BGrk6MAyDeG9ap7DpxjdQD6SvAS`: 2 tokens, 1 early wallets.
+- `G9qZLEJwX5UY2btv1GkwHZojgEbcsHgev2Ppn1QpAE1v`: 2 tokens, 1 early wallets.
+- `GDrX9NBTxWW7tuM756ki8LFaFhwNS2ZySyjsunNKkyWr`: 2 tokens, 1 early wallets.
+- `GEcF6sHyGDLrJ6NYzj2uEv2hRbSpwvLmmvm1k8A9VGhc`: 2 tokens, 1 early wallets.
+- `GGXp6RyM38MrzoRnZ82k3Rgp8XzKSoSo77bUXypPT7bo`: 2 tokens, 1 early wallets.
+- `GUACJy8rib8h3rWjgEzPBJj9qeCaz2KM1DCj1AnJGG7L`: 2 tokens, 1 early wallets.
+- `GXiqNxeHhWc42G79TCXFkvd9YR5BxfcVvnsqWS5fWycZ`: 2 tokens, 1 early wallets.
+- `GYk1dgkvGn3DxR5GhuuG2mnRmoaCNUtC3FASzeysUkT1`: 2 tokens, 1 early wallets.
+- `Gb3gxsnsRNcQdB8EcDdUmXXj1urp6CYhswdstRfTY9k5`: 2 tokens, 1 early wallets.
+- `GcNY3SXi9JfP3Wj9538vwDenhA6CxURAwZF2rCPXgrCC`: 2 tokens, 1 early wallets.
+- `GfDh8LF56byQ3ejp6yLFE2uuv6XZJ4c91St1SDyRLEfC`: 2 tokens, 1 early wallets.
+- `GqomapyKLieJPLZnntANrfmuvn5rttQyuhVz36zNdFf7`: 2 tokens, 1 early wallets.
+- `GuKhxddRMPMusqxZjnuagzNe7mpTgqESi6SSN62fHeFF`: 2 tokens, 1 early wallets.
+- `GvFd56B3MtbQiNyQK9pUM8N12DRvGBJnpxNArjghsomc`: 2 tokens, 1 early wallets.
+- `GzYoXxQnmuMZ4aroSbAfa8FwDQTBjUTgt7zqMLNsevvn`: 2 tokens, 1 early wallets.
+- `H13ASe44mjrcjV4Yq7TMabuGmmEEp8c83iwa72nLjnV8`: 2 tokens, 1 early wallets.
+- `H3n5JUhCL2kBmYV5ve4VLjZMcN6WKDuASxHATs5PYeUq`: 2 tokens, 1 early wallets.
+- `H9LE2QX2Sf8NzepfEvwa3Z23U65kP1dtjMR2NSRcDZKc`: 2 tokens, 1 early wallets.
+- `HD2S9DojnmY5nTQp4amGWnA91Zedf1b4DpqC5yw6zx4K`: 2 tokens, 1 early wallets.
+- `HNse1FjgsieNd8L9VfxFEZFSFDdHxm3aVrviaHBrcPBY`: 2 tokens, 1 early wallets.
+- `HUJnCTq4kZNSFfc5TAtJaSvvHvA8bMRRkQkrcTgznasz`: 2 tokens, 1 early wallets.
+- `HXyTRGuxHCudZM92ZMFGoGU8oqcxemfonpPYZTNPTMgg`: 2 tokens, 1 early wallets.
+- `HoVxKFZZrixCdZ84H18PrpBXh8QwcbwEjnGAufejxGbd`: 2 tokens, 1 early wallets.
+- `Hq5JiZfK3irLYYe2KQNr6Lid62VtyvJZM2VY3HVZEF4Y`: 2 tokens, 1 early wallets.
+- `HrMzhHxF7m2jFUc272wYMTch1ubrSrTMMhdX8SU1unzp`: 2 tokens, 1 early wallets.
+- `J69XgzMHsZMjaoDA9DHrVA6zzBdzoc8tCQk6LQfZWBsc`: 2 tokens, 1 early wallets.
+- `JCm6wzuybdmMj4kyXSVPP324Cq2b2qzudfv5gs9ckwvH`: 2 tokens, 1 early wallets.
+- `ZYxe1mxKvkEtkGC58V7L8H6f8PfVdc4ch2AkxJULwNB`: 2 tokens, 1 early wallets.
+- `boLt4T3KzcFxhENKgQMgPZ24pPDS2Kwawie877JH8sn`: 2 tokens, 1 early wallets.
+- `nRrN5xd9sG6G1sF84J9J55x6YwkGT1oByUsVbw9G5yP`: 2 tokens, 1 early wallets.
+- `phatP9mRBhkbbgr4nzvm9Duh4doL8xetMfJoGHRfqQs`: 2 tokens, 1 early wallets.
+- `tSvJ4jw9nxKW88QBELk2K4RswT2ijMyDbZ3bfe9dRqQ`: 2 tokens, 1 early wallets.
+- `v84npn1bP1AUwssY6dvfr8mmoFBWvD7ERgv2JE8r2w5`: 2 tokens, 1 early wallets.
+- `ybhs3gRRvtyeaWkc2DaJTbkesjmYnY34oYinpEbUGvP`: 2 tokens, 1 early wallets.
+
+## Repeated Root Funders
+
+- `2ojv9BAiHUrvsm9gxDe7fJSzbNZSJcxZvf8dqmWGHG8S`: 97 tokens, 720 wallets.
+- `5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9`: 97 tokens, 387 wallets.
+- `AC5RDfQFmDS1deWZos921JfqscXdByf8BKHs5ACWjtW2`: 96 tokens, 196 wallets.
+- `F3zEDm3ARFjUgP8Jx5CGYS89SX8EqDQ3z5dNB4jS1Dq5`: 95 tokens, 416 wallets.
+- `AkbiCvpW9sgYP8CCondVmpecNGyJ88jka6t8HXja7zC5`: 90 tokens, 146 wallets.
+- `iGdFcQoyR2MwbXMHQskhmNsqddZ6rinsipHc4TNSdwu`: 81 tokens, 86 wallets.
+- `FWznbcNXWQuHTawe9RxvQ2LdCENssh12dsznf4RiouN5`: 78 tokens, 98 wallets.
+- `3fsEw3NcHfU1oDnZKnWcztMZWta3mnTkjZRGmHmxugQt`: 69 tokens, 72 wallets.
+- `EPj6VRcqbkMUf9gKnJPSAPUsUYeosNYvnUhfZdwoqRaL`: 67 tokens, 113 wallets.
+- `CpjcPX63sPsWHMQLqY5qDnRDsfTpt7yn6d7h4xRV8o9g`: 59 tokens, 60 wallets.
+- `FBvxneTq8dY7WKxj924CseuveWzDL5tN9JuSW3S9nJkN`: 57 tokens, 33 wallets.
+- `6LY1JzAFVZsP2a2xKrtU6znQMQ5h4i7tocWdgrkZzkzF`: 57 tokens, 32 wallets.
+- `H8sMJSCQxfKiFTCfDR3DUMLPwcRbM61LGFJ8N4dK3WjS`: 56 tokens, 70 wallets.
+- `ECGGgZDLZr9qdRR5YK3b6NZi5aCLLPasf8EE5NQvPbdf`: 51 tokens, 65 wallets.
+- `EfwJn8cXCYhcGrsavxWSDbUFHPrCK9gvdCr6AVywFBPg`: 51 tokens, 64 wallets.
+- `2AQdpHJ2JpcEgPiATUXjQxA8QmafFegfQwSLWSprPicm`: 51 tokens, 54 wallets.
+- `5VCwKtCXgCJ6kit5FybXjvriW3xELsFDhYrPSqtJNmcD`: 49 tokens, 55 wallets.
+- `ASTyfSima4LLAdDgoFGkgqoKowG1LZFDr9fAQrg7iaJZ`: 48 tokens, 28 wallets.
+- `J8Sxd1NcbqT8DCu2hzSSSCn7SdZ4hBq2sWhY4y2rF9yN`: 48 tokens, 12 wallets.
+- `VuZw4xm73qBJubsWcHKGRChsvXLhxTS1Btxb7vcB84x`: 48 tokens, 10 wallets.
+- `7dm9am6Qx7cH64RB99Mzf7ZsLbEfmXM7ihXXCvMiT2X1`: 47 tokens, 51 wallets.
+- `Biw4eeaiYYYq6xSqEd7GzdwsrrndxA8mqdxfAtG3PTUU`: 43 tokens, 48 wallets.
+- `G2YxRa6wt1qePMwfJzdXZG62ej4qaTC7YURzuh2Lwd3t`: 43 tokens, 38 wallets.
+- `F8aaoMFeP7d1WzB5A3u3PCRJDHqEf7RhoG6qDXcQcWjY`: 41 tokens, 48 wallets.
+- `EU8z368kxJ4VzLfdpNG774L6DpAnav9d9cBBpbyH9Rr2`: 41 tokens, 39 wallets.
+- `57vSaRTqN9iXaemgh4AoDsZ63mcaoshfMK8NP3Z5QNbs`: 40 tokens, 40 wallets.
+- `7cvkjYAkUYs4W8XcXsca7cBrEGFeSUjeZmKoNBvEwyri`: 39 tokens, 42 wallets.
+- `BmFdpraQhkiDQE6SnfG5omcA1VwzqfXrwtNYBwWTymy6`: 36 tokens, 35 wallets.
+- `is6MTRHEgyFLNTfYcuV4QBWLjrZBfmhVNYR6ccgr8KV`: 36 tokens, 28 wallets.
+- `6ZRCB7AAqGre6c72PRz3MHLC73VMYvJ8bi9KHf1HFpNk`: 35 tokens, 42 wallets.
+- `57HfnzRPHqmiForDe2oSRDEbMpmXxxAfpNp1Q76hYgNw`: 34 tokens, 34 wallets.
+- `6GdqGGgrgmZdYfhxHWFi2GGKoiJLeMhxLJueUoKTxmbF`: 32 tokens, 36 wallets.
+- `7oi1L8U9MRu5zDz5syFahsiLUric47LzvJBQX6r827ws`: 32 tokens, 30 wallets.
+- `CH6fqSQbBjfzkyAw5kv5EucSJenfNAuLA8Dq3qmAGy6E`: 32 tokens, 29 wallets.
+- `teStzXQ6CwnVkhzzSxskjFJUUzsGuzokuYCf9w5Sjxt`: 32 tokens, 28 wallets.
+- `5F1seMKUqSNhv45f6FhB2cFmgJbk8U1avJw7M6TexUq1`: 31 tokens, 48 wallets.
+- `GJRs4FwHtemZ5ZE9x3FNvJ8TMwitKTh21yxdRPqn7npE`: 31 tokens, 25 wallets.
+- `4QxRHtMBdHonzGypX9KjoqXfMjVqDwSe7WdvjHA1bumH`: 30 tokens, 34 wallets.
+- `Amf2mf2Ciap5wYAEKDtGoQHfHPWaKbyFYhutMK46hTRF`: 30 tokens, 28 wallets.
+- `GBFSP3s4pU3dDKS2gCzvH8UpE4UJs3XGRuxmuWthHaf9`: 30 tokens, 25 wallets.
+- `BfP2dBiHbiqYvsmESsgHEL8wQtZt25sbDNKnwmNRB34G`: 30 tokens, 24 wallets.
+- `AobVSwdW9BbpMdJvTqeCN4hPAmh4rHm7vwLnQ5ATSyrS`: 28 tokens, 14 wallets.
+- `4DDFSVjX2hSBuvnBStyUYJuQwvqZLTuDeWL2bcKuHXxz`: 27 tokens, 38 wallets.
+- `Mc5XB47H3DKJHym5RLa9mPzWv5snERsF3KNv5AauXK8`: 27 tokens, 31 wallets.
+- `9FoTJww6TPNBa7e5rrPb9BDybxVhDYo5PPUpBdgJoFbS`: 26 tokens, 34 wallets.
+- `689rD478v4XcXNEfpokFNWn7nntpY8cHspXzwXMKWjA1`: 26 tokens, 20 wallets.
+- `AFKxebx96mnt1yn1ek6mcxeGDHmfrAWzo2h1fVdrrvWE`: 25 tokens, 28 wallets.
+- `u6PJ8DtQuPFnfmwHbGFULQ4u4EgjDiyYKjVEsynXq2w`: 25 tokens, 17 wallets.
+- `6EL35nNz5ir2byVR1fNPsfetq71BznjeT6Wdw8eBotMR`: 25 tokens, 9 wallets.
+- `J22N7rDd3J36P3QbTRc28R1UPpoRvCxa1tXfw9XyrtvQ`: 24 tokens, 30 wallets.
+- `BuHXgjWof8o3LnwCz7MADoe4GLZMzRpNpzKwfb3h86BS`: 24 tokens, 15 wallets.
+- `5zKxnTh4o2dXL1tmXpbPz9efCcc4c3z1Bva8N5UzKJyJ`: 24 tokens, 3 wallets.
+- `HBxZShcE86UMmF93KUM8eWJKqeEXi5cqWCLYLMMhqMYm`: 22 tokens, 28 wallets.
+- `4AcmsW4k1JKCRv9irityUMkJ8eMm1JSqG9rR5FcNdZvy`: 22 tokens, 2 wallets.
+- `2jb8nQfckg9mNJzaiRsxEoQGuAHXz5dnuDEiBUAzNxXo`: 21 tokens, 23 wallets.
+- `D89hHJT5Aqyx1trP6EnGY9jJUB3whgnq3aUvvCqedvzf`: 21 tokens, 20 wallets.
+- `F7p3dFrjRTbtRp8FRF6qHLomXbKRBzpvBLjtQcfcgmNe`: 21 tokens, 19 wallets.
+- `EBcfPtP3w7VKtYemb8ddCVYjXcsfiu61PPJ9vd89u4AU`: 21 tokens, 16 wallets.
+- `5X1KAV2EUHdVRTFzPThQnnZGQXRycDafCmkSjS6DRph`: 20 tokens, 24 wallets.
+- `B48kNVXs4YK4amkBCH2XokQiv1SeiVQGHDR17xDeKAAn`: 20 tokens, 10 wallets.
+- `Gu9viX22AFFtn7JH34exTTX6c743zkBV9qR5JdPMfaVH`: 20 tokens, 3 wallets.
+- `APhyMCpYjQ9RdEBn8cs4ifyBXjxAS5JtM3wYpWMJjsY5`: 20 tokens, 2 wallets.
+- `HQ8Mb1h5DCC2m9J3V9BcAkMj9o6zfLoCCuFvFREc2UHK`: 19 tokens, 11 wallets.
+- `bZDAfkARHkuKihHxHSyfNShpyhHXPSSL5xPZEmGoDrp`: 19 tokens, 11 wallets.
+- `4BANhFgDVFh9WL8MDb3jbYS1D7oW9LaoWaPAMpV65kbU`: 19 tokens, 6 wallets.
+- `54RTekQXXX2XkdMPrvfYgtGPHDxEhLWV1fef4u3SVg6s`: 19 tokens, 1 wallets.
+- `A77HErqtfN1hLLpvZ9pCtu66FEtM8BveoaKbbMoZ4RiR`: 18 tokens, 20 wallets.
+- `Cc3bpPzUvgAzdW9Nv7dUQ8cpap8Xa7ujJgLdpqGrTCu6`: 18 tokens, 17 wallets.
+- `EVtyyoCXZ79fc9C7u17bF6skmgfqXueNMNL6HrtWPMe`: 18 tokens, 6 wallets.
+- `9CHibAsuWZD9q7EVsDR2MUs9UddFQ5dPERS26cXNPUhW`: 18 tokens, 1 wallets.
+- `3oUEaNt7uL7pjZ6gdiAiEVRp9ZCcGRec7B5aSvXcjbWS`: 16 tokens, 4 wallets.
+- `5S2iHMLcM2vNT71QUk4QtapvXwaJ5i74ZeKVhUJyziiN`: 15 tokens, 23 wallets.
+- `AgmLJBMDCqWynYnQiPCuj9ewsNNsBJXyzoUhD9LJzN51`: 15 tokens, 14 wallets.
+- `A4fUQMPdeXDVuAxJf5tdouEoWF52atfZc3tV1Y9acKPr`: 15 tokens, 12 wallets.
+- `5ndLnEYqSFiA5yUFHo6LVZ1eWc6Rhh11K5CfJNkoHEPs`: 15 tokens, 8 wallets.
+- `46Zk9VL676HwJTMWrhFTxLdFeP1oL4vsCwRnK9g2HMbj`: 15 tokens, 6 wallets.
+- `6FBtm9MASG6fRudBP2w53ffdARzCVHvdD9SCrPu2VSF1`: 15 tokens, 3 wallets.
+- `CEHdauzuhhNxrh5WDdA9qnjwSQLAoTcy3bpMaRPGcMNR`: 15 tokens, 2 wallets.
+- `CuCApcakpKR5c2a2JnqYqmiKBNeiDhx2R6QccX4DeMfy`: 15 tokens, 2 wallets.
+- `GAATeBugAfzHyC82CFoKYYkXbUN6ZeteL177En4aCQf8`: 15 tokens, 2 wallets.
+- `HcMDKpLr5tDVDzaZRaBV4sdSUN254Jx2Ww8aWBX85QEb`: 15 tokens, 2 wallets.
+- `6ED9YuJXMRjUCEYWQGbbsy8fXW9ae9WtpDHYGEoKstjV`: 15 tokens, 1 wallets.
+- `EEHcVr9tk4wU58ctyKkDbmRhRv9aH4S1RH41TEB3zsA5`: 15 tokens, 1 wallets.
+- `4CLsJtrAcjJGzYwimbByHz4vgARqGz7VjMeeD11w1gU6`: 14 tokens, 12 wallets.
+- `43DbAvKxhXh1oSxkJSqGosNw3HpBnmsWiak6tB5wpecN`: 14 tokens, 10 wallets.
+- `827wk5SMxHQ5haSyCp2qX3srKy6P22KuJjTWyv1KvA7n`: 14 tokens, 9 wallets.
+- `DSYq7yD7ewHeDETSWFZZQzPYhGEdtNs1YCu3RduCUHCT`: 14 tokens, 7 wallets.
+- `EKF7tL1PxXE9UBPQmpLcsUe9uvGEAaX1ddNgLydv1XFS`: 14 tokens, 3 wallets.
+- `3jvM9vL8SAh1xVbXPkbd5uLiA5VaFN1VBMgb7ManU6vM`: 14 tokens, 1 wallets.
+- `BcKvePyFUjLG3meXpTs72FY5yuvGf2XAa2qXQp3E4qxu`: 14 tokens, 1 wallets.
+- `DQ5JWbJyWdJeyBxZuuyu36sUBud6L6wo3aN1QC1bRmsR`: 13 tokens, 11 wallets.
+- `7gCXbx72G9TqsXCi3dkDYC8xSb2Dec5S3Mq9VF6cB5DD`: 13 tokens, 10 wallets.
+- `7Gsmp3QhJj3Wkt9Pjg5H3mGnUwAALwQfTz2cJS7tzYfh`: 13 tokens, 4 wallets.
+- `4xLpwxgYuPwPvtQjE94RLS4WZ4aD8NJYYKr2AJk99Qdg`: 12 tokens, 14 wallets.
+- `FpwQQhQQoEaVu3WU2qZMfF1hx48YyfwsLoRgXG83E99Q`: 12 tokens, 11 wallets.
+- `9obNtb5GyUegcs3a1CbBkLuc5hEWynWfJC6gjz5uWQkE`: 12 tokens, 9 wallets.
+- `AxiomRYAid8ZDhS1bJUAzEaNSr69aTWB9ATfdDLfUbnc`: 12 tokens, 8 wallets.
+- `Fhbh1DTUDKt6qu9zVg8Q5VgnZa1WWWbxBxG6pCoJoggA`: 12 tokens, 5 wallets.
+- `AG7atvfS1vgJ6Y3r959LGi3XE6izmAitJH6JH6GViVQf`: 12 tokens, 3 wallets.
+- `49Pvtit7pgtrUpSBpmN8A3BnVFqZ14BUfvqd5VCAykbP`: 12 tokens, 2 wallets.
+- `9p4Qxov71uutY4VMwqrvMUb8BpXSo2QR25uBsVhaTkQA`: 12 tokens, 2 wallets.
+- `F1WYv89YB2T5ENvVjq5NA8aCFmPJj4uThoXUerDrbSnJ`: 12 tokens, 1 wallets.
+- `HnVKeQdZsb7vvqnikhqnW34Ntydf9f8JR78qYAAediWU`: 12 tokens, 1 wallets.
+- `kimkbEWyFh5gdkziZzeDMztwD3CbCP3PHtp39XG67pi`: 11 tokens, 18 wallets.
+- `3vxheE5C46XzK4XftziRhwAf8QAfipD7HXXWj25mgkom`: 11 tokens, 12 wallets.
+- `AxiomRXZAq1Jgjj9pHmNqVP7Lhu67wLXZJZbaK87TTSk`: 11 tokens, 12 wallets.
+- `5z7gxL5u4jCW9D6acu28LEw4RKTiBSG1EmXbtCX7efg2`: 11 tokens, 10 wallets.
+- `D8cJRpXaCWVK8c3doDq7Ymoz2XE4WyhFhbgNytWwqptA`: 11 tokens, 9 wallets.
+- `9PgnUC8KAs1zePf7U3h3v2jdJZxYpNyshTgJDuyqvTnE`: 11 tokens, 1 wallets.
+- `72tcEgR2vorCfo2XFyavXFSdDgpqbszHTWyt9eEG3YZZ`: 10 tokens, 11 wallets.
+- `88xTWZMeKfiTgbfEmPLdsUCQcZinwUfk25EBQZ21XMAZ`: 10 tokens, 11 wallets.
+- `DhEsUaJkT1DzkFUWLCkU21VruJQZk1es4zBRhU9QjK9R`: 10 tokens, 9 wallets.
+- `FUEiRTKsi4MozVStpKxdq3gdpxkfRjLnhvoznUcx69WU`: 10 tokens, 8 wallets.
+- `DoAsxPQgiyAxyaJNvpAAUb2ups6rbJRdYrCPyWxwRxBb`: 10 tokens, 3 wallets.
+- `E14xA9ASbrAzECUkUw87YDYEtWjSWTjVwYQfRD4NB9L`: 10 tokens, 3 wallets.
+- `FpfsHusKvqc9LhupVPB1R67HuCiWDKrZMN4SJitrMdTj`: 10 tokens, 3 wallets.
+- `GzgzW9SCpi1ZMMXeGHGAPFvVbpVMS7oFCRkEhqYZTzvF`: 10 tokens, 3 wallets.
+- `En6uMwunpPmcvXXBuDvuf8zwAY2yCFtxfBBUrt4ZArM3`: 10 tokens, 2 wallets.
+- `GfViU5vGuBHDdXMTvZRa9sS63krdCAz9siXAgbwf2HsL`: 10 tokens, 2 wallets.
+- `Dv34prGm2BT7Ph2n6qKLgzeLgjnii87RJJ7Db6ZQQvKM`: 9 tokens, 13 wallets.
+- `8Tp9fFkZ2KcRBLYDTUNXo98Ez6ojGb6MZEPXfGDdeBzG`: 9 tokens, 9 wallets.
+- `2snHHreXbpJ7UwZxPe37gnUNf7Wx7wv6UKDSR2JckKuS`: 9 tokens, 7 wallets.
+- `5bXMabHqB9a4SmyVw9w84nRtySGFTuCMaqcpmSmNoNiM`: 9 tokens, 4 wallets.
+- `BrGihgGjCmpu2p96rou6GQj3sQpwgeud937jf4RvZP9G`: 9 tokens, 4 wallets.
+- `ESJYxHNvEpqDMywGUD6Feo5JtQqBR6gHoainv1axUC8s`: 9 tokens, 2 wallets.
+- `9fnbCdCystXJP5Ggwub2AZL74B7Vusj2KDPAJQEgscgS`: 9 tokens, 1 wallets.
+- `C1RuNDzQBgfFaeNwTLX5ss5K9Sb8Zn79nQBADyNuh3Dy`: 9 tokens, 1 wallets.
+- `8QCVZ7KL65pBhUxbvfwbyyg4ronxNAEXbDrGLYLrRNn5`: 8 tokens, 9 wallets.
+- `A9BP3ZP1wH7H3JwDXTThcC6fb7zUW5AfrLXbHHqBQsG`: 8 tokens, 8 wallets.
+- `7b9NQcnK1jjE4n13mXybtLoMCL9VSik7NJenFki14fLC`: 8 tokens, 7 wallets.
+- `Hmc2dLxZZ4xfHqn2wFCTBu11oCpYiuwsj23JBjJmD4ni`: 8 tokens, 7 wallets.
+- `3iai9tqkbkAxq3uvSEi7KLcQbroDPgcF72N3hAjkWA3E`: 8 tokens, 4 wallets.
+- `5hpZag8AmNHtDnfs3oC8W74HRuL4WarDviYnAfHbm1XJ`: 8 tokens, 2 wallets.
+- `5HsChPkobFXfABqQgf223a4sdsyYuWecUG2VJXfCxE3r`: 8 tokens, 1 wallets.
+- `8gQGv878ydpjjLqWL9Z3mUeKifQzwEe7uaJxwzniNrAW`: 8 tokens, 1 wallets.
+- `AjvTRk59JnUir6VNU6T9Q7L1amSqFrsP62JAQdNjeR7g`: 8 tokens, 1 wallets.
+- `B1noB7cAikcp8iR95yAhtWyc7q8jnzUv5L2u9AS9vPRD`: 8 tokens, 1 wallets.
+- `GoCE4JwdgJgSv7PRy2CFZZQLrv69MWyanM5F1E4NXggo`: 8 tokens, 1 wallets.
+- `95ipm63sgxs1oHtn9rHfuvPKRRA6ZGeL7yBni8aynDW5`: 7 tokens, 7 wallets.
+- `BGXGZvwKDhJbXJHR9NRPof7DK4ZNFPyq4Hr9q5gmRJyJ`: 7 tokens, 7 wallets.
+- `EMXJqHznGSnSzeMyigBGQNEFw4EeaNDbj1UwaFTpp3sg`: 7 tokens, 7 wallets.
+- `6brjeZNfSpqjWoo16z1YbywKguAruXZhNz9bJMVZE8pD`: 7 tokens, 6 wallets.
+- `HxEpRcehmKJTNECxTcWYtRs4DxyD1FCXBVTQ4jERr5BZ`: 7 tokens, 6 wallets.
+- `32ngBETKhNWXei5choskVLneHzQzxcaaDEM2nDzgG9QW`: 7 tokens, 3 wallets.
+- `46YixXTzvBCMRiqBiAQ7gZ2uLYFzob9Ansqns4tGGoAy`: 7 tokens, 2 wallets.
+- `5gw4qDkMhX81g2PHrhYg23RLcF9KWgVNMHHNdYgALaGi`: 7 tokens, 2 wallets.
+- `85yes56w1NijxFwDbLeEJnKsUUzibLr6nwE1YsHwgVkB`: 7 tokens, 2 wallets.
+- `4uR3i2EfzGBMDoNUKGnnzdCvKa3cn49UJQwBt4YaqHc9`: 7 tokens, 1 wallets.
+- `8TuTs4KCzRQZNuiJZaEG2JikytsockR4tg4qAQxqt3YL`: 7 tokens, 1 wallets.
+- `DCxq8uGBD1prJNbC1kgXWwhYtaXWP8d8CXoyKbYaHNb5`: 7 tokens, 1 wallets.
+- `EQrBF1UsrRU2PY1XzEpqRf1LBrAScco8LZPRiTGCv53J`: 7 tokens, 1 wallets.
+- `EeVuoLc8r744EmSiJKEbBuJhFbogdx3yxSjQmqtmFjxj`: 7 tokens, 1 wallets.
+- `FWsiUemtwodckXXjzHd4JRFsuuHpHJoRscN9oSPLLCJj`: 7 tokens, 1 wallets.
+- `G8cPR7uJAcQVxn27WLqSL9esgBEfSB1amMoxt4Eqf1vC`: 7 tokens, 1 wallets.
+- `2h8JJq1kAsJvKYVrsEqwhQTcy99p465esHUFcJA94QY2`: 6 tokens, 7 wallets.
+- `4NyK1AdJBNbgaJ9EsKz3J4rfeHsuYdjkTPg3JaNdLeFw`: 6 tokens, 7 wallets.
+- `FfxU1AEhdz2q16TAmzgG6wdYP3NKsFz5gkYt4DprYBsH`: 6 tokens, 7 wallets.
+- `2Kr5MG6mkBXWUGXkYVJxmgSR5sLaFmkkHGEQDUujmNKS`: 6 tokens, 6 wallets.
+- `5BCgqYg51CANe8qUMPYWJsqRA4Y8HnyfmvkoJxcEmQfY`: 6 tokens, 6 wallets.
+- `xm4dC6XCRH4MWUXCNNZ1MqYm8jZjnabV4BHS7Eyoj29`: 6 tokens, 6 wallets.
+- `Dn74e5D3RWA79MfB58CxoXyGWyhwuu9sDqDcL47bvm3q`: 6 tokens, 5 wallets.
+- `4Ri6Rd7zN6M6H8jF3vPc6MqnmFioVcPaizZt3crLVGXd`: 6 tokens, 3 wallets.
+- `6Aj7L9qekp4enKGKr5GrGP7bK4p494pCqmt7BaVAgcsG`: 6 tokens, 2 wallets.
+- `ATwnkyg654y1Zys7s1vLVPtZzErZpH1ZxiCZvSWpvhmi`: 6 tokens, 2 wallets.
+- `FALMyY4KdHXYdi6A78z7ysFJfP2MXXcFMB2At2fPywES`: 6 tokens, 2 wallets.
+- `rHgiEB6j8NyJBkJvJ5y9dEqitgL7xqoEmw431Q6qmbH`: 6 tokens, 2 wallets.
+- `4frBKrDzR63R8jAnZDkLTYRzUVByax6duBSruHeqdyv4`: 6 tokens, 1 wallets.
+- `58F3sNyLPxJSHx8zbEMTKddVFaJXBMbZe4KVnbsP96sy`: 6 tokens, 1 wallets.
+- `5CNnTuisNNkq7wH75soGHzEBNqYKPxxgac2rdZqAofBo`: 6 tokens, 1 wallets.
+- `5bb5kQKhp4zT3MYuFp7QSpkvJkghfLp6yjQbvTDLK2vy`: 6 tokens, 1 wallets.
+- `7s466j3RdULGfJjjVehcx32bVUeMyACgTzs3Z3tBwDJg`: 6 tokens, 1 wallets.
+- `83Fh3RRxWPL1cJEH13SQTPoFiQ2AynNdcKjTx5Naznj8`: 6 tokens, 1 wallets.
+- `89HbgWduLwoxcofWpmn1EiF9wEdpgkNDEyPjzZ72mkDi`: 6 tokens, 1 wallets.
+- `8vKELWvobdxNVodWFBmqkAFxqgaa6K3w6W4yvE8t8b4q`: 6 tokens, 1 wallets.
+- `AsoEput4ppv8vGQdcNypQqpKDB8V5mTmVQf3RAcWCqTT`: 6 tokens, 1 wallets.
+- `BG8ZtBbibcEZ7SCzUU7D3HjBKyw7gM3XVsXKhvKgTsfk`: 6 tokens, 1 wallets.
+- `BiRSoKU43cEFfQjntjfkRdsSmGpc9qF8pUnZDZfYpBqm`: 6 tokens, 1 wallets.
+- `CfYz1rUY5cBBk7rv9DDJRP1edTaZGe5ZjyhgYFVbDT33`: 6 tokens, 1 wallets.
+- `DN9AiZxa3zhxsphoxTpTR7wkXns3LpVq1mqrs1KMtsmX`: 6 tokens, 1 wallets.
+- `EvrZDaPt9S4MNzbzMZaPdG2KNyzu9w9TitWBu2Es3pJg`: 6 tokens, 1 wallets.
+- `EvsnmAWviUs9S2tiyK6RAwH5xUoaUFYiGHKHUMGk3ZGP`: 6 tokens, 1 wallets.
+- `8mowmVCEewZ9W2cEaQyQeQEeSxhGr1hvRviLwozwNtBt`: 5 tokens, 7 wallets.
+- `2nvBrX3EdKqhpqUMAhCu3LcEDno1tkbn8A95aGAocUNQ`: 5 tokens, 5 wallets.
+- `3RgDwC2XFoc1SoyUVUeFN2gX5qQirrcgaeXuLhouGCMb`: 5 tokens, 5 wallets.
+- `5g7yNHyGLJ7fiQ9SN9mf47opDnMjc585kqXWt6d7aBWs`: 5 tokens, 5 wallets.
+- `8Czzjeh2igeE7gSsbuuXVZUmZZ42yZTCNUZoZcCGRKdr`: 5 tokens, 4 wallets.
+- `HsEJqJhzJPrMGopNtRW5PgTfZqrnZDTwtEUMfPx3Pz5P`: 5 tokens, 4 wallets.
+- `J1BDJEdvTmmcjeTMVTHLPaaNvuQ3mdxeuWEM1YyMksLy`: 5 tokens, 4 wallets.
+- `E4rU2A9xN26hM9Ybjj1jTWnz4GZK2Cu4bsLdE6g1yV4q`: 5 tokens, 3 wallets.
+- `J2L495ZPcJ6Btuyd4YqXz5uw7hpKiQXGcLvALwumabED`: 5 tokens, 3 wallets.
+- `2zeqw7x4LrRXJzK8ydx6qw2EPYF7eynLBXwd9oJrkswA`: 5 tokens, 2 wallets.
+- `273jG1gGxC7W5HdLfKLR2HhStjBkgAkiszpUHi921YSR`: 5 tokens, 1 wallets.
+- `41bHxJeGsNan3Nk5dtYYn5bioc8kpZ9borRGc1TGbAks`: 5 tokens, 1 wallets.
+- `4SNG1GJudWdPB2sJXuu9AyCHQJF8Qg7cyqBJ2oqR6ACW`: 5 tokens, 1 wallets.
+- `4bHUoZY36hmtW1FbJ1XJ5umWmFWXxx9voAe94M8PWNpL`: 5 tokens, 1 wallets.
+- `6f5REdk3QGK65aTa9nfw8B3r7f7UnwsKPnr7JWy7CKbS`: 5 tokens, 1 wallets.
+- `76yGatLCWsbBXLumYURqgb6mV2gzTwAvgPKhKBSnDimu`: 5 tokens, 1 wallets.
+- `7K7WwY9yEMpbAacgHvCfquyCHpRkVyNdroNrXZvj2drK`: 5 tokens, 1 wallets.
+- `8NmNgDKZYiqHfB4hgCcg2iYMi6UFcBCsvnatuVBqgZYG`: 5 tokens, 1 wallets.
+- `8kLKsGS5qfydG7pfFbJSRAdx8CBhaePSHTr1yFh44bZ9`: 5 tokens, 1 wallets.
+- `9qfqFtj3DDdGAw8eMh8Lyc3Zbeeud4zxCPaAzHME6adp`: 5 tokens, 1 wallets.
+- `B6gSJMXRJ4pSXtommyAkXf9rkCyGocM1Hn98X222z3Q2`: 5 tokens, 1 wallets.
+- `C3DzwFnpw9nwwRf4Xr8j4V8DrwfjawnuGXUPgYJJx6te`: 5 tokens, 1 wallets.
+- `C9v3H5zA4jHYjQ1wj3zRScC3hMnHRSpcYNBt4hbHn7YT`: 5 tokens, 1 wallets.
+- `DReGN3hKwQN5NqFRv1vFTAgKQUZkanYZKfuYi3RnRaSY`: 5 tokens, 1 wallets.
+- `GcTQ5efBGcatMjG2Vef8DPuerNSkzTdQHbVF4NGTBqKn`: 5 tokens, 1 wallets.
+- `GhvjpZmsAiemYChc8vrJNktJw2viVTQ78WeDQ337eCQD`: 5 tokens, 1 wallets.
+- `LywHriV2Ghkx6jKhthiqPSr4f6mjppmKGhJBTWMctmH`: 5 tokens, 1 wallets.
+- `U3ty8ZwdCzSBRNK1VGuzxx9xTMBJ63RyERayWx5oSyo`: 5 tokens, 1 wallets.
+- `37kGnQ4gzX5LCBhXxAiGkaHX33bSX2aSiWxYjqapGKWe`: 4 tokens, 4 wallets.
+- `3PcFYzZaoYFAXSbBSUNFakm96oN1he3TT3ws2ZEpMKis`: 4 tokens, 4 wallets.
+- `57WCAr4QVsgPSG7xd4CVPHYonP5s8EGgsk31fhhcGiKC`: 4 tokens, 4 wallets.
+- `6xfPFKnwv48XvxpFf4athewqGFvSTKQcMmfzYapgZ2sG`: 4 tokens, 4 wallets.
+- `6xh9dCmarfheM3GZsmaiB85n2LsMc3VJcQQTb47ETCpD`: 4 tokens, 4 wallets.
+- `982h1AkQEvPHbRr1a3JDJgiqFYs52VVNNgjWinoCyvrE`: 4 tokens, 4 wallets.
+- `AqqiPxP5S8TdnoRKBbFAZMDrebcEQLMorM4vwXxYkvZL`: 4 tokens, 4 wallets.
+- `CSEncqtqbmNRjve42sNnbs5cCSmrjUNsAEwc17XY2RCs`: 4 tokens, 4 wallets.
+- `Cp1WzVy6WLuJvrTsTJzdx4g9WwLZgfPFZxaNaNLmv7qL`: 4 tokens, 4 wallets.
+- `FBfQEqTqKRDaPx8tdMnYfbF7GJESqpVq1h1YY4kUWnys`: 4 tokens, 4 wallets.
+- `J1BGeK3ojLF5dqaNFLg7WkQToyYisY79pWvHHscTJcpD`: 4 tokens, 4 wallets.
+- `sWZsb5dzwQUKWA3DdrKDtw9mVZWrmAJJhqPK3iuGJMH`: 4 tokens, 4 wallets.
+- `AaZkwhkiDStDcgrU37XAj9fpNLrD8Erz5PNkdm4k5hjy`: 4 tokens, 3 wallets.
+- `2LSncYjJrRsorTTG7UeTia9rmGo8pw8JtaAoYbq7CV5F`: 4 tokens, 2 wallets.
+- `3V11R3pEGSt5XeRaoLDcCdkAB8zVSaKRCm8y3uKBgnsr`: 4 tokens, 2 wallets.
+- `4kgP66iRUa4fv7Td77cuuii2baAzZtzPEy13QvTQ9TGq`: 4 tokens, 2 wallets.
+- `88NHCphrGXyP5sHxcStQSFsPAQyXQSeLWuUFzNWLzT3P`: 4 tokens, 2 wallets.
+- `99Xy6CWaX9Gi6jDs4Pju9UETZPGXFFDpG666V5D86d6w`: 4 tokens, 2 wallets.
+- `BTLG71P7eH7hxT4MMv1DUaSkH6G2aYp7hRKqocjeYrSy`: 4 tokens, 2 wallets.
+- `C9EQw1s7cVEhywcR7yPFiurThNigqNrCYHTxWekAWRm6`: 4 tokens, 2 wallets.
+- `FzZ77TM8Ekcb6gyWPmcT9upWkAZKZc5xrYfuFu7pifPn`: 4 tokens, 2 wallets.
+- `HtvyWRnxhkm8GwdDQZuqHbf6ZR8Pi99aGjxCsbke43Gd`: 4 tokens, 2 wallets.
+- `UsGASwdfVpXaak8ZjvYEN4CPve91chx7YtUeyrq25ag`: 4 tokens, 2 wallets.
+- `4X8Vj7PuhjtDuU3r8LrJv1Z27dnzFvd9rTLwXv1adXVW`: 4 tokens, 1 wallets.
+- `5cPfNrmpCaLUV5Ji5LJHJatWbb41996W3HnrBgkzEBRb`: 4 tokens, 1 wallets.
+- `5uNuVS493MR7ELATQWPTkBw691JLQPNecpzd6sCa5bzX`: 4 tokens, 1 wallets.
+- `7FfB2zQRYUQwpPzkRxAeg2mCBGeCRKp4PCEeULJA9xTo`: 4 tokens, 1 wallets.
+- `7TurS8qzRHQHiaZuD1P511eD2ZYs7a3AwPBhKfZZ1TsN`: 4 tokens, 1 wallets.
+- `7ZjuE9qShyeXY8c2LWedeuYS3MZL7T2ZnFPnb7ZsuYfq`: 4 tokens, 1 wallets.
+- `7nzEQip8bS7edWmaqyf1yC1hvggx754PLcMa9UqKA2cf`: 4 tokens, 1 wallets.
+- `8cuk2oZtaE7tprXarmzKokHwu5mxzicjQ78hvHFYkKw8`: 4 tokens, 1 wallets.
+- `8vXBHs6eE53pnSm5oGb84Zo5js4534GabyqnD1ycYy2M`: 4 tokens, 1 wallets.
+- `9HV5mTUyyEqzTWYQZBPRTr1KVTQ19q163dB7HfwJJo2A`: 4 tokens, 1 wallets.
+- `A2JJrxHVxuAZUFSYX8ibMD5iFK1UEpetUEkW4wMeQbkK`: 4 tokens, 1 wallets.
+- `AYRNomUoh1dggsVTzLZ5tDb84zWn3RBokKHm8rCFwWhE`: 4 tokens, 1 wallets.
+- `AvmoaxAG6Uwh1f9HjrxdNzc78ach9SkZp9nLpeoChQBa`: 4 tokens, 1 wallets.
+- `BPdHzYBbDPF1oBMexqVdM3LBNscoWgNR1hjf4RLFSK3h`: 4 tokens, 1 wallets.
+- `BqZ5JypJLR4VQcXQ2LJtBZxvfEy9qcQMxtNQ5TMYdmBQ`: 4 tokens, 1 wallets.
+- `BuLwdEjWTHHGUiPpwiPn4jMCCRkHVcEFkViCk7cB5gY5`: 4 tokens, 1 wallets.
+- `CLT8ep6inWM4FhgNhe3pN5yBUrTkBSm7eTcrn19JPGZi`: 4 tokens, 1 wallets.
+- `DBj5PCBzXQG1wqw5Wi7VY9Y6Ce5VirBPU7pnYFvKSshf`: 4 tokens, 1 wallets.
+- `DeftBKL2RPHizRMsiWSGKYdkbtCCdyWY22DNQfHfdgt7`: 4 tokens, 1 wallets.
+- `FpAA7eBBmQ7jMYW9SQLPZPiSA73v76BYLZJG8J7Gg2E6`: 4 tokens, 1 wallets.
+- `Fqd6vwLNSdzc9sW3GRGVVMVgBQDR2axyXQByGsKNFicu`: 4 tokens, 1 wallets.
+- `GSvtmUkVXcKFKJNToCYhmzYB8DDARXUzarmh6GPtMMRw`: 4 tokens, 1 wallets.
+- `H3LkeBLx8s8B9XuzdBhQCqw5QPaMHcbMYC9PsfKgdLkQ`: 4 tokens, 1 wallets.
+- `VejDZjHYpwGgwYisuDHVrsj9ryENj7mSpi5WWs2awfy`: 4 tokens, 1 wallets.
+- `cpaDpszLwgWUsVc2uc2S4Sv49dtLpkoavF4QCGjjqim`: 4 tokens, 1 wallets.
+- `J2tKRPLrfuqLcM5WXzeQ5zhZjT7dkZTwuzZ8FDCYXxcd`: 3 tokens, 4 wallets.
+- `2UL8hbNaoErAYNePqgQYPP9yDCDRZGWbzKW4krLqkhNL`: 3 tokens, 3 wallets.
+- `3EFPL3LixQ9LnwJVQd1JPCotc2NV6GkrFp1jBA1QkoST`: 3 tokens, 3 wallets.
+- `42nQHDpyUQ73XUVcEAqG1c8MTiCuioGoeeBAFHJCoRRm`: 3 tokens, 3 wallets.
+- `4domd1azK6PRgeZD5bnGxrkf2KzBJmoq8U9aNDSGimRR`: 3 tokens, 3 wallets.
+- `5HQZd9ovzAF1TLnHRAq1zcSnXC9HAp3EwhoxMHvo8rxB`: 3 tokens, 3 wallets.
+- `6s85Pgnzior5LcA9UyctYndAv6n1aGy9E19ybHY8pufj`: 3 tokens, 3 wallets.
+- `771zujoMQDHMGyBWu363HNHr3PPXbSkA7X5kiQBpPNSz`: 3 tokens, 3 wallets.
+- `8VUwMyYHkNn5qeC3Z2JY5k4BjkWXxNHoqvwSeWCSQKFu`: 3 tokens, 3 wallets.
+- `AeBwztwXScyNNuQCEdhS54wttRQrw3Nj1UtqddzB4C7b`: 3 tokens, 3 wallets.
+- `BBeft5QozTYdDPagToAjvcvCwBXXjzehxqs24BtCLMRD`: 3 tokens, 3 wallets.
+- `BqZyyCbokradQgbQkJeq9m3NtBz72Z3UjfAvs7qkcdNZ`: 3 tokens, 3 wallets.
+- `Bt5GSgDCwSN9yTwcT9RiDrmFDxjg6reCMoqpwfuc3pmq`: 3 tokens, 3 wallets.
+- `CdcVvn23Bzxj14ibBe7xRcK3g8QbrcXKYYQpqkTrW1KG`: 3 tokens, 3 wallets.
+- `GT7fvH15kWfQhCaMkV4JttcRvBEGUnLpL9g3HSF4SK3a`: 3 tokens, 3 wallets.
+- `GnWFhrfgciKVoqgAqarwWEQ79NuD2LnRd9EEYaB1kUoc`: 3 tokens, 3 wallets.
+- `H4YJ7ESVkiiP9tGeQJy9jKVSHk98tSAUD3LqTowH9tEY`: 3 tokens, 3 wallets.
+- `HWjmoUNYckccg9Qrwi43JTzBcGcM1nbdAtATf9GXmz16`: 3 tokens, 3 wallets.
+- `jgJtDpx8Vvd7BdXapHMamygH9wJANXtmPHWkAvnnRJc`: 3 tokens, 3 wallets.
+- `2J63XsqjCtmMh2e2KF5epVTd63DgKs2P1xCsnEkP8ELx`: 3 tokens, 2 wallets.
+- `37B54AfYYzMED31DCNKr2QvMKdQjsGmkj6joghcgSrNF`: 3 tokens, 2 wallets.
+- `3eGdjMdQqFUNc4G64BZb7YCALDEaturLUWcixjJfKxEh`: 3 tokens, 2 wallets.
+- `3yhYHk8tR3WrUEcXAqk7BXwQmYzCfDHVw9XLSuu7NzKV`: 3 tokens, 2 wallets.
+- `4tBE6E7ULJXuwH7Lqyy7pJHCQdoniMHD2R4GeXMGmX6W`: 3 tokens, 2 wallets.
+- `5DvkepygZ2reBb36dDHFGcJgLKCq4sBJGGme5k5Zcv56`: 3 tokens, 2 wallets.
+- `5FdeqoNxzUgooTHc4wCUYf4W2on9HmYk7PKK4sD6bYX6`: 3 tokens, 2 wallets.
+- `8d9FNC7AgKLTCPKNd3MMkLLXZYLmiYFYR3vfXMBNJVNx`: 3 tokens, 2 wallets.
+- `8oXDK6ZgtC9t3x6ieSNRXFfCydybGxGXYTbfRkFHTC4V`: 3 tokens, 2 wallets.
+- `9EGEoLk1S947Fa29WbvYBvqJHK4WCYt2dc91CxKJGonz`: 3 tokens, 2 wallets.
+- `9bc61xemFMSZBsQZp59zQppw3sGXrPhRkxrdVBtip6om`: 3 tokens, 2 wallets.
+- `AgKXnkXhVAXw5SxBiD5gNamnfhwyXHYvvssuv31KG9c7`: 3 tokens, 2 wallets.
+- `BJBnHNvcZQJU1WoRVi6JiHQ2L95f8HAUWWWazJa71Udy`: 3 tokens, 2 wallets.
+- `BuaZosYJeooUaFiupEmd6YCNojJGY2AJnSrZVhZHSmdR`: 3 tokens, 2 wallets.
+- `DvcxsHYssGm8dD6fENmfufDrq5jXDZZVydAfbbzM6fGN`: 3 tokens, 2 wallets.
+- `F6byFuzbsgecuEqRXFFndYb6GFiRWdBCnZnJcQPMXcbu`: 3 tokens, 2 wallets.
+- `HMAc7MgAnzHGxU2SM1EUhWu4m2iBG9rLj499yqJxM3ec`: 3 tokens, 2 wallets.
+- `HRsasidHLbhVz89XPuL3icQNKBukD8egiYfGuRWQ3Qcz`: 3 tokens, 2 wallets.
+- `J7pHJSM3SSzjFGs1bV4DQa7ADkj84ynEtFBL92rQjUXF`: 3 tokens, 2 wallets.
+- `JABz7x2RzZW1y1Ev4nzxvEk6GP9ii3k11N1hymBntD9G`: 3 tokens, 2 wallets.
+- `2DrvaHk5xSwBRVYU165Bdt6Uv6pZWwLRU128vZ7fzDy1`: 3 tokens, 1 wallets.
+- `2RLMU5oeepXyQ98u6vG6Ssusr4ZRFRH7RxDWvkAEcDi5`: 3 tokens, 1 wallets.
+- `3nqtkTh2HErytGoNt6arqwzPGZnh1qFgC19TBN1rjyi1`: 3 tokens, 1 wallets.
+- `4EdNCf7oiFwRdT3V3iEcBKUTbJdwvHWaCkEHPgKxRR7M`: 3 tokens, 1 wallets.
+- `5mF42hVfatHyb5c75dkvxiYWJ2SdbgrEtRBkEmu7Y57b`: 3 tokens, 1 wallets.
+- `6HdkbSHZmAna2Hsi7uKuqMAhroDdky1fvMDVWfJbNsKE`: 3 tokens, 1 wallets.
+- `6KU83HPei2obGTcRsMDrxQmLKV9XE3nRgATVyBJ1WBDd`: 3 tokens, 1 wallets.
+- `6QRdkwTSk9Kop6VdqSkSPah7a3HfqKHU5DD4BqMFCUQP`: 3 tokens, 1 wallets.
+- `6YAnhaVXixs3bNDeecS8XRpn3bJ1mL3GG6TdBZiekGfh`: 3 tokens, 1 wallets.
+- `6hWVaDnXEEUVRiDVQnnqgYjbGBPuG56LRLbGo2ynkB5y`: 3 tokens, 1 wallets.
+- `6xzdsrRyYvwu5M3z5cZFCDPfWzV1TZ1R19Anfz5NBNq7`: 3 tokens, 1 wallets.
+- `7WGp6ZkX8JoKs8msMWzKQpDNTT7cQKQLVEtnR1aGDrFm`: 3 tokens, 1 wallets.
+- `7moqFjvm2MwAiMtCZoqYoTAPzRBxxMRT2ddyHThQuWjr`: 3 tokens, 1 wallets.
+- `82Cs9tM2ouvvJQ16hopRSsjE8uPJ5HvgQEdcrQnUT9FV`: 3 tokens, 1 wallets.
+- `8d68B8Wo6QjMBpAnza29xNRjPyFPBG8dzuTFoofnjvHy`: 3 tokens, 1 wallets.
+- `8rtcDdAaeRX4wHNPuA4NaX1J1hPw3PQ8Mzp6wDirmPWb`: 3 tokens, 1 wallets.
+- `8xmo2ZgPVxFUgRhSCGGCnFicGeVot79j54xCi8AoJTXW`: 3 tokens, 1 wallets.
+- `9999huSCf6QpepPHQVFLZ9smhsbwkV4XWPLboiy9qqRj`: 3 tokens, 1 wallets.
+- `9FPrGS2KJZKZMaXQ2z6YTQ66qd7ugA43xy1XsSfcLi7X`: 3 tokens, 1 wallets.
+- `9UXzdWKncNoRVatj2E2ataobKhVKzrsfc59srbiVVbeA`: 3 tokens, 1 wallets.
+- `9zqq3mcvHYsSrgQ9QAvzdYE7AB3riC21uasF92Vq631B`: 3 tokens, 1 wallets.
+- `ALSSMGgLAAcrJDt4itge3ZnZ8hCtysP2szueD5jzWXQu`: 3 tokens, 1 wallets.
+- `AnCNL5BdMEahDEEkmdKiUsKgs6rpNg4APvNWbJ7any2D`: 3 tokens, 1 wallets.
+- `Aqrm7DR9GQnqz88sJ3RdDBgnTr85pL5GaKWFv9qXbZBj`: 3 tokens, 1 wallets.
+- `BTgZevYNx5PyhN36JSq8U8eUpU8mKAELfYA2AHP54Dts`: 3 tokens, 1 wallets.
+- `CFxV5thMrC2zePzDqtegAMPMENP1R5iayRWFq2TFM9kN`: 3 tokens, 1 wallets.
+- `CNYpb3ruhuSAkFt3JUE9zpfVHya7GSpYLVxRibXd6bU2`: 3 tokens, 1 wallets.
+- `CdmhaaYwCt1a1akcX1wb9cXWxC36moPKefZ6cfhX1qxz`: 3 tokens, 1 wallets.
+- `CqLu65KkFvGi3DUrR9o9aUC4LP2yUywFHZn8WoNLNVgy`: 3 tokens, 1 wallets.
+- `DXKasUWSfD8dVHiiAcfUkkuA5YKaNdbGu17Gp6SCwdP6`: 3 tokens, 1 wallets.
+- `DbkCBqE29XoUk7fiuSR3cDkmDkELLF6f9g5YimeDjDL3`: 3 tokens, 1 wallets.
+- `DcyfyLktz4CJcXksqBWwBHvdm2r1sS2XZktDwKyzN69V`: 3 tokens, 1 wallets.
+- `E3oAi9yFZbHrJkws3fhR4PcVfbNjuyWPUd1wduHPnDSo`: 3 tokens, 1 wallets.
+- `EpkTo4khMNuJV7fZhY5bGGiY7eCeKpnXf2fHoMwZCjMS`: 3 tokens, 1 wallets.
+- `Eq5V9n1tEVdX4z6Jd3Y165Ysidto13Eb39orTj5kVcw6`: 3 tokens, 1 wallets.
+- `F2tPbomxzgThjVHa4pTi9vd1ji6Lr6oZ5YCBu6odH56o`: 3 tokens, 1 wallets.
+- `F5ywzc2LXAqkkNT7HEgS9DRtB6b1GudcpJQJ6QaFUa7y`: 3 tokens, 1 wallets.
+- `FGMJAT3Yrouh1eTWpAzNUfToupBggySqTUe8VfnJquVg`: 3 tokens, 1 wallets.
+- `FeTdmE2NSW63Mth4hc9a2AsP87SrJHDgvScJLkk38iSe`: 3 tokens, 1 wallets.
+- `H13wk1NsagnoFDs3G6PiaCZCnd5k2UwsFosWXE5HUuVv`: 3 tokens, 1 wallets.
+- `H76ACfqzjWCaJktcqwUwb1qmrxdcAMPCCSbK11AWiSuV`: 3 tokens, 1 wallets.
+- `HVbvJw8r5gP38hZQXU19N7Xc8216q5xEPbbKb2WKMz8r`: 3 tokens, 1 wallets.
+- `UmDSFej1bibqL2gPZ2FQpEMBQ82iwYxA5ndBLVwUq2f`: 3 tokens, 1 wallets.
+- `XR1fbP9MKsk4cU8VbXikjfcMRbHXzxopEZaZxL4Sofb`: 3 tokens, 1 wallets.
+- `anXJV4Fg8XHfAcXrqE6JiysNu2Mre5BdPcGEJuCmhzs`: 3 tokens, 1 wallets.
+- `gtxoJs2xRpX7ib3GmJtbJw5zQbZ62bXBoJpSq51DySL`: 3 tokens, 1 wallets.
+- `rpjmtoNWfK59BfdmiB3TmVuuag7zLtc5qT5rAPr8axS`: 3 tokens, 1 wallets.
+- `23etvasqkYsLSYAjtgT928SKap8DjmtzVrLt3Wa8DW7B`: 2 tokens, 3 wallets.
+- `6TAXiK1fT87LrYNWd4Likpe9hkXHreLyCNvUCBVR1uVK`: 2 tokens, 3 wallets.
+- `ABbvqsusy43YUhdYmLpYyRpJPRdeSeEF1a5FqFhKjyrK`: 2 tokens, 3 wallets.
+- `Fta3fmTRZvoT8WPX2BGrk6MAyDeG9ap7DpxjdQD6SvAS`: 2 tokens, 3 wallets.
+- `G15sDFsLzK8ghBSs3Uxqu9XokDushBNXXrz1LQS9kiK5`: 2 tokens, 3 wallets.
+- `12ELeHVc14MvuuKp9MgGtb3B75SfAwHzvdx8rGnHUMyB`: 2 tokens, 2 wallets.
+- `25pKfQYZVDpNpFGPrLUXSEwAuJtiaLQER1fHH4Mg49ea`: 2 tokens, 2 wallets.
+- `2E7DQDjtGWSrH2CCotUFqQmGpw6KDHhyoo4tZE419xpT`: 2 tokens, 2 wallets.
+- `2bU2iNwARWvJ28s9armWWtePLGzx6LsPPZseDDej7Vjn`: 2 tokens, 2 wallets.
+- `2jwP4cuugAAYiGMjVuqvwaRS2Axe6H6GvXv3PxMPQNeC`: 2 tokens, 2 wallets.
+- `3kxxVahftfYVbz44JqgtCeWJQnjKgWHNGT847xypoXbA`: 2 tokens, 2 wallets.
+- `3qdEYTVzVhc9HRrZqcGdZCCSKer8LPLWoBS5qtDsuhqL`: 2 tokens, 2 wallets.
+- `48uyC7N8JA7GUqhCX5KHgksAqu8BYoTmiLGLQx78ETpf`: 2 tokens, 2 wallets.
+- `4Cphqkxqit5PAcjDisTqvdpHAEMX7LFudcRZCoe5nfqe`: 2 tokens, 2 wallets.
+- `4iieWMwLjxHpZLfChMTwJaaBnRUVAFQFpFfTuZ7rFLSb`: 2 tokens, 2 wallets.
+- `54Pz1e35z9uoFdnxtzjp7xZQoFiofqhdayQWBMN7dsuy`: 2 tokens, 2 wallets.
+- `5JBH6uLBV29iFoRrPMr5DW3ZcU2n8TJYjZNMCGeupNZL`: 2 tokens, 2 wallets.
+- `5aqEH1bP8MHiw2PgMZ6GLoPPtvY7x1bbhxYGZyaaaxGE`: 2 tokens, 2 wallets.
+- `6Yx7MX8PTz4hLg52e6QKGwAYUZTFxZqxVqqon3yGGtRS`: 2 tokens, 2 wallets.
+- `6aWmxmeQhsK1tuH4rDA2YaKpXcae4bmbuDAz2fMToRNY`: 2 tokens, 2 wallets.
+- `6d3nb39xmfcw4kufH4DzmAfyXjfxRiCF4ZnCzxV4uDxh`: 2 tokens, 2 wallets.
+- `6gbG9Qu6kQPxukmTSSzTD54AVVtzjSuWGSxgxpVykrsZ`: 2 tokens, 2 wallets.
+- `6iw1EsyyrsmegKzDzH89TFAVxcnth6Wbz4YGXNpuUeTe`: 2 tokens, 2 wallets.
+- `6o4FLsHPEj5a6FH3yAuvR9fodZFV4sQrKaV3dZc2hS9J`: 2 tokens, 2 wallets.
+- `6ocyen9TVBK8GWcjsYc1jFQ3LhoLjUJXTRqSUWvrYEpY`: 2 tokens, 2 wallets.
+- `7ZrP5k2GXf99uBr5pHSQcxKKFtLsLsj9LnDLoKk979g4`: 2 tokens, 2 wallets.
+- `7ovu7sqYQGcHwUnLfVfwjCx5VGBCiJmBrsrBv2ab1Ltx`: 2 tokens, 2 wallets.
+- `89KJXjHPsrxCQTBbQtZHitabqtd2bn3BYkYTkBXLbeou`: 2 tokens, 2 wallets.
+- `8ghowffWQGEZqVWaad9d54V9mNhYTJ5kDbucCB98FYyJ`: 2 tokens, 2 wallets.
+- `97rSMQUukMDjA7PYErccyx7ZxbHvSDaeXp2ig5BwSrTf`: 2 tokens, 2 wallets.
+- `9D8xSHWqF9NJWqCtn3rNxYEox63aCbWxYzTMfMur7Cc9`: 2 tokens, 2 wallets.
+- `9Gfj3iirxSGkyAnrhwmSYaUCh63EFpdWVQF6mEJaadoN`: 2 tokens, 2 wallets.
+- `9NZXS5qWyyQRDLQAPcPrBh68VkzyUNGbY6RxLr7P4ti5`: 2 tokens, 2 wallets.
+- `9PfWqYpxH9bj2ReLoeuWaBPP87QfZLHfSctRHETnaZy3`: 2 tokens, 2 wallets.
+- `9k8DyWnbkDiDmkwWpGonNGnpKub2iRfKXHXCnnyvR75d`: 2 tokens, 2 wallets.
+- `9s3RbNan8nLetHoGFVgCJ4fABF3f5ha9dxcGqSdFrD9e`: 2 tokens, 2 wallets.
+- `A31jE6TiyNv5XyQUmZNTcqaVha2ExA73WqAKjgGpnC5i`: 2 tokens, 2 wallets.
+- `AbdxrST5risqoSDB76Yk6cvGJRdrHrGXxUrZ4VxZHGZU`: 2 tokens, 2 wallets.
+- `AwT9jzKu6Jxs61PLws2xJBWeQm8W3uQFZxZNJZU3o1ov`: 2 tokens, 2 wallets.
+- `AwiguNn4m6Z3qeeXoiF2cMcAEqs4nu7zBU611E3iTsmH`: 2 tokens, 2 wallets.
+- `B3hx56cBV2dj3uViNTNThzzhCaUoUQPY4DbX9aVqPaUn`: 2 tokens, 2 wallets.
+- `BEtzUWz1isBuPofjSwb1nKEECVXdf9LSmw1za1MMrGVM`: 2 tokens, 2 wallets.
+- `BdZBQGZ3icyTGyhmQnzTpnWmQjDmHbGpmenWN6QPNipE`: 2 tokens, 2 wallets.
+- `C68a6RCGLiPskbPYtAcsCjhG8tfTWYcoB4JjCrXFdqyo`: 2 tokens, 2 wallets.
+- `CmhwnxnwdJCpkKqihNxR9cub3V417WgwzZQzEgVyjCNG`: 2 tokens, 2 wallets.
+- `DB9vH8TkfR6xQGBrjvNLNmHJeMDg5c2CDFRgdDBXzGP5`: 2 tokens, 2 wallets.
+- `DEM7JJFjemWE5tjt3aC9eeTsGtTnyAs95EWhY2bM6n1o`: 2 tokens, 2 wallets.
+- `DTvi6ARgZw5ubRxfZgLs3PQKqXchB5UtU8DZibEThBgb`: 2 tokens, 2 wallets.
+- `DZFW9vYwHzQWYm6PtU9JNfwVzbvzqba7GgwdAj2ik34y`: 2 tokens, 2 wallets.
+- `DZPHncPHWGPdWpiqLRDYEbKhk5KEM2wYrHniFKNkXtEw`: 2 tokens, 2 wallets.
+- `DnHDAsgPSoor3qe59u6DFWDhADpmJTH1XvjLgSaBx2PA`: 2 tokens, 2 wallets.
+- `Dzno7srFNNSJqtUZ4LqdVE36WPtG7ESYhkjLXz1kwTEu`: 2 tokens, 2 wallets.
+- `E1r6HTirXt5EB8H2MjLL4ieKkGeVBMTtDTuzQVoSi4iV`: 2 tokens, 2 wallets.
+- `ELAEEmiHW3RW9wz2C5rP9ZoQ7g6NJTr5fbjvhCPdnFzQ`: 2 tokens, 2 wallets.
+- `EjtCjDWj3HyL1a4dRritZLTtZrwvD3E1AAzp6evMUmVB`: 2 tokens, 2 wallets.
+- `EmpmeE2ZS3YhMhM7wiJZAHdJeA8FDTGpj9sutiHdjKhd`: 2 tokens, 2 wallets.
+- `Ep2mHmeGV3R9FDsobFuAF1ghmA7GduFhm4V6WgwuUKNo`: 2 tokens, 2 wallets.
+- `F5ZQi4PaptaPrUNP59UQWvF8RJnLcRtdgNh55ynr7vEa`: 2 tokens, 2 wallets.
+- `FcvvJvHU1jk5Y5JqjsuoSwzqgiqTAdxmzbggYmVQWJMD`: 2 tokens, 2 wallets.
+- `GB7SkZMTwZVZxdXfrsPpQFNqEWV88fK5jwQHsPKJU28G`: 2 tokens, 2 wallets.
+- `GSDdxyi8i6fuADHzugtzy8vBuXZdLKpGjgeZ5Fe9PEeQ`: 2 tokens, 2 wallets.
+- `Gc8fRjXQdZqBPBf3UiTvnz3S6tWdvKzouF7wnJVW3mGi`: 2 tokens, 2 wallets.
+- `GfMFq3wtBBcvYX7J2aQ72MARfGaDu2DCeS9t1jteUupf`: 2 tokens, 2 wallets.
+- `GhtPPz97MJY9GAMyrh6ksDoJy8dD5gKLQvYzaukBg5eP`: 2 tokens, 2 wallets.
+- `GxBeMrKTFeUGhykaQRFj8k4MsxbVxhLYTd752sHbhkhe`: 2 tokens, 2 wallets.
+- `H2PVM96jQomH864kZAAxRMFBZaHbdKQG2iG21v52jRxF`: 2 tokens, 2 wallets.
+- `H2nE3ub81zSFbMNgStNHdTJkiekG1ecQNMeD4S3Qj12X`: 2 tokens, 2 wallets.
+- `HZYVhXkh3jA5RMRrVHTfQSZgbEDgXouMz3T13NKfa3vx`: 2 tokens, 2 wallets.
+- `HcgXHH1NNm6i7z9Pn1QuXVMi7BpbbipT7mpYqCg9yJAt`: 2 tokens, 2 wallets.
+- `WLZG31XNaD3GmdRW1GphLTLbWfh7REDQfYCURuxzAhU`: 2 tokens, 2 wallets.
+- `YgLDEUfHBU3z2UCjhZJwzjgtWJiz1cSuP69eQf26AKi`: 2 tokens, 2 wallets.
+- `jPQwaSnXfBtgqCkpu3U2pVDBkj8GQF6BfQZh9idD3QG`: 2 tokens, 2 wallets.
+- `toAPhdPcxDZsm2ziAgKcLLb5FMvhsUxqWpRvxTnYfnP`: 2 tokens, 2 wallets.
+- `1SWG87xMiCPqe8C8Sm5M9mdD8pnNrpEznexZrTn9Smk`: 2 tokens, 1 wallets.
+- `21mKoPFpbwgGZzK77CnwRGQL4U3xV52fgyemPD854g4E`: 2 tokens, 1 wallets.
+- `2C6DGD2FacCPcyrkngFE1zBLgqNqcKcrLGbAU8A3Txfz`: 2 tokens, 1 wallets.
+- `2MvLMELX2HzyUK9XERSh7D9HBmozmPgvvEvqEyBhCZUP`: 2 tokens, 1 wallets.
+- `2PtMKfAh1kFhZBB5EKU1KjUzmeStcjw3Yf8eAVdGngyE`: 2 tokens, 1 wallets.
+- `2SaShcvKTBfhetQxYyu9oNjSg43HkTSD87R8AJpfGLBm`: 2 tokens, 1 wallets.
+- `2SkV88PoqCgigc6AHArQYAffi4xrMzxihEhYt6ghKfMt`: 2 tokens, 1 wallets.
+- `2aErPyKRhuNeaoZsQXe4tpbfJJvJvxd6a7fKLdhfA5NK`: 2 tokens, 1 wallets.
+- `2b735s85qNxWBJxShEKWydWYhESBN9oupTKYCuoarQJY`: 2 tokens, 1 wallets.
+- `2egMQeAcTKMsarPyQyg6JuDWEgyTCgFHp6qBX3XYsxgq`: 2 tokens, 1 wallets.
+- `2vXv2fuggaH73T8fR8KvMg6P2hRayte5vztUzFu7s9Jv`: 2 tokens, 1 wallets.
+- `2vYxUXCaRVQdXnVvGsNT49eyJ4443pcZj2vAsQe5GsxA`: 2 tokens, 1 wallets.
+- `32EQNoCxL11UaJVAzf5NEvkHtQBXznHJZ2C1fd7fEM2R`: 2 tokens, 1 wallets.
+- `34EwZdYMkwyovsZq415sL7zHgF8Kb6RUScwe9NXMzYjx`: 2 tokens, 1 wallets.
+- `359799J7GstQvNG9TDqPUiUmgTGVTwcuzEohbyhkAyy2`: 2 tokens, 1 wallets.
+- `3Km3B1A8wc6STENcRz9KtRXzeTxPz3UvFAvcotCUL72W`: 2 tokens, 1 wallets.
+- `3PLsH8jJH5yKB8YWJAaRuXAyk8CNHcVCNuq7WM2JBKQ7`: 2 tokens, 1 wallets.
+- `3T176w4ndDFdNqVrPo5a5DLhzWewRRq1CuVsUU5PyDL3`: 2 tokens, 1 wallets.
+- `3VJME2SB7HxQ2UV2dDTB5QZuYnHEsjRNJbTgGJxPBxpH`: 2 tokens, 1 wallets.
+- `3bjQeHurKbSR3bHXuKdLTLrFsxwysLLk8JS9EChgi4LG`: 2 tokens, 1 wallets.
+- `3dAdD3pwSGYFqQTJAjUR4UPivhgq449Tmvv3yBLgmZYT`: 2 tokens, 1 wallets.
+- `3eBRCNdGTFerLXbiVAjB4rzf9Q3FsBUisfRfG4vbNkAy`: 2 tokens, 1 wallets.
+- `3iX3tbMCzrXLKvsy2nM3SqvAmG6AwvgSRnRw7TGWftCZ`: 2 tokens, 1 wallets.
+- `3sUcG7pM6NHrukKj4k2pyw1bds4GTFPtPc1hNGNf4N4f`: 2 tokens, 1 wallets.
+- `3zyhJh5uwkWH6eFgnKHRWZyMqGbga1RZTfyViqodJZKF`: 2 tokens, 1 wallets.
+- `47ZMpswZTsHnNnBmAvx9yeNQEp4qh8hVTe1veyWTXYMW`: 2 tokens, 1 wallets.
+- `49Sx66TcCQvptmqFuRxXMuRrkDYKb4Wr9zPdMyyQT7um`: 2 tokens, 1 wallets.
+- `4CVrvkkqaWkhaMd4CZB5DFsgVD7kKpbf2faJi7cj1CvG`: 2 tokens, 1 wallets.
+- `4EH2RGDvVrwsR1ue7ohu6RxogqJVcCGJtEHGdwk6Cwxh`: 2 tokens, 1 wallets.
+- `4J9BsbpgSXrZc7NSxJfJTDG98o8rbPpJiJmCZDcK564D`: 2 tokens, 1 wallets.
+- `4QNeSQwr6rMMSuyuJJ9eDYpdKX4VciU3qGSC5odwmcfn`: 2 tokens, 1 wallets.
+- `4UuPSjhzcTxStYW2F6y1xcqEa4KzEbTASUhEFAoh2Bms`: 2 tokens, 1 wallets.
+- `4Y7ZzZadcfDc4zSEdY43JrCMLs3JyDtvxqzbTQ2DaTey`: 2 tokens, 1 wallets.
+- `4YQYRGyGkC98bgaLk2YeKNgMRgRJi8B13WjjqLqAKoZE`: 2 tokens, 1 wallets.
+- `4ZBBvUmyXBCBxJk9VFHDBNWg3EKftCP97Fsa925cEnPh`: 2 tokens, 1 wallets.
+- `4i4zkJEvZR41hgGr9TuCZTCdGJLoirXUd1mD8Xkd4BSo`: 2 tokens, 1 wallets.
+- `58EZnkcSZKCF1LftbVwqt4Vg7HYtQh6kSH2j8QbWmPjK`: 2 tokens, 1 wallets.
+- `5FXBrxPpoW1gDBG1KTMXaugzhnR8ishReTLzrdMvKa2a`: 2 tokens, 1 wallets.
+- `5UN4XzcM14PZLfXxHpw9JKuLSedjGCDaUPtmUZj13uMp`: 2 tokens, 1 wallets.
+- `5UbqJP1PX4CbSerCrvrBfohhM2csecrUxYfSNB321gyk`: 2 tokens, 1 wallets.
+- `5XyYse3QFuiiNtnwhwLvECPp1YvTxZmAogn6DJvqQT1D`: 2 tokens, 1 wallets.
+- `5m24GDS9Vm3PT9ykj1GvZ27FFhTHaR9QK661YzJbfNuB`: 2 tokens, 1 wallets.
+- `5vuUfqcG2gSAGbtt1xpPsC4VWV3B5ZZ8bySbQgyTwB9M`: 2 tokens, 1 wallets.
+- `5ycRK3CRQugQMFtpGayRNg1pK5akZ8HoFRgjzJjDBTej`: 2 tokens, 1 wallets.
+- `63YJDUh383DhEHyyGPhSTAiK1EC6jXeq79ZiTZnMxyvZ`: 2 tokens, 1 wallets.
+- `69vM4G7HfbSvFAxhkDQe8jdtFPepT5YkMpXxB91JmeNd`: 2 tokens, 1 wallets.
+- `6Sx7pb1792ibStiGr11VsZjHcHUA2gg58eh9Cq7gPVZY`: 2 tokens, 1 wallets.
+- `6cyXoJPA7HeJHhDWpe91xN8uF1PsPv6SKbKw7b8RQuwf`: 2 tokens, 1 wallets.
+- `6eGH2QJ9mn8zJJcLsMxdFR8dQrqMAHw7WL3e3vTzNuGd`: 2 tokens, 1 wallets.
+- `6fyHmx1nfvc7dnbYVaa2EvCFKXuoLGffz8wYBzCNe89n`: 2 tokens, 1 wallets.
+- `6jveGpiAuqQ5oVuuXGBwogoAM8zDasZRgAu3bu6Du3a`: 2 tokens, 1 wallets.
+- `6wcEPC4DupFKCUBeK2mkR3rfGZMeomEev6aazfnMz92D`: 2 tokens, 1 wallets.
+- `6wguJRAKs6TxXWUWjMQTzpkiFjEeDC6the1NoZgrzHUK`: 2 tokens, 1 wallets.
+- `6zCA2SQPJ6vchKX16Qq7Uo3YKo3whftkb92Z8rnQYNaq`: 2 tokens, 1 wallets.
+- `71trvza55BL1MuS3eeoqz5XA3pq6aCJzFsgZoYFkNs88`: 2 tokens, 1 wallets.
+- `7AJZG3FCM7Z1D65vc24FYQFsWTaN2DfPYseHFzTywqek`: 2 tokens, 1 wallets.
+- `7BXREvJj2NzASSabL66nLBLnePNzxat59pVi8NmAY1DJ`: 2 tokens, 1 wallets.
+- `7GDfN8YDuxbbLy4feAyDhmXQGJvJawqjcwiSWXGHDHVG`: 2 tokens, 1 wallets.
+- `7HuBHZKVnm97dqqsWuvKCPaxvJV1Pj5j9YMEe1fDE3rb`: 2 tokens, 1 wallets.
+- `7HvrZKuescAny7bYoFv4v7uwWqdPAbPWcCD95Z7g4zh1`: 2 tokens, 1 wallets.
+- `7JqFP41z8pAuyrFVvqkMZP2U6KaL3sy8xzAqKbrpv7T6`: 2 tokens, 1 wallets.
+- `7NTGoyD1PVDQLSo8vjb7jv5mJfcdkZZ9BshqnpACUcEX`: 2 tokens, 1 wallets.
+- `7jwZx9dws7yWgB9VpyB5JH3fbu73K2mJRQ76DuX5wZaQ`: 2 tokens, 1 wallets.
+- `7u1ZFpfEGpjmppFQaRhMa7H863KEufu2FjfSpzT2tKqv`: 2 tokens, 1 wallets.
+- `86hH7CwMbFqqmRkXf2S4bPe61JurGcn9qsfdrertNKjV`: 2 tokens, 1 wallets.
+- `8FPnDaxmcCoXzb1Yxnvyh8c6JopxLmRBnujUGN1A31CF`: 2 tokens, 1 wallets.
+- `8RsVdj7Gtnt5kEBC2QiALYEUYGKTE2uBWuLBCJBtYPKn`: 2 tokens, 1 wallets.
+- `8dB6DPtZRCg1pYbwMweWddtxHZ5HrskqDapxdn3uKsXN`: 2 tokens, 1 wallets.
+- `8mB4yQi3RrnB1cEwUVCjabTCwa41GcehpDvJ9J7s87f9`: 2 tokens, 1 wallets.
+- `8t6wZnNuBcZLb3qwygr8XKftr3mg3saTF7L36snsbcvS`: 2 tokens, 1 wallets.
+- `8thfjPKZQfWnG6NaYmN3deaXo6pMenEnnbuPRhzMmhBX`: 2 tokens, 1 wallets.
+- `8y8sggYFwcQ3pGSdKacr12Jsi1MjYvvtbZDTEfmp7Mcy`: 2 tokens, 1 wallets.
+- `9EmBphRceQRGbZaWZSx6qsQg9ZsTVc7y6y8rGcWukK4`: 2 tokens, 1 wallets.
+- `9NK9GyNuprx85yCaRzAZ991PZsZfQRj8iS4NSa2rebRj`: 2 tokens, 1 wallets.
+- `9SJwupCeGGBo8ffNXVdXwpYLaAjJDu8zYTtd1Rr4ygE6`: 2 tokens, 1 wallets.
+- `9VG3XG5k4bwwhrX1G7LRVWxqUGbvZcBMd3ua5vNAxZex`: 2 tokens, 1 wallets.
+- `9iMnGDVJrrHnGEjzFqDpR45nCp9MhNTcnjPcBEE9h6F2`: 2 tokens, 1 wallets.
+- `9kBaB4U1rUTvEfgtextLF7QwekQG5S6LPX2gsvMeAWso`: 2 tokens, 1 wallets.
+- `9vEiNrjxyBeSqndVWaUEEHNQQ21NP2GF8aKzoXAfN74r`: 2 tokens, 1 wallets.
+- `9w29NMnWqsGmJXPgYpi9L9KfpPKr6CBX7iYpx5SKYSzu`: 2 tokens, 1 wallets.
+- `AB6pZLZJLcmrkDNmu6hJhuFzLNsPrj5LHM6reqiCK8s6`: 2 tokens, 1 wallets.
+- `AD5uX42SjFw44Dw573JBtZPh7tWsZEiHgsfcX3jPxcys`: 2 tokens, 1 wallets.
+- `AJ5snxaH5Gdvxi6CRTwN7c7467eNjfwGAP2htaMSrRpr`: 2 tokens, 1 wallets.
+- `APP9x1gzK2k9AGqgn7PgJ4rTgei5dds9wLtvb13GJVZQ`: 2 tokens, 1 wallets.
+- `AS9vUKMLB6Fx2nV5Uo8zbGqQk3ZrdaLVAvoXw9WJwEEk`: 2 tokens, 1 wallets.
+- `ArRdqGfyY38dD9GrZfbr88HPTNN3NL9WQxG9LTsW6mxh`: 2 tokens, 1 wallets.
+- `B9DzcvUd7FvHqH9frhFUYFXqTYgtgw6dofNCAUZTnB2U`: 2 tokens, 1 wallets.
+- `BAs4xGYuv1VweDUujDSayy1JCFjE1hZee5kdKbfa1cBr`: 2 tokens, 1 wallets.
+- `BQMTDasYPfw1Dq8w54VBr6P3Pfakx9LnpUjDWFkoWH7s`: 2 tokens, 1 wallets.
+- `BdUmVX4fiVkpEigfDo6AkmGyssPDRJbJHeeaDijRUpde`: 2 tokens, 1 wallets.
+- `BfcHaZQWxyWVLx1LDWMkov4gmKsMYb591dyMLepxwsJM`: 2 tokens, 1 wallets.
+- `Bney7YfJwsNimbSYFzMimsCrZB78f41eazqMJei6iWZP`: 2 tokens, 1 wallets.
+- `C8wFDVKg64KJeRfEbmz6u8LS46wGcTgwxJ9dnbiyrqVN`: 2 tokens, 1 wallets.
+- `C93nhfBonygynvEJ34pp8iURHPRgcvzGWukysyekzcwV`: 2 tokens, 1 wallets.
+- `CBsCZVzpR3FdZjLaTkL5KoKYUyhSzZT7hnU724GeEHkU`: 2 tokens, 1 wallets.
+- `CKsmK8i3K3EkwT9khQcGZnB8tJmtLFhqiWwX9J4B36gA`: 2 tokens, 1 wallets.
+- `CXdVsPmnXsx91LgFGUTe5uFfMWu7rFvwva3iUHW2XYdR`: 2 tokens, 1 wallets.
+- `CzJDyukr4HWZynU5SGh146jaeByPaZKCvp7QSxBz2HqN`: 2 tokens, 1 wallets.
+- `D5jx4wmxuPz18hqmgpCMLGVq3uSksCafCp5xjVe1nw8p`: 2 tokens, 1 wallets.
+- `D8B4sCpy65342FoBVUhuHDHMrhN5RB8cMni3G7RYQinb`: 2 tokens, 1 wallets.
+- `D8C9WdGGtHYJy3ybvnevyALo2Krr7iRKBCw8xjLmG6Vr`: 2 tokens, 1 wallets.
+- `D8hEem5Z4UXd7mNbHq4B1ZurpSTqVKfLyf75K5acveJ9`: 2 tokens, 1 wallets.
+- `DS98QvHesnUYGY4QYnoqPwi3ZrAfmZkvEr6aJbXGt9DX`: 2 tokens, 1 wallets.
+- `DzwYP13mnRMghnuRYdmy65znX5FUhWG3SR7kXZVpLeWg`: 2 tokens, 1 wallets.
+- `ELemUDAZTbZDpcQMsFM6aHaGqvHgSmhfSoMHC3SL7QBh`: 2 tokens, 1 wallets.
+- `EX9nBm9ERGc7nfxQva1pkVi8AgzcusveJzbyk76yQzgZ`: 2 tokens, 1 wallets.
+- `EXCDZXZXiQjbWCEUkbEmjEJnPyvgjvbQZcqgjRdawTYk`: 2 tokens, 1 wallets.
+- `EXEK3AtSKEwdw62rVhBNoioF832QWZooBSKGNvPmjKWw`: 2 tokens, 1 wallets.
+- `EdLzXGtyCeSCBwna914UeeDMDT6nQJjTdtAvgXgrLScM`: 2 tokens, 1 wallets.
+- `F5yM7ysjKT2ziNuLbZoVwXySkWewSfzPnEGmMZmVn4yx`: 2 tokens, 1 wallets.
+- `FBrPFDi66UA2j6dfhEVPF6H6U7ZkqQWzWnjk2KDhUzxG`: 2 tokens, 1 wallets.
+- `FDCEKihu7TRhfpziLGWpdo8KP9qSqqW7DffG9osbtXci`: 2 tokens, 1 wallets.
+- `FMnoL72XNZMBSd7gvuVHVoJp9xTv1AkqoPs9d1v23uYL`: 2 tokens, 1 wallets.
+- `FVvkJdScMjzLtz1Vwcxaz3q7xVpLWqQvWeA73L37yWnC`: 2 tokens, 1 wallets.
+- `Fm4yKDsqHmKfiom8XYtW3igfRrj1fpSwrAsZxBVe2f8A`: 2 tokens, 1 wallets.
+- `FoYfyHYgG9q8bKYftkwRDKskeYgh1M7c3ipgWDg1rxfC`: 2 tokens, 1 wallets.
+- `FqgQJD8yvNjpecjoo4oRz25Bx1E66sfKiFrZhj7TS89U`: 2 tokens, 1 wallets.
+- `G1r5o1G6wd5M29KKd7whqSAdZmFqwiNfNBKSj2MoMdrK`: 2 tokens, 1 wallets.
+- `G9qZLEJwX5UY2btv1GkwHZojgEbcsHgev2Ppn1QpAE1v`: 2 tokens, 1 wallets.
+- `GAaKhvMgSKz8XW7i6vpbtB75MizATbNdTKfo7kACWAaz`: 2 tokens, 1 wallets.
+- `GB4dVFPDt3h525iBnHKZRZXv2UTUJGVxbqF5wtBQ1R5A`: 2 tokens, 1 wallets.
+- `GBVUgTSzUFevv2LobeSqCdnZgYa7bGjcptBA6KuotMek`: 2 tokens, 1 wallets.
+- `GKDMPkNyHKNWSMScd9uxvEVSVoemEywaCYKoBbdTA5Ag`: 2 tokens, 1 wallets.
+- `GS55bBrWNZZPG4D77MkJyMQ1Fr843tQ1zNADb9v7fARH`: 2 tokens, 1 wallets.
+- `GUACJy8rib8h3rWjgEzPBJj9qeCaz2KM1DCj1AnJGG7L`: 2 tokens, 1 wallets.
+- `GZVSEAajExLJEvACHHQcujBw7nJq98GWUEZtood9LM9b`: 2 tokens, 1 wallets.
+- `H3RW6enHKN7ukfwuuiB2m4L88fDYzSyVshSKcUznMAQ1`: 2 tokens, 1 wallets.
+- `H8MNNBezp9JgpVJfToPhgpv9rLTA2CDyojradjgW2VDJ`: 2 tokens, 1 wallets.
+- `H8UKNvUeaqpVT7DZ8TXJVreSQEXDjTA7fEv8hjD3FzHm`: 2 tokens, 1 wallets.
+- `HBchuGxr65W6hCBoGao4qTExMVcFa6UK8keRekbyxG96`: 2 tokens, 1 wallets.
+- `HaanfQaVw3DK6WQv4P2h1ts277E3qtqQ7tSyXzEqUeuW`: 2 tokens, 1 wallets.
+- `HdAgzEmMXvp6h1gSUpBGKTeHNCLwvcvDCiUW3SHFeApk`: 2 tokens, 1 wallets.
+- `HjHftFsDrxZcZwxHEdFXEJrjDqXRqGEhkBTEqsXbngU9`: 2 tokens, 1 wallets.
+- `HnGCryxeGtemdoq6EB7ZTb8Jpm6Cw7avhut2akBLkyiD`: 2 tokens, 1 wallets.
+- `HnSDgneyHsqLoZ3o1rXvyLkqNLqbS2ZbUYWBjT3XLPgV`: 2 tokens, 1 wallets.
+- `HoChUe1nYaFTCsgdD2NXHtESCk1teqSAmhmyiXPxVfd9`: 2 tokens, 1 wallets.
+- `HpiSZHWZ1iiVhB5FKiECJUNZR72upRGYMH8bMCMkNnAt`: 2 tokens, 1 wallets.
+- `HqjZYwB3Xa4MuvJjFxLGEdsvLxv4XvUPbtEMSVUXXfT6`: 2 tokens, 1 wallets.
+- `HsFQKgHiSh4nYDcApQiGuormM6bxKyFRK7dtYmxkszcL`: 2 tokens, 1 wallets.
+- `J3eEak3bdoLgr7pAZDVn2JFYS8aRAyLHKC6a2nNNbWwx`: 2 tokens, 1 wallets.
+- `JCXdWz4aRo4qHJ1W867SVCQe1HRiP3J6gCWs27pUAXzG`: 2 tokens, 1 wallets.
+- `asZXA376PpwGCufMvx8vC4XtbKaA7mXpACecxw65Cnr`: 2 tokens, 1 wallets.
+- `ayaXQa5nrMBkszMxeo7J9oMeRExdm6di1kHnvzcTQgz`: 2 tokens, 1 wallets.
+- `psKMUdCnrc38Zh8ns9n9WVUQPLc9SFvRcPVzVQHghMQ`: 2 tokens, 1 wallets.
+- `suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK`: 2 tokens, 1 wallets.
+- `xgCByZAn5PP5ogNnm5ztgSF5xynZq1q6f5ovSMQ5EwX`: 2 tokens, 1 wallets.
+- `xxxZbGGUXfqhJRD4jDoU8tJycXGz4VkcHxQ2xqLkmdw`: 2 tokens, 1 wallets.
+
+## Recurring Early Buyers
+
+- `nya666pQkP3PzWxi7JngU3rRMHuc7zbLK8c8wxQ4qpT`: 29 tokens; average 4.345s after launch and -3590.480s relative to the call; 29 pre-call appearances.
+- `AUrkH8jWtG7our71fSYqCp524BAJuf5Tampe267wfyFA`: 26 tokens; average 3.962s after launch and -4185.447s relative to the call; 26 pre-call appearances.
+- `6yVb4pxNwDfr6rovwNnBg3SyKSvDcHGD4WdFPN1JJBqm`: 24 tokens; average 49.583s after launch and -141.553s relative to the call; 24 pre-call appearances.
+- `5nsDhZRGdxtWFDdBbexvYUEh59EeFKpsRCH75mRkywjn`: 21 tokens; average 3.238s after launch and -4842.834s relative to the call; 21 pre-call appearances.
+- `CCCCQCrL6zVjnDeucDzcxJgxAs5ahNmrhw1CDexPhqrd`: 19 tokens; average 9.737s after launch and -528.477s relative to the call; 19 pre-call appearances.
+- `6yRBpeDDba4yASyjmWBLstxv1gYHVsvdHfuBpVpr63N2`: 18 tokens; average 6.167s after launch and -500.841s relative to the call; 18 pre-call appearances.
+- `CFt926D6bJSFKFt34VJDTAqrPRMLQJVLA5vP1oeL3GTt`: 18 tokens; average 5.056s after launch and -487.812s relative to the call; 18 pre-call appearances.
+- `haqqiUUXB5gp7gDbSjpEkw3phAjQb25r86uXJsZQgWq`: 18 tokens; average 5.222s after launch and -5742.121s relative to the call; 18 pre-call appearances.
+- `9A7um9R3So5a9ZgiE8H4DmrcSPhLeA18u1VbsUUKjS5A`: 17 tokens; average 3.941s after launch and -443.955s relative to the call; 17 pre-call appearances.
+- `2CQgjcdNEo7WtbQLpJTAVcC3Ga61pNvRDTgP5grzctFG`: 16 tokens; average 4.250s after launch and -316.770s relative to the call; 16 pre-call appearances.
+- `EC1SJENgWiuJBnQ1Jwj939fHw9cnsMb39oiFDomNZTYh`: 16 tokens; average 4.375s after launch and -6260.145s relative to the call; 16 pre-call appearances.
+- `3N1KKNyjKBxmRN66zF2jZwdtLaR8D3zXcAgKvuuFAdiS`: 15 tokens; average 3.733s after launch and -886.966s relative to the call; 15 pre-call appearances.
+- `ETwFDcuXBv38wD9AVTgP5quZkmkrmrHrJUJF4FGCssRi`: 15 tokens; average 4.333s after launch and -398.822s relative to the call; 15 pre-call appearances.
+- `9Z5Gf1ozdfdoxgEc52fqsGFWdhumgd3NX3mssrJQva9V`: 14 tokens; average 4.000s after launch and -467.339s relative to the call; 14 pre-call appearances.
+- `CAvvAFNRfXDWTTDqwgxb9qSyYT8fTuTXWSFwL7Jsz8vT`: 14 tokens; average 7.500s after launch and -379.904s relative to the call; 14 pre-call appearances.
+- `EQUiJsxnuQVj11s6JFcXowgJLMW32UZimpNgkrgSy25N`: 14 tokens; average 2.429s after launch and -569.659s relative to the call; 14 pre-call appearances.
+- `1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56`: 13 tokens; average 10.615s after launch and -136.351s relative to the call; 13 pre-call appearances.
+- `88887QrRZPZmsstEXsoXXB8E7nbmUDde4Gp5s7jG3ENu`: 13 tokens; average 6.846s after launch and -648.166s relative to the call; 13 pre-call appearances.
+- `BFkVZiBz8WTTWBXVhMEAN2kGXBVpbLVEdRT99TUxKTy8`: 13 tokens; average 12.385s after launch and -353.646s relative to the call; 13 pre-call appearances.
+- `GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61`: 13 tokens; average 10.615s after launch and -136.351s relative to the call; 13 pre-call appearances.
+- `8F3QG5uwQjHgLyeoNd66bjpo24cPT39GBGqpknZVJCB9`: 12 tokens; average 12.417s after launch and -502.223s relative to the call; 12 pre-call appearances.
+- `9999huSCf6QpepPHQVFLZ9smhsbwkV4XWPLboiy9qqRj`: 12 tokens; average 14.500s after launch and -367.494s relative to the call; 12 pre-call appearances.
+- `AMDEmVocLtN5ji2gBY7BrmSHEyM5vt6TGszBbg4crMXg`: 12 tokens; average 0.083s after launch and -348.063s relative to the call; 12 pre-call appearances.
+- `24678QKx2Dy8ZCw6Ra8o9DeTqPLL5GR9ZQKxt5FddHmq`: 11 tokens; average 0.000s after launch and -392.283s relative to the call; 11 pre-call appearances.
+- `3Vggwn3LPougvnGa8zpYJMEN9L38tSRa45gv9odiSVF1`: 11 tokens; average 13.000s after launch and -327.539s relative to the call; 11 pre-call appearances.
+- `CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X`: 11 tokens; average 10.545s after launch and -149.646s relative to the call; 11 pre-call appearances.
+- `EDGEKeUNA3b7L5F9BcoyvptqHAKSLi9c5JxHwFKvuNLc`: 11 tokens; average 4.364s after launch and -212.073s relative to the call; 11 pre-call appearances.
+- `GYk1dgkvGn3DxR5GhuuG2mnRmoaCNUtC3FASzeysUkT1`: 11 tokens; average 2.818s after launch and -8888.766s relative to the call; 11 pre-call appearances.
+- `35caaJFwzSNaFwFmP1f33wDP9cUFEXTLDsFnjna7kAjs`: 10 tokens; average 5.000s after launch and -360.039s relative to the call; 10 pre-call appearances.
+- `67LwNGrukVFFcA1XZQ9U8ddZGCBuPvPHgMxw81AeRtQ7`: 10 tokens; average 18.700s after launch and -265.259s relative to the call; 9 pre-call appearances.
+- `6AHvixSibGaLQfWUcttAPSRKLkDJb26aRX22EUHH2sM`: 10 tokens; average 4.100s after launch and -9544.239s relative to the call; 10 pre-call appearances.
+- `AJ5snxaH5Gdvxi6CRTwN7c7467eNjfwGAP2htaMSrRpr`: 10 tokens; average 3.100s after launch and -890.725s relative to the call; 10 pre-call appearances.
+- `4GcCNFbMnCw1GX157hHCYyrSZFoxbWBdPbvZMboZHGfV`: 9 tokens; average 9.667s after launch and -10593.687s relative to the call; 9 pre-call appearances.
+- `8Tcn1AkBTPDXExQT7baVp4KNjpAuYqqmPVpp5fADkfTp`: 9 tokens; average 62.000s after launch and -10849.149s relative to the call; 9 pre-call appearances.
+- `ARu4n5mFdZogZAravu7CcizaojWnS6oqka37gdLT5SZn`: 9 tokens; average 34.778s after launch and -273.191s relative to the call; 9 pre-call appearances.
+- `AWrTFnoSjCbJ4KhTzCQsjHwWrCt8jhXNKQubjdT1ENWw`: 9 tokens; average 3.556s after launch and -548.084s relative to the call; 9 pre-call appearances.
+- `EEHcVr9tk4wU58ctyKkDbmRhRv9aH4S1RH41TEB3zsA5`: 9 tokens; average 4.444s after launch and -420.634s relative to the call; 9 pre-call appearances.
+- `EqgpVyzFTpuDTDmsSi9a8t5WXoAwfXxvBKBdLeXTyr4w`: 9 tokens; average 3.000s after launch and -506.901s relative to the call; 9 pre-call appearances.
+- `HXkuar8tVXscBmcD9ShdcNsgojfnjKfQYVapPuiQsHpC`: 9 tokens; average 7.556s after launch and -10850.490s relative to the call; 9 pre-call appearances.
+- `2R8qnLbbaceGu7G6CAxdr6UNTZCC2i93LGJ2oftsKwMJ`: 8 tokens; average 62.500s after launch and -12378.579s relative to the call; 8 pre-call appearances.
+- `74NAhBbuYhBGqpkScVZCfVuZUYXxMQ6gRmAJpiGfX8ZT`: 8 tokens; average 10.875s after launch and -334.685s relative to the call; 8 pre-call appearances.
+- `84UBp52FJZ5xwD5sGUqddzujNUUUAjNzNtLBfVeLXW84`: 8 tokens; average 4.500s after launch and -521.707s relative to the call; 8 pre-call appearances.
+- `9su3UPQW3txjtKDZAkf2Kdimp5tEb9TM6hnJrGC1U7pY`: 8 tokens; average 0.000s after launch and -316.583s relative to the call; 8 pre-call appearances.
+- `Akmwur3r9WhfFpy6yFUuDtgbQ4X4QUuif7xS7JfMNsxy`: 8 tokens; average 3.625s after launch and -1184.776s relative to the call; 8 pre-call appearances.
+- `C5EMTGGE87SqLyuvhShLDMj2jUBwqBLJAZF6ybK8Jyqw`: 8 tokens; average 0.000s after launch and -12009.753s relative to the call; 8 pre-call appearances.
+- `DyXeuCJHHXeREb1WjusM9rbZDX24y1YaJXUmRraNcZib`: 8 tokens; average 11.875s after launch and -132.830s relative to the call; 8 pre-call appearances.
+- `FC1RZf6MTebDXdKFpPfhkiftU8TFz333g8ugbsPJ1Wbd`: 8 tokens; average 3.750s after launch and -11804.698s relative to the call; 8 pre-call appearances.
+- `3USuyHQVNyppevSmNiamBy8eFcjDJKqLWcCuJ6zJMG5H`: 7 tokens; average 3.857s after launch and -298.438s relative to the call; 7 pre-call appearances.
+- `3oN2NBiW9X3dFZ6GYBY5FKfSExoaYL6mFiN9NJn8eBHd`: 7 tokens; average 5.429s after launch and -277.754s relative to the call; 7 pre-call appearances.
+- `4frkCTj2HmJN7naXZL3e4m4Fj2nbXDAHRFzuCTmRvJEW`: 7 tokens; average 4.286s after launch and -774.684s relative to the call; 7 pre-call appearances.
+- `55cmMzY3CLYMVXxg6jPLRdfEvFhQqk1yPM3E8FsnDh76`: 7 tokens; average 11.286s after launch and -449.270s relative to the call; 7 pre-call appearances.
+- `5bb5kQKhp4zT3MYuFp7QSpkvJkghfLp6yjQbvTDLK2vy`: 7 tokens; average 4.857s after launch and -352.194s relative to the call; 7 pre-call appearances.
+- `61n4nqq4ECk2p34vsY5tpmU8mD6arLH3cecMAQ6CLGt6`: 7 tokens; average 5.286s after launch and -302.321s relative to the call; 7 pre-call appearances.
+- `64hJxoZzjoL6MW4uwdKDkaBiZdk87ZxmthHnLwaAKUgS`: 7 tokens; average 4.429s after launch and -248.707s relative to the call; 7 pre-call appearances.
+- `7cp6zxvhxbfS7QgYTB7ts2RqFf7zDYwtjfuHcEHhKLAz`: 7 tokens; average 0.000s after launch and -13720.327s relative to the call; 7 pre-call appearances.
+- `8pisMPgQvkTc1x6jYtqCubVpASKGHAovN87m7XLtbbd5`: 7 tokens; average 9.857s after launch and -253.525s relative to the call; 7 pre-call appearances.
+- `9dVSVwrUJfnFqRZ8ChaGExowQbxWBSRgQbtgEQecCkis`: 7 tokens; average 2.571s after launch and -390.144s relative to the call; 7 pre-call appearances.
+- `AmwJToZR4YkawNquDbiUHbZnC2Myq1CLRRryUQ9FBf89`: 7 tokens; average 12.143s after launch and -217.591s relative to the call; 7 pre-call appearances.
+- `Bp4hdBHbAbhYDoGgxsG1iqxr8zEbzwQWtmAHz5c4oUpo`: 7 tokens; average 10.857s after launch and -116.392s relative to the call; 7 pre-call appearances.
+- `CBKgS8Nj714YomoPPxhVLUWos7vSrWnuL2cVKnJqWo2s`: 7 tokens; average 6.286s after launch and -331.646s relative to the call; 7 pre-call appearances.
+- `E35uoEGT6mR2ae94KNuSfk4X86y7bcNeomDNV4T7GaFs`: 7 tokens; average 4.714s after launch and -425.478s relative to the call; 7 pre-call appearances.
+- `Gdfyi9hHz7s1aDKbexkGeudLZ4pVjpLpsxECTEmV55Qr`: 7 tokens; average 10.143s after launch and -393.328s relative to the call; 7 pre-call appearances.
+- `GfDh8LF56byQ3ejp6yLFE2uuv6XZJ4c91St1SDyRLEfC`: 7 tokens; average 2.857s after launch and -397.811s relative to the call; 7 pre-call appearances.
+- `Hudwr9vv9aoXW4RMtfmwBfRFnWpKmz63UNm77ShreTbf`: 7 tokens; average 6.143s after launch and -13699.121s relative to the call; 7 pre-call appearances.
+- `J6DdwTar52hc1Bk7idh8c4wJ8XwHkH2tkyHimXtKJuBk`: 7 tokens; average 15.571s after launch and -341.244s relative to the call; 7 pre-call appearances.
+- `NajoJR4TibdKnVmz4rNGiNVz2jrrYc5AXm5XbiBkpXH`: 7 tokens; average 5.714s after launch and -724.149s relative to the call; 7 pre-call appearances.
+- `uwuRcFYRfvr31mpnxbYZFJnnRNSn9kc3RNnPXE3Nxn3`: 7 tokens; average 4.429s after launch and -13808.918s relative to the call; 7 pre-call appearances.
+- `2k6aaxszxwHpbg9CuYTZgb326V1xmp18HrXyru7Adjva`: 6 tokens; average 5.333s after launch and -376.941s relative to the call; 6 pre-call appearances.
+- `3Xk2EuuSwKgniGNA4XkB33YY4mnEvcMnTLNpkKgGa14X`: 6 tokens; average 20.167s after launch and -280.082s relative to the call; 6 pre-call appearances.
+- `3pk5yRhwwFdvDBrBuuC5CRorVafHG2EQmzNEYy8Ny2K6`: 6 tokens; average 6.167s after launch and -378.688s relative to the call; 6 pre-call appearances.
+- `4vw54BmAogeRV3vPKWyFet5yf8DTLcREzdSzx4rw9Ud9`: 6 tokens; average 4.167s after launch and -247.984s relative to the call; 6 pre-call appearances.
+- `57stAMFvwctAjkBS76RXGoK4QKyS1QoxbGMbzFFe4DyZ`: 6 tokens; average 20.500s after launch and -375.656s relative to the call; 6 pre-call appearances.
+- `5Eu4myQ55U5EN1KFEzp1xdQeRLXwU6iDNkCMAo7THAX3`: 6 tokens; average 13.333s after launch and -869.580s relative to the call; 6 pre-call appearances.
+- `5Gbbfx1LVvqTJFPQKkwEQwPEJM2NfghPWaYY9KtXrswg`: 6 tokens; average 3.667s after launch and -285.358s relative to the call; 6 pre-call appearances.
+- `5QY3MBvLEsP4xjE4SNYJYPuwvJgoBUrDnvSaZUNsNHZT`: 6 tokens; average 9.667s after launch and -247.459s relative to the call; 6 pre-call appearances.
+- `5Xdgg4VA4wuA1SzbWf3qquDxGzVJQYLuDQJEnX5vocNH`: 6 tokens; average 3.667s after launch and -285.358s relative to the call; 6 pre-call appearances.
+- `5yQK7ctnXhKnmc7SATBVwoMvMbrX1gBvbVQoB4Qc3wsw`: 6 tokens; average 3.333s after launch and -91.727s relative to the call; 6 pre-call appearances.
+- `6aXFYXbFob1ZKAEDCcqZnX2vooA3TgEqDoy5dAQbeWoV`: 6 tokens; average 5.500s after launch and -239.939s relative to the call; 6 pre-call appearances.
+- `7W8SEZv79hk4445o56Fd6RzhbUsozkzGXi8vkc7vNRr8`: 6 tokens; average 86.500s after launch and -810.518s relative to the call; 6 pre-call appearances.
+- `7jjEEgTx3xjGMHrykHQmjcWQjzXmZx83SQJWnYwREK5H`: 6 tokens; average 24.333s after launch and -421.673s relative to the call; 6 pre-call appearances.
+- `89HbgWduLwoxcofWpmn1EiF9wEdpgkNDEyPjzZ72mkDi`: 6 tokens; average 3.333s after launch and -91.727s relative to the call; 6 pre-call appearances.
+- `8ik9TbDMMm7iXErRA7ohCEGf3X4KjnbBfsJiCCSCFxdX`: 6 tokens; average 0.500s after launch and -403.741s relative to the call; 6 pre-call appearances.
+- `8jsPACiiC3x7d8gWN9yUUcvjqhJDpnEcV5BP8wPdD2Eg`: 6 tokens; average 10.667s after launch and -281.174s relative to the call; 6 pre-call appearances.
+- `AmfPwSWpiYUfD4sGzQfhfAotsF7wH6Z9WwfLjowjCKUz`: 6 tokens; average 3.333s after launch and -91.727s relative to the call; 6 pre-call appearances.
+- `BDW8Bjoe9fgfRPAkSf3Kpnphdd4ugWwsLitSxvqo4gg4`: 6 tokens; average 11.833s after launch and -507.378s relative to the call; 6 pre-call appearances.
+- `BNwVduQq1AH3ee5hnLQtbJmPyrBJHaS29b6VQt3pzvsR`: 6 tokens; average 5.000s after launch and -15785.282s relative to the call; 6 pre-call appearances.
+- `C3yvxfMZ7BSTXHmEsDmH3TnGyEMucgQ5QwmhZkegzFmP`: 6 tokens; average 0.000s after launch and -283.108s relative to the call; 6 pre-call appearances.
+- `Dqjztz4eZJN5qykPPqZTe9AAkHcuVWizVUDw61kUDJZi`: 6 tokens; average 10.667s after launch and -1129.405s relative to the call; 6 pre-call appearances.
+- `E418ruAsgQuuRFdpYQAJEjnq7Y1sXTKBmRiMSPwwRcm3`: 6 tokens; average 25.333s after launch and -580.465s relative to the call; 6 pre-call appearances.
+- `Fhbh1DTUDKt6qu9zVg8Q5VgnZa1WWWbxBxG6pCoJoggA`: 6 tokens; average 4.833s after launch and -188.838s relative to the call; 6 pre-call appearances.
+- `FpNMwD26c4m3pKvzwAaN7MYNuzSCuN2v4jySiaWehtPS`: 6 tokens; average 6.667s after launch and -15639.969s relative to the call; 6 pre-call appearances.
+- `GYULUFYXYR8fUghpgPYYR57Rb9uGxMWS8qguLQCmWj7J`: 6 tokens; average 9.167s after launch and -361.019s relative to the call; 6 pre-call appearances.
+- `Gf1SM7E5TcgCmSTxunkrGPkK6npqstfCPARqEHDpjCko`: 6 tokens; average 9.333s after launch and -455.585s relative to the call; 6 pre-call appearances.
+- `GuJtPr2zG1uCzAufr2UaBVT8PyWq9t4GvNuCGBnf2tPY`: 6 tokens; average 6.167s after launch and -288.687s relative to the call; 6 pre-call appearances.
+- `HCsVftaMsjHf88jDM26hdg5NrXT42pvpETUhzbYj5MfW`: 6 tokens; average 2.000s after launch and -443.670s relative to the call; 6 pre-call appearances.
+- `Hh2yn37jiXuwCM4nkvAZPbc8CjL6j32Ho38giC1y2PzL`: 6 tokens; average 12.667s after launch and -917.122s relative to the call; 6 pre-call appearances.
+- `HoChUe1nYaFTCsgdD2NXHtESCk1teqSAmhmyiXPxVfd9`: 6 tokens; average 4.167s after launch and -15898.216s relative to the call; 6 pre-call appearances.
+- `J3gZFpvsCsmA5zwqXgUpyqNLBoGGcJzmnfRwbHFR6KfU`: 6 tokens; average 18.167s after launch and -487.499s relative to the call; 6 pre-call appearances.
+- `bwamJzztZsepfkteWRChggmXuiiCQvpLqPietdNfSXa`: 6 tokens; average 0.000s after launch and -341.416s relative to the call; 6 pre-call appearances.
+- `omegoMAe1AMY5MFKQQr3JwXVy8F4eCvmBAfcpo8XAfq`: 6 tokens; average 118.000s after launch and -242.609s relative to the call; 5 pre-call appearances.
+- `29yFzeBZgxf5zqrAkKXwgZtQehRf4pL8WbV2nRJikbw8`: 5 tokens; average 0.000s after launch and -516.052s relative to the call; 5 pre-call appearances.
+- `2sv6wfieAtEaYKYQ33DsgnHTU9WvAYpSHhRywCLutjBz`: 5 tokens; average 2.200s after launch and -689.693s relative to the call; 5 pre-call appearances.
+- `3SmnSapyT84wx74x5iJyf73UXS16i5nwaaFaLFtKKuxJ`: 5 tokens; average 0.000s after launch and -354.995s relative to the call; 5 pre-call appearances.
+- `3yrJE1A8dgSuy5NLimG5GSYxA6wMkvnAYLD9Y4xR2fjJ`: 5 tokens; average 0.200s after launch and -147.953s relative to the call; 5 pre-call appearances.
+- `4Aktn51cRBEYXMrn2SDACPwXrKyz5oyXh4EUhCdiCjcG`: 5 tokens; average 4.800s after launch and -453.948s relative to the call; 5 pre-call appearances.
+- `4wbrLxXe4pwZe1u4g56BcKBN8uWi8xNoqwwN5tktgpVq`: 5 tokens; average 129.000s after launch and -641.915s relative to the call; 5 pre-call appearances.
+- `5KXTtadmWL3vLg7sRYZy3URf53SYbVn7L8VWmmdtcW3f`: 5 tokens; average 5.000s after launch and -439.580s relative to the call; 5 pre-call appearances.
+- `5U3qWioYpMXT841HnkAGo9gyayVhtuS8d4dgTjsC41g2`: 5 tokens; average 4.200s after launch and -393.883s relative to the call; 5 pre-call appearances.
+- `5st7H8QtPEVfovSwLmdJDjbUAQivVZJGzbHCir6dZxGc`: 5 tokens; average 3.400s after launch and -541.475s relative to the call; 5 pre-call appearances.
+- `64hP97Bwr5PubotcTeGgfhkFrGiLVVxT2kVo9M9b4AEz`: 5 tokens; average 16.000s after launch and -528.999s relative to the call; 5 pre-call appearances.
+- `6J1T22cKBTw11McuSteoEMpFfMfmWgG9NzsKs11mQYGD`: 5 tokens; average 25.800s after launch and -497.108s relative to the call; 5 pre-call appearances.
+- `6YC4BiqyxYku1g6VE33Me2b8ZuXdcArkt1RAYsLz6erL`: 5 tokens; average 1.000s after launch and -371.835s relative to the call; 5 pre-call appearances.
+- `9FQnf1QFTg8TZ6AJEffsfa7CNQJGALecmPtkYoTYUPFj`: 5 tokens; average 0.000s after launch and -250.567s relative to the call; 5 pre-call appearances.
+- `9bznRVmdeZ3PteMWQTqPzDLxMunvBbjX7dHE6GhFdLDp`: 5 tokens; average 44.600s after launch and -218.975s relative to the call; 5 pre-call appearances.
+- `AfPWFykWPZZxU2CyF6BcPoY2v8VEkmYS7ZggvELK7Pv1`: 5 tokens; average 2.800s after launch and -344.942s relative to the call; 5 pre-call appearances.
+- `Bi4rd5FH5bYEN8scZ7wevxNZyNmKHdaBcvewdPFxYdLt`: 5 tokens; average 7.400s after launch and -415.383s relative to the call; 5 pre-call appearances.
+- `C42SHQMDcfe8vLsHwBiHKj7sksco2jLQq8xcXXt3EB6T`: 5 tokens; average 5.200s after launch and -533.992s relative to the call; 5 pre-call appearances.
+- `DPGBtpCqWEhePyLH18a8zyRkV3i7JpzyKijTkv8BWTNf`: 5 tokens; average 2.000s after launch and -454.249s relative to the call; 5 pre-call appearances.
+- `Dd2nB2vD1XvDsdKqhtmCuh1q6tzWckkqLq3JubznKanL`: 5 tokens; average 3.800s after launch and -352.097s relative to the call; 5 pre-call appearances.
+- `DwkERB9i8oj8AuKXAGupkrzF3NRmJYvmZvsMYcefdoLq`: 5 tokens; average 23.600s after launch and -18830.234s relative to the call; 5 pre-call appearances.
+- `E4EzXdwf7NNdqM2XGswWaWHfxgucVCo24PTCcrimTKBz`: 5 tokens; average 0.000s after launch and -457.240s relative to the call; 5 pre-call appearances.
+- `EKhh135SzZs6hw8xRnbZbAVJVtFnmPE2t1uV1AbsbQBf`: 5 tokens; average 6.600s after launch and -18715.583s relative to the call; 5 pre-call appearances.
+- `EaaCfVxVboPx1wht6Xvqcmq6LVhDW5ouyCBMiu2tafBG`: 5 tokens; average 7.000s after launch and -356.695s relative to the call; 5 pre-call appearances.
+- `F6qRoKQD3cDfHAp6QK4KWGF1HHBAsqUYL6yXMrN9rJMK`: 5 tokens; average 12.200s after launch and -18883.009s relative to the call; 5 pre-call appearances.
+- `H31vEBxSJk1nQdUN11qZgZyhScyShhscKhvhZZU3dQoU`: 5 tokens; average 3.400s after launch and -141.338s relative to the call; 5 pre-call appearances.
+- `Hc8CBxEa2v45NoYwSDpcBrCHHzji9JDPWyFg1XqdogsC`: 5 tokens; average 6.000s after launch and -200.480s relative to the call; 5 pre-call appearances.
+- `Hyz8paNbNLSYxSfWT8KT2JDyvPW7E8yJBbaGnsZV7WE6`: 5 tokens; average 3.600s after launch and -307.076s relative to the call; 5 pre-call appearances.
+- `J36AVCr7uVoXwYgcL8yBmeCAatSLGLSjrCMaBca3sCXq`: 5 tokens; average 3.200s after launch and -367.186s relative to the call; 5 pre-call appearances.
+- `LivF8GikFDeekGrBcB6nHVNUHcBPNYTVzeoD2WQ5dfx`: 5 tokens; average 4.800s after launch and -142.577s relative to the call; 5 pre-call appearances.
+- `LpieurWuRDwZuWRrjpzB4UBa6nuN8auoNeKsLGUukn2`: 5 tokens; average 12.800s after launch and -1021.540s relative to the call; 5 pre-call appearances.
+- `ViTjB3dRqXLkSEyHPnwjVS82Kr5bRkpDbxw7525QRyd`: 5 tokens; average 3.200s after launch and -626.764s relative to the call; 5 pre-call appearances.
+- `a9Cct2wpjn4vWSR4rsytxm1URyk6vTXo4RTqXFpjyvD`: 5 tokens; average 38.800s after launch and -261.313s relative to the call; 4 pre-call appearances.
+- `mwamTohZTS8VVDXhJBwEFzmWbbaax5sSYY8e8Vxu6HG`: 5 tokens; average 25.000s after launch and -136.405s relative to the call; 5 pre-call appearances.
+- `sssssDdMNAWKingjpEojkTNdVuZrBe7FsJLaGtexe7d`: 5 tokens; average 26.400s after launch and -521.140s relative to the call; 5 pre-call appearances.
+- `2N5y6E7mqQmXEXQwGsFJWAgnVZ8M6mYpkx4aFTAJmy2c`: 4 tokens; average 4.250s after launch and -506.279s relative to the call; 4 pre-call appearances.
+- `2T3U2FzVKVWYvdimQESxo9gpTCQyJ4rYUAStuitcAgKQ`: 4 tokens; average 3.000s after launch and -602.692s relative to the call; 4 pre-call appearances.
+- `2iSMjjhBhsRmxBTvp4ZiZkMv7baQjm5r1CYVM7nPSs5E`: 4 tokens; average 12.250s after launch and -548.193s relative to the call; 4 pre-call appearances.
+- `3JD7zrZVXfGozgaSrnn3GzAcGsHCM5ATazX8EqwJqZWY`: 4 tokens; average 8.000s after launch and -382.632s relative to the call; 4 pre-call appearances.
+- `3Le7cTELrgoSX51gRZagrueWsm4fPJWMa64sXAqYcJk9`: 4 tokens; average 2.500s after launch and -273.610s relative to the call; 4 pre-call appearances.
+- `3TB4EwTwSrkWgjubYYbd6JNmVcTSJ44EgMMwKm8HZABQ`: 4 tokens; average 10.750s after launch and -332.923s relative to the call; 4 pre-call appearances.
+- `4WxE3GAiFG6EofdSF4N3DWXg5na9V3BQJJN5LuE5dzhP`: 4 tokens; average 40.000s after launch and -333.805s relative to the call; 4 pre-call appearances.
+- `4cTuSjRoxbqdiN1UcfnMtVUQtB6DSRDVtcCZUXLEhZbr`: 4 tokens; average 3.250s after launch and -481.215s relative to the call; 4 pre-call appearances.
+- `55YWjLwZB9W8ptCGzYZ4Jv6P8pc7hNeqBxjX682ncCRx`: 4 tokens; average 13.500s after launch and -608.886s relative to the call; 4 pre-call appearances.
+- `56S29mZ3wqvw8hATuUUFqKhGcSGYFASRRFNT38W8q7G3`: 4 tokens; average 41.750s after launch and -649.144s relative to the call; 3 pre-call appearances.
+- `5BFuw7KyK5ryyvBwv4uJYwwNMnXPqGJGcf6okqtnhmFJ`: 4 tokens; average 0.250s after launch and -501.445s relative to the call; 4 pre-call appearances.
+- `5KcKcGczDGsFjPDvZdCSWavQrpC6YhkBkv1rD7Jv1THR`: 4 tokens; average 10.000s after launch and -288.138s relative to the call; 4 pre-call appearances.
+- `5M7RCHoGbJnoKRajh7FbhVxU9peiiJgmqLzB4JVVJFmu`: 4 tokens; average 1.250s after launch and -239.815s relative to the call; 4 pre-call appearances.
+- `5XEj4qt6STm1dKvwTiqiuLRYJoMWUey4BqiwDPTuaUVG`: 4 tokens; average 27.750s after launch and -547.039s relative to the call; 4 pre-call appearances.
+- `5ZEUmZhKBnN7NTRqC4LgE9uNzB2Yk4XHqtjz8bcZVbRq`: 4 tokens; average 2.000s after launch and -480.619s relative to the call; 4 pre-call appearances.
+- `5fqfT3EkpwJNmbtNczcLoz11oJskK1hmiXGXuGqreTdW`: 4 tokens; average 5.500s after launch and -134.488s relative to the call; 4 pre-call appearances.
+- `5qMp9p2oFJx1Y2rLZ1X5kUbmXnpMvn5THtDP5NLsxaHK`: 4 tokens; average 5.750s after launch and -318.043s relative to the call; 4 pre-call appearances.
+- `65nGwm7t9Z6qkdkQrK88su5WWrYrqKuPJZSx9afcq5vm`: 4 tokens; average 18.750s after launch and -132.657s relative to the call; 4 pre-call appearances.
+- `6QRdkwTSk9Kop6VdqSkSPah7a3HfqKHU5DD4BqMFCUQP`: 4 tokens; average 3.250s after launch and -153.267s relative to the call; 4 pre-call appearances.
+- `6SHf2w549aAF6oqtGyQpHoSeDodTfanzKa1yH4AhXSsX`: 4 tokens; average 0.000s after launch and -228.945s relative to the call; 4 pre-call appearances.
+- `6fKGtgUw3kfEG3cxEGBN4RrwybvBv35zY49iCjwQfyka`: 4 tokens; average 12.250s after launch and -489.058s relative to the call; 4 pre-call appearances.
+- `78Qkt6pnSvDAfDLPG97At5ksFLdPqgNUKRKtGh9g1e5D`: 4 tokens; average 1.000s after launch and -733.425s relative to the call; 4 pre-call appearances.
+- `7BXQx5ASzsj5YeyxLyXrDP6U5uCjNVViMKTM85MNC76k`: 4 tokens; average 51.000s after launch and -156.594s relative to the call; 4 pre-call appearances.
+- `7JAcdE9ggUkye8Jo5FZT855iV2UbC55nkXAPZv638Dpf`: 4 tokens; average 4.750s after launch and -23472.270s relative to the call; 4 pre-call appearances.
+- `7NmDowR2Awy4sVVfejDiD1joZee91Do3Y2ACQxSWSq4B`: 4 tokens; average 3.500s after launch and -600.209s relative to the call; 4 pre-call appearances.
+- `7cL7mAhZegAMna95EDVC8CNvvGafGS15yoy3TKNodkcA`: 4 tokens; average 4.750s after launch and -23566.658s relative to the call; 4 pre-call appearances.
+- `7iyYn4gshakdEUkF2bfV4pU3oaYBmg9ktJwGW8kQ9z96`: 4 tokens; average 4.750s after launch and -296.239s relative to the call; 4 pre-call appearances.
+- `8BAXvpH6omY6CNRPkTmsRH72jQKBsXGN6kuXy1FpGAgh`: 4 tokens; average 3.250s after launch and -153.267s relative to the call; 4 pre-call appearances.
+- `8KUYGivN8zgRfKiLTeHBxpk9houRUxJb82NRwUBkhCQF`: 4 tokens; average 7.250s after launch and -1302.492s relative to the call; 4 pre-call appearances.
+- `8rM1bD9y1HxwcLgQgj8E5uLrXuDzXg6WwnV2h2oNZN8B`: 4 tokens; average 227.500s after launch and -135.164s relative to the call; 4 pre-call appearances.
+- `8tkKuYWCF5EVZeBm377LqyU3E2zcaQg4w2rgm1rYDDk6`: 4 tokens; average 18.750s after launch and -132.657s relative to the call; 4 pre-call appearances.
+- `97jv9pjCf5D7VUZEyj6XnXBC5JF23Vsagc3bvSF6GRmL`: 4 tokens; average 9.250s after launch and -725.536s relative to the call; 4 pre-call appearances.
+- `9pdYXJGy698VVwMacH19fd5yBCy1Yq2HdfXE1M4WYTbR`: 4 tokens; average 0.750s after launch and -513.257s relative to the call; 4 pre-call appearances.
+- `AbuGAb9M4AgXBchk42pJ3NSGgQKbiW6Lgc48BtMMKqkN`: 4 tokens; average 5.750s after launch and -411.737s relative to the call; 4 pre-call appearances.
+- `ApA3QLxi1Ta3UiS5vY4QakcEh8zsz39oZJYkXh1iwQBL`: 4 tokens; average 9.750s after launch and -23957.685s relative to the call; 4 pre-call appearances.
+- `Au1H6riMgxmP61PAF7GAbdcGrQgSuk3psSqm9mYtQg2j`: 4 tokens; average 4.250s after launch and -624.322s relative to the call; 4 pre-call appearances.
+- `Av3xWHJ5EsoLZag6pr7LKbrGgLRTaykXomDD5kBhL9YQ`: 4 tokens; average 7.000s after launch and -334.986s relative to the call; 4 pre-call appearances.
+- `BEgBqxKNA4aunzgAcboRQAH9fCUme22qaryWyZt4pSNT`: 4 tokens; average 39.250s after launch and -846.846s relative to the call; 4 pre-call appearances.
+- `BLAMEEhCJyRuChcs6p6ckex6MKUNmLLmtfC6vteCddEg`: 4 tokens; average 0.000s after launch and -340.061s relative to the call; 4 pre-call appearances.
+- `BmEZf8SgDkv8CKWbLUfzCRoqBNzwyvb55MwvgAAZGLyG`: 4 tokens; average 6.750s after launch and -526.125s relative to the call; 4 pre-call appearances.
+- `BrGTSccufFUri59SeD6g2ry7iwhKe2BP2FsD24BkpCZZ`: 4 tokens; average 2.250s after launch and -252.261s relative to the call; 4 pre-call appearances.
+- `BsNemx1CrL8jBy6sepqnpXYNf91PvjaicxeGwuo6JSnq`: 4 tokens; average 2.750s after launch and -304.342s relative to the call; 4 pre-call appearances.
+- `CWiNFAEk4M1y6SjvnZkmxWDmhqSmnKFcnop1WoDW3S2J`: 4 tokens; average 0.000s after launch and -236.138s relative to the call; 4 pre-call appearances.
+- `CcGUSWpKPyeRUseWnDHQMMjAmcy32WL27GbCUnHwABxY`: 4 tokens; average 9.750s after launch and -23558.842s relative to the call; 4 pre-call appearances.
+- `CtypBtuREmcupYzfA7Y8afwQtorMRc5HBkbE3qhwroNr`: 4 tokens; average 11.000s after launch and -196.383s relative to the call; 4 pre-call appearances.
+- `D5d2honrUBF81xyczcAWTXvhKmiX136V7u4fwpMQrBpP`: 4 tokens; average 205.250s after launch and -104.962s relative to the call; 4 pre-call appearances.
+- `DpBUrt6HsNvdPXV7eXGvfDZsUD9QLQZvYdno52YqtffV`: 4 tokens; average 5.000s after launch and -452.928s relative to the call; 4 pre-call appearances.
+- `DxhpC9c4kGkYJR34xUrfFeDx9vwb6yoHUMWrTCZybwtH`: 4 tokens; average 0.000s after launch and -187.170s relative to the call; 4 pre-call appearances.
+- `DzRqREhHeiSVpGSurhnHvyqoFrweh99u9yUSdXL6CQft`: 4 tokens; average 3.500s after launch and -23361.147s relative to the call; 4 pre-call appearances.
+- `EANGmhfRYdu8qEYPNGCmCEK2xbfbzjF89wteUUBapBEZ`: 4 tokens; average 46.500s after launch and -416.011s relative to the call; 4 pre-call appearances.
+- `EM1ZyNA3g4rr9MBzSEA36QqWd7t7cp54zDidm3YskyeU`: 4 tokens; average 4.750s after launch and -23490.139s relative to the call; 4 pre-call appearances.
+- `EWdAgcTdywcj5JxK4PEB4wN9zW2vtJDDrZcjbCUo3QaL`: 4 tokens; average 5.000s after launch and -122.006s relative to the call; 4 pre-call appearances.
+- `FBvxneTq8dY7WKxj924CseuveWzDL5tN9JuSW3S9nJkN`: 4 tokens; average 2.000s after launch and -565.710s relative to the call; 4 pre-call appearances.
+- `Ft2jWws5CduAu9BB2yqKdsaNVQRNegLm6Sk82nJBRgmd`: 4 tokens; average 4.750s after launch and -926.860s relative to the call; 4 pre-call appearances.
+- `GG4EPBKX4mp1ztJ2mPkNpsjC36Ka4QMJ1rFMkHbHzAex`: 4 tokens; average 0.000s after launch and -550.228s relative to the call; 4 pre-call appearances.
+- `GTnbqqrYg8tv9gsievtfDGxMi9FVGikNu3HiSxb4Wukr`: 4 tokens; average 0.000s after launch and -555.716s relative to the call; 4 pre-call appearances.
+- `Gg3ska7ScdMZX5nPgsM7wBfprRhNp6cuS2zuG7UFXcDv`: 4 tokens; average 0.000s after launch and -555.716s relative to the call; 4 pre-call appearances.
+- `GpWzQoGQRY5Lcb4NTeZvb2HjCcG5y8Wy46TBejzZu18g`: 4 tokens; average 4.750s after launch and -560.169s relative to the call; 4 pre-call appearances.
+- `H54i95gYfvbKe16Z4WUH8P5XV8o7fK5DPAAjBN5QoymZ`: 4 tokens; average 8.500s after launch and -540.546s relative to the call; 4 pre-call appearances.
+- `HW4UkuG9uTuFvrTjJB5euuwPLTRQ1oCQ7doCZSVLRkHC`: 4 tokens; average 4.750s after launch and -292.368s relative to the call; 4 pre-call appearances.
+- `HX3MjY4Ap3wwwrndXEmwAhQwQ6bZCmP9XbdvR2b1RKvw`: 4 tokens; average 9.750s after launch and -23558.842s relative to the call; 4 pre-call appearances.
+- `HcWPg6ELLoWAX1rJuqabbu5BUWEoAmJv4JczgohAn3Fq`: 4 tokens; average 1.750s after launch and -315.319s relative to the call; 4 pre-call appearances.
+- `Hn9B5qcoHAQZg6YsjT6twgugzw1YTNF9qahC1n7UKBao`: 4 tokens; average 5.000s after launch and -375.575s relative to the call; 4 pre-call appearances.
+- `J2L495ZPcJ6Btuyd4YqXz5uw7hpKiQXGcLvALwumabED`: 4 tokens; average 4.750s after launch and -23490.139s relative to the call; 4 pre-call appearances.
+- `J4hrKzU3oNwmAk1L93woL2qVW2uAkZ3XQpx52WnAQupw`: 4 tokens; average 5.750s after launch and -318.043s relative to the call; 4 pre-call appearances.
+- `PMJA8UQDyWTFw2Smhyp9jGA6aTaP7jKHR7BPudrgyYN`: 4 tokens; average 4.750s after launch and -23490.139s relative to the call; 4 pre-call appearances.
+- `ssssswdk4RR8HqkE3uwUWzDbd6mXFTTPjcXBKNzQ57E`: 4 tokens; average 31.500s after launch and -742.336s relative to the call; 4 pre-call appearances.
+- `1uVqKCwP2XNYaJrzYjf5jBDJArZdb46h6VQ5b3mzgyf`: 3 tokens; average 0.000s after launch and -539.725s relative to the call; 3 pre-call appearances.
+- `2F2c5EyXoxreThVusdrQHduDPD6pjDnYfNDrHGprtJKp`: 3 tokens; average 3.333s after launch and -473.791s relative to the call; 3 pre-call appearances.
+- `2M4nec5AdyUKuhg27pLDBBA7V4JunoERcRHtfcfxs5rh`: 3 tokens; average 4.333s after launch and -707.278s relative to the call; 3 pre-call appearances.
+- `2S4b4i8EBsJDdxHTQWibdsuzr8o8QhjUsPpvsW6HhFAe`: 3 tokens; average 0.000s after launch and -684.766s relative to the call; 3 pre-call appearances.
+- `2UYEBF1wXNDhcsjgRBvG8sp7aWRLbzF3MXU8hdn2yNpU`: 3 tokens; average 3.333s after launch and -31073.478s relative to the call; 3 pre-call appearances.
+- `2kw9zcTqxhtq8MDDb9JXJ1F315nfZvwBRuMTv3NYs4M9`: 3 tokens; average 19.000s after launch and -537.712s relative to the call; 3 pre-call appearances.
+- `2mqrindMAjJEQPLhroYWyiYPo5h9iAsahfdd4QtsjwdY`: 3 tokens; average 0.000s after launch and -539.607s relative to the call; 3 pre-call appearances.
+- `38V2r5forPyyhGYVEzpU71UVUC5uftCwfoTALaa7RNS3`: 3 tokens; average 5.667s after launch and -212.940s relative to the call; 3 pre-call appearances.
+- `38bVgxEww3WXP1vkz84RB5NJHiYKCdDoKo56GMs5rYJG`: 3 tokens; average 3.333s after launch and -240.806s relative to the call; 3 pre-call appearances.
+- `3H79ieQ7Xfp1nDAbUksbZHWwXzrbN6aU83zpik5yWjMY`: 3 tokens; average 1.000s after launch and -394.671s relative to the call; 3 pre-call appearances.
+- `3PpgE1PkUoftrPkZ5TcYzqaVHJs27baJsd4WathmNkuP`: 3 tokens; average 11.000s after launch and -328.611s relative to the call; 3 pre-call appearances.
+- `3ansVDDVNHZB7BYVMtyaAiq3jMP6rQ8hQwPXnVsC7KFc`: 3 tokens; average 0.000s after launch and -539.725s relative to the call; 3 pre-call appearances.
+- `3crj9TB2QitxSKBCTz9wSFR4wvEcK3RqEdhHtSxEfhgS`: 3 tokens; average 9.000s after launch and -685.167s relative to the call; 3 pre-call appearances.
+- `3ffu3rp7qiQb7JwDXyESGFfwRsUAviuSpXm3UGDtNi5T`: 3 tokens; average 0.000s after launch and -472.365s relative to the call; 3 pre-call appearances.
+- `3hhcEqz3doh5vSgo3x5ADbjGCdHYrt2UCELhBQQZ2iuS`: 3 tokens; average 4.000s after launch and -655.339s relative to the call; 3 pre-call appearances.
+- `3tNPvytXB9yTZLgh5RGdjrXVxHp89vGeCiwx9juqgp7q`: 3 tokens; average 0.000s after launch and -31009.615s relative to the call; 3 pre-call appearances.
+- `4Bz5ZrF2YNwZMYa3JAgukAxe3v8hytuYobdgxgHaVbzB`: 3 tokens; average 11.000s after launch and -697.019s relative to the call; 3 pre-call appearances.
+- `4Gr9GFoHb9WpCCHVUao6XFEwHq373vtJynwgH7nMTA1K`: 3 tokens; average 15.667s after launch and -469.382s relative to the call; 3 pre-call appearances.
+- `4TnayWRQizk4RpxYLusVLKumJooSWRDRAzzwKRELbCRK`: 3 tokens; average 0.000s after launch and -276.974s relative to the call; 3 pre-call appearances.
+- `4UPvSdt1ki7x4cwFuNxjhxPCnQ4AXnCSTKLxYV1vXK1t`: 3 tokens; average 4.000s after launch and -545.461s relative to the call; 3 pre-call appearances.
+- `4VYPJRjzD4ujK83puDbfq4wBa9oFjksTNBizk4G3n9nf`: 3 tokens; average 4.333s after launch and -707.278s relative to the call; 3 pre-call appearances.
+- `4Xt42F1RdP3hmS44Nf94C4atsmsrfPgiqqKCVkhhrhvP`: 3 tokens; average 5.667s after launch and -212.940s relative to the call; 3 pre-call appearances.
+- `4dK89Q3VstWHWL86f3XuSv725ZTS22MCFgRy1CRSDuAT`: 3 tokens; average 4.333s after launch and -666.103s relative to the call; 3 pre-call appearances.
+- `55EK3V7MApfPL4V6N5Vi6LBQbTrvXYVbFXqFNakY4E88`: 3 tokens; average 17.333s after launch and -222.323s relative to the call; 3 pre-call appearances.
+- `5HnzXhdADMB3gn2GphZATAwfrEzzMvG5hBwT36Wtd7JX`: 3 tokens; average 25.667s after launch and -1418.348s relative to the call; 3 pre-call appearances.
+- `5VXEfywc7afkroqUDxVr6KCWNmZpaquwTUvHspXP5edD`: 3 tokens; average 7.333s after launch and -426.219s relative to the call; 3 pre-call appearances.
+- `5ZKd8DNBFMVedS3D1ZkHVuf8X2Ha9tsUTWJZErCrg9Vz`: 3 tokens; average 3.667s after launch and -582.188s relative to the call; 3 pre-call appearances.
+- `62pyhnNMYsuDck9umU2DWk9HEkypke7KQ3tm75eEEDrn`: 3 tokens; average 2.333s after launch and -385.352s relative to the call; 3 pre-call appearances.
+- `634yyAz3EbZKmQusDaQBkoLGgJhgf2UDVEXR4rfZ4aZZ`: 3 tokens; average 5.000s after launch and -389.491s relative to the call; 3 pre-call appearances.
+- `63otb3qfCMz5bghv2vyEEwMoZnhnqyv7mj6rVco1hwnH`: 3 tokens; average 64.334s after launch and -83.663s relative to the call; 2 pre-call appearances.
+- `69Vppxj63mAGdt8fMhgEK9MimbboXn5meMPrLWEegAjS`: 3 tokens; average 13.667s after launch and -374.835s relative to the call; 3 pre-call appearances.
+- `6D14Xppf6m3kSGGXSJ45PPPDSSVAENtPLrCeoiHu6RjX`: 3 tokens; average 6.000s after launch and -417.932s relative to the call; 3 pre-call appearances.
+- `6KR7SorsUQtNH6CB6JpAnWCAKeTysa95iyXeWihdNeGT`: 3 tokens; average 5.000s after launch and -392.484s relative to the call; 3 pre-call appearances.
+- `6VNAfzQKMWvqRimbSzLDf68wC6yjvW5yLn9vteZN7TQJ`: 3 tokens; average 0.000s after launch and -708.019s relative to the call; 3 pre-call appearances.
+- `6VzXcLk9rCLDHgRBmUGKK8HY2KvhHmR4pZPCxi4tA1kx`: 3 tokens; average 1.667s after launch and -281.509s relative to the call; 3 pre-call appearances.
+- `6cUt6WMbsT5xh8j59AD2ZzumVszcPMGey9VB7dHvz6En`: 3 tokens; average 19.000s after launch and -342.448s relative to the call; 3 pre-call appearances.
+- `6qDMpcMrZSBXBF4SBE8V7bohgHS8iWpMcYWBqaZZsrrM`: 3 tokens; average 11.000s after launch and -697.019s relative to the call; 3 pre-call appearances.
+- `6vB9VfGpjtSTYdhJ9ZMTLXC32UDCCaKpeQmSVnGNHgXh`: 3 tokens; average 3.667s after launch and -214.441s relative to the call; 3 pre-call appearances.
+- `76VCjPWLJWHT5v5F7gfsUD7at7T6CEazLs1VGZeZoWkF`: 3 tokens; average 0.000s after launch and -135.503s relative to the call; 3 pre-call appearances.
+- `7777P2fkxsNCi3DLbfyv16c4PDRaZ1FJDZngvcv5FVu6`: 3 tokens; average 3.667s after launch and -161.641s relative to the call; 3 pre-call appearances.
+- `77wS9zZHJ57AXR2QvkX8Fu8iqUPBbYvUnJ2irb36QyTG`: 3 tokens; average 10.000s after launch and -228.983s relative to the call; 3 pre-call appearances.
+- `7BBGHVx6sQbxhQ2N1HMgeHRqiTYQCHarwLCutJGgiwZr`: 3 tokens; average 7.667s after launch and -214.955s relative to the call; 3 pre-call appearances.
+- `7moqFjvm2MwAiMtCZoqYoTAPzRBxxMRT2ddyHThQuWjr`: 3 tokens; average 0.000s after launch and -539.725s relative to the call; 3 pre-call appearances.
+- `7rzHb25KeVs1WeeSaRHTouJWiCiSJKkxE14DvYCNkw3k`: 3 tokens; average 9.667s after launch and -415.093s relative to the call; 3 pre-call appearances.
+- `8CvFWU1Hfmy7HkS7eWG2x8EMtQxAzCr7KcukKwspGFwB`: 3 tokens; average 2.333s after launch and -755.486s relative to the call; 3 pre-call appearances.
+- `8DDkEWgV5yergncamSkey91e5hg3LseRHnXts3VKcGAo`: 3 tokens; average 25.667s after launch and -132.352s relative to the call; 3 pre-call appearances.
+- `8FjipgAr2qxD7hVVkidEmTodNa1pCv1eMEFHk7TbJmED`: 3 tokens; average 6.667s after launch and -364.163s relative to the call; 3 pre-call appearances.
+- `8NJ7Ujpji8uMF2675mqaTSEm2DCbfJA7fiRKtiaqkaLN`: 3 tokens; average 0.000s after launch and -31009.615s relative to the call; 3 pre-call appearances.
+- `8QLGSQ7EPAiTAUtqDDtTn1pkdRvGHS5QFxZhR8Aiazaq`: 3 tokens; average 79.667s after launch and -60.125s relative to the call; 2 pre-call appearances.
+- `8XEsovzLjQQZWMTj2xPsJeVRKcztQmnAQTqiZyDnkhFa`: 3 tokens; average 0.000s after launch and -684.766s relative to the call; 3 pre-call appearances.
+- `8dwubKnL4FmmZsFt9cobpneFWH5azwRqDvciT2vsuQxS`: 3 tokens; average 6.667s after launch and -364.163s relative to the call; 3 pre-call appearances.
+- `91RpCePwmwCvSq5FjnBLvzCG748rMu4xcCCoxLedfejs`: 3 tokens; average 4.333s after launch and -176.984s relative to the call; 3 pre-call appearances.
+- `99xnE2zEFi8YhmKDaikc1EvH6ELTQJppnqUwMzmpLXrs`: 3 tokens; average 12.000s after launch and -153.569s relative to the call; 3 pre-call appearances.
+- `9B3R9F54rtugc1QoFa8o3z8uUCnxcTTAJqnkF6mRkf8b`: 3 tokens; average 16.000s after launch and -217.479s relative to the call; 3 pre-call appearances.
+- `9UEU5WSTcMfnuLZ2KFmSRpatYfabp4kaaBRZZwpRbRNA`: 3 tokens; average 3.667s after launch and -449.619s relative to the call; 3 pre-call appearances.
+- `9tbGNjKTcJiYNE8rnCBxnD9kateC7eeposZrzD35d5wt`: 3 tokens; average 7.333s after launch and -426.219s relative to the call; 3 pre-call appearances.
+- `AA3r25VTmVGWjQNCPZnuJkqGBcrCgtfkB6jZtDUSBYYt`: 3 tokens; average 7.000s after launch and -270.226s relative to the call; 3 pre-call appearances.
+- `ADkquSiH1zS6LmGoJxzwE6x44gpE6S3KWLALqNc3sTDs`: 3 tokens; average 0.667s after launch and -863.494s relative to the call; 3 pre-call appearances.
+- `AJEoYSg3KFGm8VLaZqPf4QC8pkQHFikfmVg57AZv1HHZ`: 3 tokens; average 0.000s after launch and -708.019s relative to the call; 3 pre-call appearances.
+- `AS6akYpZQydPnhrphuEkzAajBLYmkByHcKcMuLHfbEg8`: 3 tokens; average 18.333s after launch and -70.823s relative to the call; 3 pre-call appearances.
+- `AYJpwUnCZWaAhgTfU85eGUbSy59c5u9VzM8mbE6VLrUV`: 3 tokens; average 9.667s after launch and -104.899s relative to the call; 3 pre-call appearances.
+- `AbibCB5obxY8bQdq4W91FuCP1Wcc7FNXVUp4KJbtwFKJ`: 3 tokens; average 9.667s after launch and -185.265s relative to the call; 3 pre-call appearances.
+- `Akr3DzP8ZFKo8J2YmEBCpDoUqZKiFwea9E4UvqChnTV7`: 3 tokens; average 0.333s after launch and -162.053s relative to the call; 3 pre-call appearances.
+- `Anubis512ho5t7S6LNSwoxUWdeQmX2kf3RvZ8ApHHF5w`: 3 tokens; average 2.000s after launch and -245.519s relative to the call; 3 pre-call appearances.
+- `AoFQouMn7LLo6NfzRcBu8obUdxF6KfzPZSy6SwRv88Mv`: 3 tokens; average 0.000s after launch and -135.503s relative to the call; 3 pre-call appearances.
+- `ApSqUG7VPy8dr5adZW6CNCcANshz9LgYarvnTYv8tMhM`: 3 tokens; average 13.000s after launch and -459.570s relative to the call; 3 pre-call appearances.
+- `AxUfULyBzPc8LA9HwBePCg3E5PYGgjJjCBgvqGMaGnHd`: 3 tokens; average 0.000s after launch and -708.019s relative to the call; 3 pre-call appearances.
+- `B3tzc5vz2XrK9Hjd3r8Mxb1zk2rnAShP3tDQ56PJjV4S`: 3 tokens; average 0.000s after launch and -441.539s relative to the call; 3 pre-call appearances.
+- `BAscvCT17s9uUZCmaETRJ2rBYUEnytrisCJ7xoyS8ap3`: 3 tokens; average 6.667s after launch and -148.582s relative to the call; 3 pre-call appearances.
+- `BGVobQzqq7B8jFMXSBq25Cn9m4CpZPuD5pHmarm48GXS`: 3 tokens; average 95.000s after launch and -104.115s relative to the call; 2 pre-call appearances.
+- `BU99XYHSueULuTN3V3GuTfmXXWgNCrQXWwNsw9Ku1MPk`: 3 tokens; average 12.000s after launch and -153.569s relative to the call; 3 pre-call appearances.
+- `BUBBLEtr8BEJZ9PyC2DFYxG58r8tu5PiyAKMVm14hCg9`: 3 tokens; average 151.000s after launch and -284.956s relative to the call; 3 pre-call appearances.
+- `BZxtqKj99iYqDZFPxiXtEsCq9ffWPLkFuTkbW4LW23EF`: 3 tokens; average 12.000s after launch and -153.569s relative to the call; 3 pre-call appearances.
+- `Bb7iZcL3qj88yViNmUF37TZoQCJcLREjURY77rkJxGmA`: 3 tokens; average 0.000s after launch and -150.265s relative to the call; 3 pre-call appearances.
+- `BiE9oXEC74jqmsy7ASget6wcRZg5Sd9LRtKFbNE61r2E`: 3 tokens; average 18.333s after launch and -725.929s relative to the call; 3 pre-call appearances.
+- `BuekUk3YMmm7Agnb4ni1qMCmShVpeBTdQZYNyihyzr7u`: 3 tokens; average 7.000s after launch and -94.225s relative to the call; 3 pre-call appearances.
+- `Bxj8UY2XsScusb42vNjwABGNZVhBuK1yjifxDhHsX8Ga`: 3 tokens; average 10.000s after launch and -388.736s relative to the call; 3 pre-call appearances.
+- `CMcdFuBcRi68oKhUCmG6NXEGaxzRaQGvPpaD9jZfLTPq`: 3 tokens; average 6.000s after launch and -417.932s relative to the call; 3 pre-call appearances.
+- `CNMbjihxUkGhwrHmpFNh4ixSdERNHfZtUQ8TA95ZXXZr`: 3 tokens; average 9.667s after launch and -185.265s relative to the call; 3 pre-call appearances.
+- `CR7K5qzzcEHNPfwTKCZDYV7x6cE2QK8SdYdpM4cQya1f`: 3 tokens; average 11.000s after launch and -181.078s relative to the call; 3 pre-call appearances.
+- `CdiaH9LhKFLZTebpN3qgSqva3DnYUrwizxBmTFSTntMr`: 3 tokens; average 6.000s after launch and -417.932s relative to the call; 3 pre-call appearances.
+- `CxkxCQYLWVRStkWwdCcsAX6BWcPnMeKGQ3zm2m6jVjV8`: 3 tokens; average 233.334s after launch and -462.612s relative to the call; 2 pre-call appearances.
+- `D1QuMgpvKjaaEMbyFRpSwzLgec8CgqEeNiMsMQ3zSDb3`: 3 tokens; average 3.000s after launch and -304.669s relative to the call; 3 pre-call appearances.
+- `D6dnnGojGRnvXxWuSSNdEPjMGadt6fFTx59YkxYNQkyc`: 3 tokens; average 0.000s after launch and -31009.615s relative to the call; 3 pre-call appearances.
+- `D9aKypN8x9qNXpHggnY3braFoHJDSTVHbM2rrno1LPpW`: 3 tokens; average 5.000s after launch and -1041.617s relative to the call; 3 pre-call appearances.
+- `DEEBeFwq8yLtN9dT9vwkgHfPz6KdNkGRA36A4CoKpGAG`: 3 tokens; average 0.000s after launch and -539.725s relative to the call; 3 pre-call appearances.
+- `DFFXHcmTgdBe5NPVXryoarPc4KYGNM3zWQ5K1PhPZccn`: 3 tokens; average 8.667s after launch and -210.150s relative to the call; 3 pre-call appearances.
+- `DQeaFM7FNQYpsHQrtQRk1PFNTCFdjkqbCxYYxi4BWYYC`: 3 tokens; average 68.667s after launch and -65.579s relative to the call; 3 pre-call appearances.
+- `DWHEZ8JnfGtud25Gjhn3MndpTMshNEd12WMu2ciCa7ri`: 3 tokens; average 0.000s after launch and -135.503s relative to the call; 3 pre-call appearances.
+- `DWja6UWwLhX3uK4joHd7JwGHU2cpZP4cvevEQ69rxxqu`: 3 tokens; average 0.333s after launch and -426.330s relative to the call; 3 pre-call appearances.
+- `DXm1fbz4y7GsxX5NZjjW5u2sUdiiRVZYqhQhhLvL7G1J`: 3 tokens; average 8.667s after launch and -227.021s relative to the call; 3 pre-call appearances.
+- `DY8UwCLYdUtbgCZw9SiFPTtBz3WGZXvhHbvKjCRyuhLE`: 3 tokens; average 11.000s after launch and -697.019s relative to the call; 3 pre-call appearances.
+- `DiJF3L3796seiwyjmwfTz9wHUCCP5kmeMQM6kDzzjXax`: 3 tokens; average 20.000s after launch and -580.841s relative to the call; 3 pre-call appearances.
+- `DjQ5U31K1XfGTrZNczTtmYG76tvn4FZu7VzunhUjhehC`: 3 tokens; average 9.000s after launch and -561.320s relative to the call; 3 pre-call appearances.
+- `Dop8sxsJqy3cfdWgmwjhLTGhSRkm7z6XN7C6gQmNPrDX`: 3 tokens; average 0.000s after launch and -684.766s relative to the call; 3 pre-call appearances.
+- `E73eXATCi3YyejMdomdMXboR7zgDDrK74uF8VmmdP2i1`: 3 tokens; average 9.000s after launch and -207.606s relative to the call; 3 pre-call appearances.
+- `E83AvoFVWPbVx6m5TvCQytifvBts7p1YF6f4bbNVoydU`: 3 tokens; average 1.333s after launch and -564.957s relative to the call; 3 pre-call appearances.
+- `EHhEH9HwguHBvx5SEXtbrRHHdYerjTvEqB8NB1Pm5qx7`: 3 tokens; average 3.667s after launch and -449.619s relative to the call; 3 pre-call appearances.
+- `EJWy9QChNP47pDX5N3gkL5YLr2JHXWav6f2RkA6YEyun`: 3 tokens; average 15.333s after launch and -178.886s relative to the call; 3 pre-call appearances.
+- `ESrdxDfxD1SS5qUXPTMQxydvLcT55G6wCexAnKvfPfRi`: 3 tokens; average 5.667s after launch and -866.830s relative to the call; 3 pre-call appearances.
+- `EeHJn4X6FUGEbcjJE5ysB8usN8C7AY75Ej8TrvfgPRrZ`: 3 tokens; average 23.333s after launch and -176.903s relative to the call; 3 pre-call appearances.
+- `EkXxonwVB27DoBqSEnYYjNPmF83trANHNZkq6ffkRA62`: 3 tokens; average 11.000s after launch and -328.611s relative to the call; 3 pre-call appearances.
+- `ExLao2MoBk6AMjECFaB7bKwWPZW4WUz7M34MwW72G8Jb`: 3 tokens; average 2.000s after launch and -414.350s relative to the call; 3 pre-call appearances.
+- `Ezt2W9FjaBGwXpjLtfEXu5MiVAzmKWdRecqr3UbtkNU6`: 3 tokens; average 19.667s after launch and -435.670s relative to the call; 3 pre-call appearances.
+- `FaCYdntuk2w3KZBj4Jgm1THMG5dHAHGrW8X7VGU3wh9X`: 3 tokens; average 7.333s after launch and -467.881s relative to the call; 3 pre-call appearances.
+- `FiQWdtDD79kSbrdw6wdEtwxokQjQVuW12Zsnv2NPKZ4B`: 3 tokens; average 11.000s after launch and -697.019s relative to the call; 3 pre-call appearances.
+- `Fsx82i7Wr1xY77PaTJEuVn74CVF2Yp817GdLKhaWzk7R`: 3 tokens; average 7.000s after launch and -651.371s relative to the call; 3 pre-call appearances.
+- `FzVQSzj8JJr6WMGqbUHzx2XH1KkrfxRrRPv6WcbbZmND`: 3 tokens; average 2.667s after launch and -632.909s relative to the call; 3 pre-call appearances.
+- `G35xnx776ZUYnAefJxksK8weEcgvqTXhdcscHGQDDBs1`: 3 tokens; average 13.000s after launch and -784.611s relative to the call; 3 pre-call appearances.
+- `G3JfEedn7GjYs3ZtMAkDgj1MAfBL9MBYyWirwaw3Pv6D`: 3 tokens; average 206.000s after launch and -612.335s relative to the call; 3 pre-call appearances.
+- `GAYeu4sM42VJANeJBJ4ckKyGD2gBcmrjMEtwwCe1yGBh`: 3 tokens; average 12.000s after launch and -182.846s relative to the call; 3 pre-call appearances.
+- `GC6jyQ25JWFNnmmvzQQMmZjDtbK8PhEdQzBkVTqaMZMG`: 3 tokens; average 4.333s after launch and -177.184s relative to the call; 3 pre-call appearances.
+- `GDC4QSVZiaZBCKkm89vWPfTgJDvNTu8nCK4o2d9ZwPfX`: 3 tokens; average 9.667s after launch and -185.265s relative to the call; 3 pre-call appearances.
+- `GG8hd6XKsDjLpviYEyt3EKaZs8WXmZ86uqVto6zVmsjt`: 3 tokens; average 15.000s after launch and -205.395s relative to the call; 3 pre-call appearances.
+- `GTFfTbpvNC7rNb2fJvJynjixXSXHCJpEp6iCZaUBZQCZ`: 3 tokens; average 20.000s after launch and -117.327s relative to the call; 3 pre-call appearances.
+- `Go9BEhJGCpbXFzky6SWcofqQyuiKrtE1m9Knx1aiZCc8`: 3 tokens; average 9.667s after launch and -415.093s relative to the call; 3 pre-call appearances.
+- `GpTXmkdvrTajqkzX1fBmC4BUjSboF9dHgfnqPqj8WAc4`: 3 tokens; average 0.000s after launch and -708.019s relative to the call; 3 pre-call appearances.
+- `HCd5CSegZaPdrYFHDEnvByJPCx1NDhgKeWMA6H6hL4Je`: 3 tokens; average 41.000s after launch and -166.753s relative to the call; 3 pre-call appearances.
+- `HDUApJgLvgydExUht2MpEwfGmB1z8ifBHm2HjRF2d7Ce`: 3 tokens; average 7.000s after launch and -270.226s relative to the call; 3 pre-call appearances.
+- `HEF3wZBiLJeAAxJWdPHZJEzC6AMgbFQdfavSU7Hm88xq`: 3 tokens; average 3.000s after launch and -306.444s relative to the call; 3 pre-call appearances.
+- `HNwEoMmVS3rSNWLT4omZ4D7VqNpD9TaDy2yN3MTpEm9H`: 3 tokens; average 10.333s after launch and -414.426s relative to the call; 3 pre-call appearances.
+- `HYFhXZ3Gugdcag7PEbzgcx3vAs84wRpVP3B1Et2Gffna`: 3 tokens; average 2.333s after launch and -419.078s relative to the call; 3 pre-call appearances.
+- `HhiYx4RA3NCxn2dQ7TUonPFgrTh45WKcqQjscDWrpHcr`: 3 tokens; average 0.000s after launch and -31535.776s relative to the call; 3 pre-call appearances.
+- `Hp34goKgAhAYW6sw9iFAZofvDTr3DAhtkSKF1R9bAk2P`: 3 tokens; average 0.000s after launch and -684.766s relative to the call; 3 pre-call appearances.
+- `HwEKcgZhVgyQMsw12eQH3JLotGBxqVdbiTEbHeFATXPR`: 3 tokens; average 7.000s after launch and -270.226s relative to the call; 3 pre-call appearances.
+- `J3hJBr4CemR7ak3BZg4dMwZbPDNCoLfoVDVwCt67M6ME`: 3 tokens; average 17.667s after launch and -392.077s relative to the call; 3 pre-call appearances.
+- `JA31Cm2u6v51FuN7HMzhJ7vnCkgo38vNcU5tA6o5Z3Q2`: 3 tokens; average 0.000s after launch and -135.503s relative to the call; 3 pre-call appearances.
+- `JAunzNqs3bVBcWDjDxfq9rgLzJMCadNXoaCgfzLGMtYs`: 3 tokens; average 2.333s after launch and -755.486s relative to the call; 3 pre-call appearances.
+- `ardinRsN1mNYVeoJWTBsWeYeXvuR9UUDGMsCDKpb6AT`: 3 tokens; average 5.333s after launch and -198.384s relative to the call; 3 pre-call appearances.
+- `iNyUtaMtqWNyJcwy3CyENdou1YK7F7eGcXaqC7FioxQ`: 3 tokens; average 17.667s after launch and -797.151s relative to the call; 3 pre-call appearances.
+- `pBTiFEds716DaFSkjGbetxk6eQMYaoDQ7ySU2b1Y7ow`: 3 tokens; average 5.333s after launch and -146.191s relative to the call; 3 pre-call appearances.
+- `14g7Z2882kZeXNmMYVUUxjQLf78DVafwMRwQEPJRS31u`: 2 tokens; average 138.000s after launch and -340.698s relative to the call; 1 pre-call appearances.
+- `22gbWREnUi9BDCnKZQD24sgpWX11AHWB8D75Pc1EcHWr`: 2 tokens; average 1.500s after launch and -897.124s relative to the call; 2 pre-call appearances.
+- `2F6p8TXy3DXDx8zygmMJXXvpCJVBPznq9jaqbNVQpT18`: 2 tokens; average 0.000s after launch and -190.486s relative to the call; 2 pre-call appearances.
+- `2H6oKABT1cPHsSmLWBXJjYGTGnkJew9JZMGGswRafp6W`: 2 tokens; average 3.500s after launch and -283.418s relative to the call; 2 pre-call appearances.
+- `2LSncYjJrRsorTTG7UeTia9rmGo8pw8JtaAoYbq7CV5F`: 2 tokens; average 5.000s after launch and -438.723s relative to the call; 2 pre-call appearances.
+- `2QtzCnA4h93wxw2toBgGm7Q52DHGNThS1LexWVipB18y`: 2 tokens; average 8.000s after launch and -544.725s relative to the call; 2 pre-call appearances.
+- `2YF4WdLM6s2yKUCarrtBCB1jbjxeHUjoghPrJShDaqvW`: 2 tokens; average 0.000s after launch and -157.863s relative to the call; 2 pre-call appearances.
+- `2dVDXVC8JD865FKSnywSK81sbg2enXd6Wd8VTfEXLgiP`: 2 tokens; average 2.500s after launch and -731.049s relative to the call; 2 pre-call appearances.
+- `2fg5QD1eD7rzNNCsvnhmXFm5hqNgwTTG8p7kQ6f3rx6f`: 2 tokens; average 4.500s after launch and -409.214s relative to the call; 2 pre-call appearances.
+- `2jJSJJCnJKCdrgbJxvD9zJQiWSAxEQFadksPSRxsf85P`: 2 tokens; average 31.500s after launch and -217.674s relative to the call; 2 pre-call appearances.
+- `2m4vToFf7sQjazRhToW4qKCfS33zyeMHSrFocxmfqZBC`: 2 tokens; average 0.000s after launch and -277.935s relative to the call; 2 pre-call appearances.
+- `2nU1AogLMqD6iLr8u2itPPimAozyZoyZ24f9TmbRW7vM`: 2 tokens; average 0.000s after launch and -241.329s relative to the call; 2 pre-call appearances.
+- `2sMEsaPfYD9mgjigTwKQEgvGUehySbJuiFDHMhUUtHgV`: 2 tokens; average 10.500s after launch and -572.546s relative to the call; 2 pre-call appearances.
+- `2zMj6wNqNKSa3dG8ioUDi71P2uijKiojLwEizVGKWRjG`: 2 tokens; average 16.000s after launch and -818.858s relative to the call; 2 pre-call appearances.
+- `31G1ryWxXJ48yFW3rN3mm9Yr82mxmXnYdfU8qv3W6rwM`: 2 tokens; average 2.000s after launch and -906.165s relative to the call; 2 pre-call appearances.
+- `33Xdt43iMSXvkAKANUEKJiVa5Fnpx7abSV6tsu2ZC5PU`: 2 tokens; average 85.500s after launch and -399.886s relative to the call; 2 pre-call appearances.
+- `37V1znU2AxgHM67xjwHdvtg7ASKEii7nQU9kp5FM8PXN`: 2 tokens; average 3.000s after launch and -659.756s relative to the call; 2 pre-call appearances.
+- `38FQzJyqG6zd2ZiHCxdHFoVUyQ9drUTxcsQp7zshQto3`: 2 tokens; average 13.500s after launch and -104.944s relative to the call; 2 pre-call appearances.
+- `38HSMr1h8ZMJCkpg2ED4JwrtXdyYbBu8Nb3694cWZpmG`: 2 tokens; average 6.000s after launch and -184.452s relative to the call; 2 pre-call appearances.
+- `39nduMYSoWBE1pUiQty7xB5hWrMy9CprKtNdLCKfLSnS`: 2 tokens; average 3.500s after launch and -455.154s relative to the call; 2 pre-call appearances.
+- `3BaohEHrGjGVDLY3d8DzyMLTYFnudJGwgGgKh84TqzZx`: 2 tokens; average 10.000s after launch and -637.755s relative to the call; 2 pre-call appearances.
+- `3JZ2hjzyUZdF8Fwi1mQEM98CJQjNNZuF9XfLdWx9KMGL`: 2 tokens; average 19.000s after launch and -571.951s relative to the call; 2 pre-call appearances.
+- `3Sfme9Wt5S3NPzhc7xZpxwByn3EVYUXgkbHXi9im93An`: 2 tokens; average 52.000s after launch and -428.982s relative to the call; 2 pre-call appearances.
+- `3TZkRoVa8inezaasnMe7rWCPZJztT4P4EyD21ST4rSRg`: 2 tokens; average 3.500s after launch and -148.872s relative to the call; 2 pre-call appearances.
+- `3U6o5LDawtHaRjwX8Hy6QJiCjSukM1t9W6gSbSeLmq3G`: 2 tokens; average 0.000s after launch and -277.935s relative to the call; 2 pre-call appearances.
+- `3UZiXyAkPTn3L7ziRct2rzfEqzXMdFQ5vDLLSDP6XLJY`: 2 tokens; average 0.000s after launch and -488.405s relative to the call; 2 pre-call appearances.
+- `3VW5qAB8zASzMizyrauToRxuxMnS659K6CGqDgYiroFe`: 2 tokens; average 0.000s after launch and -135.277s relative to the call; 2 pre-call appearances.
+- `3Vru9qA45tKCdWR2Fzbqp43Wc7khkLn2RVS1dsJLHMHV`: 2 tokens; average 1.500s after launch and -315.116s relative to the call; 2 pre-call appearances.
+- `3aEoBZFwEPB6LeSixoWucBWXFpjRxTESi4vkssZHB6JU`: 2 tokens; average 238.000s after launch and -1079.403s relative to the call; 2 pre-call appearances.
+- `3bTYzG94soZcUPD3qX3JGv6AY5Vp1dhGi9GxorbbzH7s`: 2 tokens; average 0.000s after launch and -643.630s relative to the call; 2 pre-call appearances.
+- `3omJTvRdpTuWiWNegT6YFXJbXAUnkDbX8ELZsa4gb7CQ`: 2 tokens; average 0.000s after launch and -544.193s relative to the call; 2 pre-call appearances.
+- `3w2XwgAFq4v8jt3ZgsK7vPHbmXGHrnFgoMzLaZKqxQT4`: 2 tokens; average 0.000s after launch and -1012.683s relative to the call; 2 pre-call appearances.
+- `45vGZ148Chx1Kf17Gu75cGzrvp8MiRXSb37J642Siqya`: 2 tokens; average 7.500s after launch and -120.337s relative to the call; 2 pre-call appearances.
+- `49Sx66TcCQvptmqFuRxXMuRrkDYKb4Wr9zPdMyyQT7um`: 2 tokens; average 18.500s after launch and -380.156s relative to the call; 2 pre-call appearances.
+- `49uoiBfP9tVEecCeeLaj7CgpoX2JUoSbB1VzANK8Wjku`: 2 tokens; average 23.500s after launch and -565.268s relative to the call; 2 pre-call appearances.
+- `4D2rHp2hAiGpgYimzVKoYvtemtX69gaLaSHX9ZnUT9bt`: 2 tokens; average 5.500s after launch and -175.227s relative to the call; 2 pre-call appearances.
+- `4DNUKHqtUhrLzbv7YYdnkAhyQNRitWj7ADLedswYeX77`: 2 tokens; average 3.500s after launch and -554.673s relative to the call; 2 pre-call appearances.
+- `4HgMCR7abFKHDPgYfMrtjvKniPXj4zHwuSNNRVx7QEzQ`: 2 tokens; average 1.500s after launch and -1070.106s relative to the call; 2 pre-call appearances.
+- `4HgQDLskD1MpS6scVwRYZvAk1zrfQdqu1651uEMq4HJ3`: 2 tokens; average 8.500s after launch and -260.476s relative to the call; 2 pre-call appearances.
+- `4PY3MLrKPV4H3k477XYNC5ngGnYivstKhjc4e28ajYRu`: 2 tokens; average 3.500s after launch and -188.935s relative to the call; 2 pre-call appearances.
+- `4RHoTDWziM3kx12xYsUXmdRZWQFiobNA2ny6J6nYcFqg`: 2 tokens; average 5.000s after launch and -200.770s relative to the call; 2 pre-call appearances.
+- `4SPbsqxbw6HRFgovwMtE7JjSSP9ZRkUT6TitL14biURG`: 2 tokens; average 7.500s after launch and -144.084s relative to the call; 2 pre-call appearances.
+- `4VJj2frqFP2yJNnX1xuLHdeM7BvratwKbeYuG18TchYd`: 2 tokens; average 5.500s after launch and -103.439s relative to the call; 2 pre-call appearances.
+- `4d8c4sgB9iTTorEc1hvQ9Fp2gZ2oTnp4q2zQgvjSpfeT`: 2 tokens; average 10.500s after launch and -934.615s relative to the call; 2 pre-call appearances.
+- `4kfbgjxuk3tiarRunDcaEarrktUdxJ1yuryYrDofqBFr`: 2 tokens; average 11.000s after launch and -81.023s relative to the call; 2 pre-call appearances.
+- `4r2Xk65EPbgGWUJ2GqspnMoqBsTJKsaTJCi5TFwsnZLC`: 2 tokens; average 6.500s after launch and -247.577s relative to the call; 2 pre-call appearances.
+- `4uBqztBzwjbb4HS7ZUspeordDkagY5fYENAeiqi8xcYU`: 2 tokens; average 4.000s after launch and -409.570s relative to the call; 2 pre-call appearances.
+- `4uCT4g7YHH4xxfmfNfKUDenwGrRNGoZ9Ay1XFxfUGhQG`: 2 tokens; average 11.500s after launch and -88.487s relative to the call; 2 pre-call appearances.
+- `4xv6f2m1xGnVnk42XVNmrvyPvCYHegndXzh1UtJXRRuQ`: 2 tokens; average 10.500s after launch and -353.058s relative to the call; 2 pre-call appearances.
+- `4yFAz7dp5WwuZs3vbWKedbRiUmSFxTVGCdsLAxfEQrG3`: 2 tokens; average 0.000s after launch and -152.315s relative to the call; 2 pre-call appearances.
+- `4zQG6oUwbjRrzVCG3wMAo6xuEBXe2doupdeeekKmPYUu`: 2 tokens; average 0.000s after launch and -572.787s relative to the call; 2 pre-call appearances.
+- `53ySUBVJCkvAkw72CojfAa8Ms8F5t8hDYCAyxXsJwTdp`: 2 tokens; average 26.500s after launch and -76.268s relative to the call; 2 pre-call appearances.
+- `56e2PjxqjQLh1Ew2mQVRQovZWWjErtPdjkkJvhwBSFHy`: 2 tokens; average 69.500s after launch and -407.567s relative to the call; 2 pre-call appearances.
+- `5CPUZppe7TzV8ryQubwNStVX2FSMBBqcpJuKDkL3trpU`: 2 tokens; average 4.500s after launch and -185.986s relative to the call; 2 pre-call appearances.
+- `5FnE3q4tcDkEjRGuHgcxoBLXoZjWXDE5xEpJyneHDc9g`: 2 tokens; average 48.500s after launch and -503.860s relative to the call; 2 pre-call appearances.
+- `5FqUo9aBjsp7QeeyN6Vi2ZmF2fjS4H5EU7wnAQwPy17z`: 2 tokens; average 0.000s after launch and -488.405s relative to the call; 2 pre-call appearances.
+- `5H4N8o4aP8Lw6tkoTwuSm1svR5nmRRRiwwYjCxaE5PNT`: 2 tokens; average 18.500s after launch and -380.156s relative to the call; 2 pre-call appearances.
+- `5PE3gSfywhfjq5u5SHf6G3XRNeWkqoy6URZYSRCsXwEf`: 2 tokens; average 10.500s after launch and -134.438s relative to the call; 2 pre-call appearances.
+- `5ZtzVYRuF7sEhot31S68xHRCKDMkDdFtTp1iujTRjowV`: 2 tokens; average 25.500s after launch and -91.717s relative to the call; 2 pre-call appearances.
+- `5c5WNCnQnPkWAQcwHcm4x2R4JX9sV8YL4BiDEZ5fKqCd`: 2 tokens; average 0.000s after launch and -488.405s relative to the call; 2 pre-call appearances.
+- `5cPfNrmpCaLUV5Ji5LJHJatWbb41996W3HnrBgkzEBRb`: 2 tokens; average 3.000s after launch and -379.986s relative to the call; 2 pre-call appearances.
+- `5dsFAqxAoUYFxnUBfufADUMn4k8BZEkr43eoHr4v2rWd`: 2 tokens; average 75.501s after launch and -166.986s relative to the call; 2 pre-call appearances.
+- `5hAgYC8TJCcEZV7LTXAzkTrm7YL29YXyQQJPCNrG84zM`: 2 tokens; average 12.500s after launch and -208.515s relative to the call; 2 pre-call appearances.
+- `5mRLLd7fepXzwxx7ZW8FTneqpSbh1cqyPqmGCVyFkc8P`: 2 tokens; average 6.500s after launch and -471.049s relative to the call; 2 pre-call appearances.
+- `5vHKMqiV9DhEYfp4qAQ6rUbmF4wNr97rwkqowxnC9XAk`: 2 tokens; average 21.500s after launch and -250.742s relative to the call; 2 pre-call appearances.
+- `5veTCy9eDaL66LqABfpywN6jr1s7zaXP4uit8sMRAaHA`: 2 tokens; average 77.501s after launch and -78.090s relative to the call; 1 pre-call appearances.
+- `618CHAKV1Ugsbdp4zfP2PYoGDwrfAUgGYPg8BK1sfxJA`: 2 tokens; average 11.000s after launch and -360.761s relative to the call; 2 pre-call appearances.
+- `63wnCAg3eQrGwh5Uk1sPWAARdKz7hebHuhLsbUQw5Z6B`: 2 tokens; average 2.000s after launch and -188.486s relative to the call; 2 pre-call appearances.
+- `643fC2hoV2bsW7b8oJ29XQunFT7JbbDtJLKyZXCb8iac`: 2 tokens; average 5.500s after launch and -297.838s relative to the call; 2 pre-call appearances.
+- `6PQ6ff7bvjtBynYuKbjJkcVNx8V6SDqyT84vX8rKXjRF`: 2 tokens; average 10.500s after launch and -197.294s relative to the call; 2 pre-call appearances.
+- `6Qt8a3Y6B4nekSRQ1p2e5yqP5bSCbE6HzUTdWwdfYXmR`: 2 tokens; average 32.500s after launch and -119.456s relative to the call; 2 pre-call appearances.
+- `6Sx7pb1792ibStiGr11VsZjHcHUA2gg58eh9Cq7gPVZY`: 2 tokens; average 11.500s after launch and -88.487s relative to the call; 2 pre-call appearances.
+- `6WxiAPEuDrKncBDfm87zA1DiSbtCksSrM5oGgdN3HBug`: 2 tokens; average 9.000s after launch and -214.639s relative to the call; 2 pre-call appearances.
+- `6YANuDjxANKngz6XyjCUaY4aVujBpebUs12RXMYAqXS3`: 2 tokens; average 7.500s after launch and -702.403s relative to the call; 2 pre-call appearances.
+- `6YF1jopu1B6TdfmhiwURzAxef6w9ukDRnszUEaVcNb95`: 2 tokens; average 4.000s after launch and -192.306s relative to the call; 2 pre-call appearances.
+- `6Zx9wRV4kMQPv9x3atiyqDr1qxT3LfYJYEMJyPxYwT7F`: 2 tokens; average 7.500s after launch and -344.055s relative to the call; 2 pre-call appearances.
+- `6abTpionfdvkiQAXQf9gLdpkXU57NeCZ2Dnwb5GSmMsX`: 2 tokens; average 1.000s after launch and -610.866s relative to the call; 2 pre-call appearances.
+- `6agRVLmoLaqqHfRVxkDsCswN5qsNkHftVmmchaMyafsg`: 2 tokens; average 1.500s after launch and -309.794s relative to the call; 2 pre-call appearances.
+- `6eGsqwhvLDCgsFykN8UdBSF4hscuZNmjtmVFrNssM77B`: 2 tokens; average 9.000s after launch and -557.486s relative to the call; 2 pre-call appearances.
+- `6ed94GSojZofqzqg2UPessdWqQAmstZX1EDqz347ASrD`: 2 tokens; average 15.500s after launch and -709.548s relative to the call; 2 pre-call appearances.
+- `6f9oaKvYRuJ2NrzHV7iMGYF6NRv8NkjzMn2c5HC2pf5D`: 2 tokens; average 0.000s after launch and -338.090s relative to the call; 2 pre-call appearances.
+- `6fAV85kfyqXexp7uJVqByxDehU61WGVq8YD3CSWrYwQ8`: 2 tokens; average 0.000s after launch and -156.704s relative to the call; 2 pre-call appearances.
+- `6gf1zR5niLW2d5pRu3mf5xeF7Whkt37THtwMU5J9m7Nh`: 2 tokens; average 2.000s after launch and -906.165s relative to the call; 2 pre-call appearances.
+- `6hVFtyYLovFvsigSquo3wqef54m6tFFFJPzxMv7ZZnGN`: 2 tokens; average 4.500s after launch and -602.948s relative to the call; 2 pre-call appearances.
+- `6kkjU6JUUwP7v3wsZPvXbmEjvTTQvfAiUhWZTCQ8p1Qh`: 2 tokens; average 0.000s after launch and -157.863s relative to the call; 2 pre-call appearances.
+- `6ptyouHwvLCrbkuDZTN7tuBkBMU3G9QmzyRmaGP4X34v`: 2 tokens; average 6.500s after launch and -496.172s relative to the call; 2 pre-call appearances.
+- `6rRLtKPTc5DWTaJk2hbQw1vgrRjGB4K9se6TWcXjbiFM`: 2 tokens; average 5.000s after launch and -139.791s relative to the call; 2 pre-call appearances.
+- `76VMCqqzCdny4658aDFFU7jw44jRTiqCCRdtWF8cAJwb`: 2 tokens; average 2.000s after launch and -1931.111s relative to the call; 2 pre-call appearances.
+- `7BXREvJj2NzASSabL66nLBLnePNzxat59pVi8NmAY1DJ`: 2 tokens; average 0.000s after launch and -157.863s relative to the call; 2 pre-call appearances.
+- `7JULSQyxhhTBzKjbAuDuxYYvcM4QgbkxErTRA5oz6pVg`: 2 tokens; average 10.000s after launch and -263.092s relative to the call; 2 pre-call appearances.
+- `7K8JxX9wEiNw6pMoP5fCX8jQ9dqRenKe6ucZRN7aVRoa`: 2 tokens; average 1.500s after launch and -418.293s relative to the call; 2 pre-call appearances.
+- `7NAd2EpYGGeFofpyvgehSXhH5vg6Ry6VRMW2Y6jiqCu1`: 2 tokens; average 4.500s after launch and -409.214s relative to the call; 2 pre-call appearances.
+- `7Qdc5LRRdPrfSmhRgcuV6PGg91NSYzbJ5WwE3yL6LXTu`: 2 tokens; average 1.000s after launch and -610.866s relative to the call; 2 pre-call appearances.
+- `7RKK7VRNmvrvwuvknCC17TAbt1rfjTsA47Pf2z7NL98w`: 2 tokens; average 10.000s after launch and -263.092s relative to the call; 2 pre-call appearances.
+- `7YP2uswqQJxtAV9JW3H4nwyVxgpFKVLVSMjfuvsTepc8`: 2 tokens; average 0.000s after launch and -709.849s relative to the call; 2 pre-call appearances.
+- `7bBpvrmVeCF3hyFWAMynNcaAxprfL2WCnfEpiotKYRfU`: 2 tokens; average 3.000s after launch and -461.959s relative to the call; 2 pre-call appearances.
+- `7bmgatCuYEkdHfK7tfPomirwfhTCEcXax6wXmTN7iGya`: 2 tokens; average 3.000s after launch and -197.099s relative to the call; 2 pre-call appearances.
+- `7jGhmzxYKP2oJvjSaUuTZqeww6JDvszAFQvwhn8vznZX`: 2 tokens; average 10.000s after launch and -140.478s relative to the call; 2 pre-call appearances.
+- `7qHQQ8Q6bauhbWT7xmLvDWU5rXGoAUaxSu4AGHpjV4jP`: 2 tokens; average 5.500s after launch and -152.226s relative to the call; 2 pre-call appearances.
+- `7vYTofeWUzF2Cxent3RFp5tQedWkiCARz2o67wUxsqi9`: 2 tokens; average 7.000s after launch and -152.496s relative to the call; 2 pre-call appearances.
+- `7zGdmBpkRapRLxfgWYNAzjngp7mFJuD7AhGZ4rHmjn5L`: 2 tokens; average 2.000s after launch and -189.380s relative to the call; 2 pre-call appearances.
+- `86hH7CwMbFqqmRkXf2S4bPe61JurGcn9qsfdrertNKjV`: 2 tokens; average 12.500s after launch and -87.525s relative to the call; 2 pre-call appearances.
+- `87nJZku6KRrRmhAKFX29bb3uVZs2K4EgNAKHod5FZANP`: 2 tokens; average 14.000s after launch and -571.747s relative to the call; 2 pre-call appearances.
+- `8C9vXEtsDCnm3DPSyZAzkVb6PabrZYioE2iZgHcdNT4D`: 2 tokens; average 3.500s after launch and -120.861s relative to the call; 2 pre-call appearances.
+- `8DQpEBcHZBBnB5FfbMC4m4oPhcUidjkQjkx88Fdu2G5V`: 2 tokens; average 0.000s after launch and -157.863s relative to the call; 2 pre-call appearances.
+- `8DUME78c7tLoyPVsgZa74HyfKAU5N6SAen9C4mRjk7kB`: 2 tokens; average 3.500s after launch and -239.100s relative to the call; 2 pre-call appearances.
+- `8DZZsi4aWxbn5BBW5XnksoiC5oMZiZZyg8y5PYG7XNQk`: 2 tokens; average 1.500s after launch and -543.846s relative to the call; 2 pre-call appearances.
+- `8DgVVtnNZQRKu4Cx6xeAMTukUHMTE3f2Cqb1wMzJ9beU`: 2 tokens; average 26.500s after launch and -254.151s relative to the call; 2 pre-call appearances.
+- `8FySgd7VmjnXsGjUbgtDxDjZVEJ1FsQJkG5K2FKY7mMq`: 2 tokens; average 1.500s after launch and -772.870s relative to the call; 2 pre-call appearances.
+- `8UN881KsS33fQJnEtC2B1XDMWQzvJBiAqfLsKzr5g67`: 2 tokens; average 23.000s after launch and -46747.395s relative to the call; 2 pre-call appearances.
+- `8ZatX3uYfVxH1emrDQd3erxwGsX8tdrqxH1mHiKh3GCw`: 2 tokens; average 0.000s after launch and -572.787s relative to the call; 2 pre-call appearances.
+- `8dtx2tr4TuJsYpri2suggFu1pg3DVjFLBBVmhtDy1MEF`: 2 tokens; average 69.000s after launch and -669.096s relative to the call; 2 pre-call appearances.
+- `8eftoRDpRcjkrT6VZ1HPSB1mJfE9SdgkNKqid58F5XKi`: 2 tokens; average 3.000s after launch and -502.333s relative to the call; 2 pre-call appearances.
+- `8g1w4PNCHooeQbAhYbNAM9yv4pbQJthPRpiqSpiSeVQh`: 2 tokens; average 4.000s after launch and -445.139s relative to the call; 2 pre-call appearances.
+- `8jaQARxGU1KCBypSgPcFNkQanFbczZ9DpHEupZ1YHGrJ`: 2 tokens; average 5.000s after launch and -226.245s relative to the call; 2 pre-call appearances.
+- `8oEdDewyhPhVNnizQFFfCUSzP27qVpHX4WXqFJKdZrYc`: 2 tokens; average 18.500s after launch and -239.321s relative to the call; 2 pre-call appearances.
+- `8onxzPhFeCTkwELU1d4Y3qaT4VXVNZ1zrTYtevqkPKse`: 2 tokens; average 2.000s after launch and -417.793s relative to the call; 2 pre-call appearances.
+- `8oq9LQS3Eqy7Gr9ehKxVjgmNHYEaVHM3gh5aBa6pC2m5`: 2 tokens; average 4.500s after launch and -415.293s relative to the call; 2 pre-call appearances.
+- `8qHBtZMpvZxkGATGmX3B7TSoBJpVBrTXAJ3CzKKTKBtG`: 2 tokens; average 4.000s after launch and -320.062s relative to the call; 2 pre-call appearances.
+- `8s1ZGsVRoeKAk96JwqmbFZ7wjEXkRgbH52q2L2PXhudX`: 2 tokens; average 4.500s after launch and -453.448s relative to the call; 2 pre-call appearances.
+- `8tWJGxjFWSj8sbBiUGFam8mm79aavBtq1zYxv7Le4n9L`: 2 tokens; average 9.000s after launch and -210.060s relative to the call; 2 pre-call appearances.
+- `8xdRQ9VGqwzT4AYgbRB6ZNMFaJQ6rr1nFGLop5BiM8z`: 2 tokens; average 2.000s after launch and -492.986s relative to the call; 2 pre-call appearances.
+- `95ZCf3jKMHeFYvPXVZW3Ek6AEPDyjebosqnc7eNioVMo`: 2 tokens; average 0.000s after launch and -242.600s relative to the call; 2 pre-call appearances.
+- `99JTmhMR9JrvrKutmRRD4ygNxAC3yR9EXhyBcq4nehXE`: 2 tokens; average 12.000s after launch and -493.350s relative to the call; 2 pre-call appearances.
+- `99Xy6CWaX9Gi6jDs4Pju9UETZPGXFFDpG666V5D86d6w`: 2 tokens; average 5.500s after launch and -371.816s relative to the call; 2 pre-call appearances.
+- `9FB3vVCvz7aPEqXFSqSHu6nPBASKGy38pFSUMyKACqrf`: 2 tokens; average 7.500s after launch and -383.733s relative to the call; 2 pre-call appearances.
+- `9FeRS4nh8T2HHFuRspqYTVqptLTHETCPQgoQ538KLjts`: 2 tokens; average 10.000s after launch and -792.083s relative to the call; 2 pre-call appearances.
+- `9GWnZKnAa4jcrQUd91qVSNpYikeBRkTeMXDTALF4aGqZ`: 2 tokens; average 3.500s after launch and -184.561s relative to the call; 2 pre-call appearances.
+- `9HpRCnTGrEnavZokww59BGzsBanFiXdCnbiT4MHhuM35`: 2 tokens; average 2.000s after launch and -659.508s relative to the call; 2 pre-call appearances.
+- `9HvLxQwEgnT7nfXctCVBRN6KdNkT2hsNtXBKV69yYiAr`: 2 tokens; average 8.000s after launch and -179.498s relative to the call; 2 pre-call appearances.
+- `9LMeW9Sx3xRHc2zSTFZ4AXPq3rTSA8zfoz8vTNi45PtU`: 2 tokens; average 0.000s after launch and -190.486s relative to the call; 2 pre-call appearances.
+- `9XnaVjr6AmpXNGeugiAJMvUvUA2r3U7snZ9gpjand6NL`: 2 tokens; average 6.000s after launch and -128.837s relative to the call; 2 pre-call appearances.
+- `9bwHbhAEDTWgF8NMdxZkJLwooDcy3fshSxGanGWeskHC`: 2 tokens; average 6.500s after launch and -153.582s relative to the call; 2 pre-call appearances.
+- `9c4hh87C6TbfYwBKiha85jtuZkL6W6E6pcbUYG8dfP35`: 2 tokens; average 7.000s after launch and -1222.347s relative to the call; 2 pre-call appearances.
+- `9ecRdqNCBxwReiY2pxtnLeayeBzE1CrSSmKKJJGdmsaJ`: 2 tokens; average 7.500s after launch and -144.084s relative to the call; 2 pre-call appearances.
+- `9g7X8SbLZcvG2N4tyewD6S5sab1isH7ywevixny5xQE2`: 2 tokens; average 3.500s after launch and -79.430s relative to the call; 2 pre-call appearances.
+- `9iYpKAGTuW1hNrf9A9CYvNYPWz21aV2cwq8jFHhrZ1Gz`: 2 tokens; average 0.000s after launch and -441.657s relative to the call; 2 pre-call appearances.
+- `9kXTVj6xsBugfoa22nGRBJCyd3EYHqz7b3YqooPB6cDj`: 2 tokens; average 3.000s after launch and -771.667s relative to the call; 2 pre-call appearances.
+- `9pkcMws3WtQcfxa5ArH1xgBkKvms69mbUxQEyf2EugLB`: 2 tokens; average 2.000s after launch and -188.486s relative to the call; 2 pre-call appearances.
+- `9qz7cWBqYBP2TnGfzMmxX64G4PQip7HtogjPBBnMhWpw`: 2 tokens; average 7.000s after launch and -96.517s relative to the call; 2 pre-call appearances.
+- `A5dFP3a3cMBhYcXZc2UstXuQzkbT7psSb7P4Wva7qM9J`: 2 tokens; average 7.500s after launch and -70.038s relative to the call; 2 pre-call appearances.
+- `AAjjzMZc6pMHnrZmjZhFwU5N8TBs5qpsNa84a8Pc7iyN`: 2 tokens; average 2.500s after launch and -731.049s relative to the call; 2 pre-call appearances.
+- `ACUqQFHiuyobxeJUW6dvppZyfqkce2EJLhVu9Zf2iL1E`: 2 tokens; average 19.500s after launch and -458.671s relative to the call; 2 pre-call appearances.
+- `AE9myP21FZTstAX6HijJ9F2aoJFZzJpiXaeQbgiYDTKu`: 2 tokens; average 26.000s after launch and -345.538s relative to the call; 2 pre-call appearances.
+- `AEgTuy8Lg4wfnjm285mk3P2k1p39ofqNXk8b5VtYhdCs`: 2 tokens; average 0.000s after launch and -163.363s relative to the call; 2 pre-call appearances.
+- `AEwwH6hq5sqf6DBeMPyf4uiZE2N24A3G5mX47816WttS`: 2 tokens; average 3.000s after launch and -291.348s relative to the call; 2 pre-call appearances.
+- `AFQyb1m5P3GoYUpgB5T3HonYP1WWAzhGRKpL8okaf1AQ`: 2 tokens; average 13.500s after launch and -1435.485s relative to the call; 2 pre-call appearances.
+- `AJLcuB9ZWYvJuVr2kvrzr182NupVrRpYtrCJbw8msfEu`: 2 tokens; average 13.500s after launch and -534.711s relative to the call; 2 pre-call appearances.
+- `ALC9QNsMaFV8cCCpyL6vHDQdwmPzMkdpx6yiwFnVE3L8`: 2 tokens; average 1.000s after launch and -545.347s relative to the call; 2 pre-call appearances.
+- `ANQAWcduKeTYn3fVki7hdkTDRUWgB5DTLyissf6AU6Ty`: 2 tokens; average 9.000s after launch and -416.074s relative to the call; 2 pre-call appearances.
+- `AQ46kfYT3hW28Xg5gWHrJkzFSz1oGWBHC3FsTbqgMEco`: 2 tokens; average 6.000s after launch and -1555.543s relative to the call; 2 pre-call appearances.
+- `AQUvxU4TEWEpwFe7X9hy5ZjSGYoihcwdzrz7ZB5G5Cyf`: 2 tokens; average 6.000s after launch and -171.282s relative to the call; 2 pre-call appearances.
+- `AWNVYDYDRqZg4NMBFB4Qqnda8FdgffLRUwnF1Pq81faw`: 2 tokens; average 6.000s after launch and -99.394s relative to the call; 2 pre-call appearances.
+- `AZ5sVzrJMUPjNY37xJiCDeAyUKF5PCfXicdXUoR4ts7s`: 2 tokens; average 1.500s after launch and -744.112s relative to the call; 2 pre-call appearances.
+- `AZpLDS1Kjn9FiCVQxBrvjb25J1rqbzVVh4U388Q9e8su`: 2 tokens; average 3.000s after launch and -422.701s relative to the call; 2 pre-call appearances.
+- `AiQBuxbtoMZgi9s3P58j8TTpukedbhxrx3dPR35pwDtC`: 2 tokens; average 22.000s after launch and -221.954s relative to the call; 2 pre-call appearances.
+- `AjRr4S5CGAHATKSgLTseJAgU7NadtEvRDxshitxC89eT`: 2 tokens; average 10.000s after launch and -145.632s relative to the call; 2 pre-call appearances.
+- `Anva6JEutaUxW9JDp2WZ9yq8yHFUpaBrV2BXshQHVJMf`: 2 tokens; average 98.501s after launch and -427.765s relative to the call; 1 pre-call appearances.
+- `ArQGq689asxfkS6veDmL2BrdRCvRGYsXBkTYvY63Qwwt`: 2 tokens; average 16.000s after launch and -261.612s relative to the call; 2 pre-call appearances.
+- `AreSXNRAsnwrKaQvg2H5trpQNqfprRPT62Y5EDU5h7xf`: 2 tokens; average 8.000s after launch and -88.645s relative to the call; 2 pre-call appearances.
+- `AsibLmSGjDUDE4o8NzhtSjZUmJ7FuQzZbdQWHF7hLoY4`: 2 tokens; average 0.000s after launch and -511.820s relative to the call; 2 pre-call appearances.
+- `AzcvjR3YbA7KGzALXtW1HPjrGuKc8B3vjWhZwg6Rrgpc`: 2 tokens; average 5.000s after launch and -389.549s relative to the call; 2 pre-call appearances.
+- `B8cJjRnS69ikJ7iE7gSW4isc6WFAz3jfH6XnZ8g5uWyL`: 2 tokens; average 8.500s after launch and -425.300s relative to the call; 2 pre-call appearances.
+- `BBFhtuEJU4qcffp2r3XJJpq7gnsfVuDhHepQzDKLfyhk`: 2 tokens; average 3.500s after launch and -251.669s relative to the call; 2 pre-call appearances.
+- `BByZPd5C7R8vSX3MivG7onXgebLRpq2L1x41aTCo2oAj`: 2 tokens; average 11.500s after launch and -362.841s relative to the call; 2 pre-call appearances.
+- `BCCwRKh4MLBKH5MpdJ1TAcjUK4hfPDSAyuyBViBBU6rf`: 2 tokens; average 2.500s after launch and -450.594s relative to the call; 2 pre-call appearances.
+- `BDuAJGTuPcUgfxWyKJVrWPASRyVTT8iTEc3j6xXPt1My`: 2 tokens; average 0.500s after launch and -487.517s relative to the call; 2 pre-call appearances.
+- `BGMxmMAWE8HxXNVHY7y8gVvayf65T6mvYuXa75LD1sha`: 2 tokens; average 11.000s after launch and -149.368s relative to the call; 2 pre-call appearances.
+- `BNS2aS6C8igpBvtvTW2s9y5pqLggPk8qySkHJDryfzXq`: 2 tokens; average 1.500s after launch and -772.870s relative to the call; 2 pre-call appearances.
+- `BQF5jTmkBpnuYVe47VhTJGVJXyzxsq5smaxA3VTGqMgD`: 2 tokens; average 10.000s after launch and -608.135s relative to the call; 2 pre-call appearances.
+- `BSwWpdoRhtcM3JSnwdhz9bAkWztibTSkdLLQA8Y5xFbz`: 2 tokens; average 2.500s after launch and -187.986s relative to the call; 2 pre-call appearances.
+- `BTf4A2exGK9BCVDNzy65b9dUzXgMqB4weVkvTMFQsadd`: 2 tokens; average 5.000s after launch and -870.650s relative to the call; 2 pre-call appearances.
+- `BTgZevYNx5PyhN36JSq8U8eUpU8mKAELfYA2AHP54Dts`: 2 tokens; average 98.501s after launch and -31.093s relative to the call; 1 pre-call appearances.
+- `BYxxKQ7crodCMHBydmsg2pBonuuaHFRKxafBprNdVTTh`: 2 tokens; average 11.000s after launch and -182.393s relative to the call; 2 pre-call appearances.
+- `BbwF4wSwmxMVp7xubA7qigCUU6RMcvK2soMu8VrDHjDH`: 2 tokens; average 3.000s after launch and -461.959s relative to the call; 2 pre-call appearances.
+- `Bcn2qwBC6nqnD2FcXxHjGNeQaWjqghwJcGFnQJHbej91`: 2 tokens; average 2.000s after launch and -132.837s relative to the call; 2 pre-call appearances.
+- `Bgj779K3T4pvSCkZrwohhAGNk2xVNGNVBXXnYTHpLUTD`: 2 tokens; average 4.000s after launch and -189.837s relative to the call; 2 pre-call appearances.
+- `BkV37yAWJnm6CXfSjFUFopxaVYG8wyjzevRVb8L4mFPj`: 2 tokens; average 5.500s after launch and -74.838s relative to the call; 2 pre-call appearances.
+- `Bo8Gm2t6KbbVmmfiTVBuyfVxFftptHakByVTbrsm45D2`: 2 tokens; average 10.500s after launch and -259.419s relative to the call; 2 pre-call appearances.
+- `BobfTFKsxnJj6GTDQuh6SVMotGnF3TVNT2v6U3Yq4iTJ`: 2 tokens; average 4.500s after launch and -160.328s relative to the call; 2 pre-call appearances.
+- `BzzzWS9hrhviTyWD4jGaVfpBAREwAZh1KiHorBc2CNvE`: 2 tokens; average 9.500s after launch and -99.439s relative to the call; 2 pre-call appearances.
+- `C4eNLxxC7XLUivghMi35YUeSfvACgnvKB18115uPUqjg`: 2 tokens; average 3.000s after launch and -886.025s relative to the call; 2 pre-call appearances.
+- `C65s6TEuoFzRvbPQ5CU1WTJaZyviviHXnHyjHLyPvRja`: 2 tokens; average 2.500s after launch and -169.173s relative to the call; 2 pre-call appearances.
+- `CBfcB2JgsRkjKF4CjN91oVuQDKztbUfvFX5Cf6X6Ma7J`: 2 tokens; average 7.000s after launch and -564.021s relative to the call; 2 pre-call appearances.
+- `CC3oFqcsqPdcjyyiC7RcshssjWEvu3zMxS68fNsFsn9`: 2 tokens; average 5.500s after launch and -116.750s relative to the call; 2 pre-call appearances.
+- `CFxV5thMrC2zePzDqtegAMPMENP1R5iayRWFq2TFM9kN`: 2 tokens; average 16.500s after launch and -223.570s relative to the call; 2 pre-call appearances.
+- `CJ2EeY5dH625NEuuiLLUtnqjzT2xrDmNELnQajDm4nSC`: 2 tokens; average 3.500s after launch and -331.298s relative to the call; 2 pre-call appearances.
+- `CJCUQo5EV7QGgWhG1RmgdYAFCWeXSAPKr4LMU6nqBqwT`: 2 tokens; average 1.000s after launch and -610.866s relative to the call; 2 pre-call appearances.
+- `CKnzTzYpxefpd1kuxXeprUoJUdgm4DJR5i2kiF34Kc1f`: 2 tokens; average 4.000s after launch and -258.962s relative to the call; 2 pre-call appearances.
+- `CN1vNmYJW3aEYHhx3GY16mYEVTAkZ2hDz7asEoqhcLEm`: 2 tokens; average 10.000s after launch and -145.632s relative to the call; 2 pre-call appearances.
+- `CT6td8mRxLQCDWN3xynGEZWPFX9s3TGJ2qgAo7oFTXto`: 2 tokens; average 6.500s after launch and -247.577s relative to the call; 2 pre-call appearances.
+- `CVxUKFrWDYkE3gsZP9gyVmLD6XkXykk2ukKhAfNrJev8`: 2 tokens; average 2.500s after launch and -572.661s relative to the call; 2 pre-call appearances.
+- `CWNAJ1ZTPxWpKH3CTGpZPAtFpTzsVuuXabCw16RbaVjp`: 2 tokens; average 0.000s after launch and -149.225s relative to the call; 2 pre-call appearances.
+- `CXoUJHtBGnuNR6zJ3zm8nTnNzCwXxFViXh29d1kTJQmK`: 2 tokens; average 0.000s after launch and -235.647s relative to the call; 2 pre-call appearances.
+- `CXsAdUqDvpumLW9588VhZDxgtNR5GuPiyqsjn9VnaG1`: 2 tokens; average 23.000s after launch and -346.132s relative to the call; 2 pre-call appearances.
+- `Cc3Z5ZAVq4oM5VifZeZPKTuwSeCzjQGpsdXAJLD9DPGe`: 2 tokens; average 3.000s after launch and -132.867s relative to the call; 2 pre-call appearances.
+- `CdP6qd97kg1xJUsk56CWHKi4cGDKp4Uxa6EpHPfgTZUR`: 2 tokens; average 2.500s after launch and -193.806s relative to the call; 2 pre-call appearances.
+- `Ci2uW1FoLwuFPdMEri5yxZWRHBURkiMWcb7dRuQYvXvS`: 2 tokens; average 3.500s after launch and -156.988s relative to the call; 2 pre-call appearances.
+- `Cj6gmebMrgzWJpQh6k2R7mzfzxQr9zyx5FafRVJpBU9N`: 2 tokens; average 24.000s after launch and -405.784s relative to the call; 2 pre-call appearances.
+- `Cjud2kUcU3WYki6meUmaHsBN1aNCzzBw2d18aXoFYojd`: 2 tokens; average 0.000s after launch and -242.600s relative to the call; 2 pre-call appearances.
+- `Cv5GgkpXvtXcsrMcKCJvx46BpMjiM61mpPU1j8RbbbVL`: 2 tokens; average 24.500s after launch and -378.089s relative to the call; 2 pre-call appearances.
+- `CzVCe1D9CG7YhdKLn5525D7nfvf3H27XdAssQbGaFCjE`: 2 tokens; average 7.500s after launch and -508.034s relative to the call; 2 pre-call appearances.
+- `D4CboCGLb1YBozXY2ShGrJ4cGVRUBMP7tDcuWbjJ98D9`: 2 tokens; average 11.000s after launch and -149.368s relative to the call; 2 pre-call appearances.
+- `D9UzqMe1T4u95Zztmu4CdxCZg7rSgiW9Qj13TBhGybR3`: 2 tokens; average 3.000s after launch and -241.682s relative to the call; 2 pre-call appearances.
+- `D9gQ6RhKEpnobPBUdWY5bPQt2p3zGk3iVz6ChpUi2ArA`: 2 tokens; average 0.000s after launch and -572.787s relative to the call; 2 pre-call appearances.
+- `DB6qhfFFWnZehFcuGLEUCWraA9p62AfXnzm6veQPTShf`: 2 tokens; average 4.500s after launch and -255.019s relative to the call; 2 pre-call appearances.
+- `DEXGUYMrUaNTAkVgVvuDuMjycdwTcq2qhqhbv1EdNuTS`: 2 tokens; average 2.000s after launch and -381.351s relative to the call; 2 pre-call appearances.
+- `DF9MXmawYzbqskNxL1wTSYRcG2Gv25pqvVxVKD4kvkM4`: 2 tokens; average 1.000s after launch and -425.235s relative to the call; 2 pre-call appearances.
+- `DHtR2UMM2p6RTjSGqvB5HQeBmKcbi6ojVX5mqqdjesb8`: 2 tokens; average 0.000s after launch and -419.793s relative to the call; 2 pre-call appearances.
+- `DJ7zsf86CMjKJSuAzBwk2TiTvJ6eTivyZJz9X5caTuUL`: 2 tokens; average 4.000s after launch and -474.454s relative to the call; 2 pre-call appearances.
+- `DTpzoWbmGb2TiChBcBBNEvZCGkM682q5Xt4RMNwtqdZ3`: 2 tokens; average 0.000s after launch and -933.822s relative to the call; 2 pre-call appearances.
+- `DWPWqoT9axSvFEtB4pyvPQDVqATE7GtaAGi6fHrfXcJw`: 2 tokens; average 11.500s after launch and -586.572s relative to the call; 2 pre-call appearances.
+- `Da1Erpm3FoS2f3Sto7FfVVnd8S2acvQyxY52VDmpH2iQ`: 2 tokens; average 11.000s after launch and -835.331s relative to the call; 2 pre-call appearances.
+- `DgVDcsjTbTA3iv45ZU1WeqxHGwJxg6yvrs9HD5u1sViE`: 2 tokens; average 26.000s after launch and -345.538s relative to the call; 2 pre-call appearances.
+- `DhvMrV29pYmi7g8zX1d7bnMNdUuB3mPxLcRN66TpJzji`: 2 tokens; average 1.000s after launch and -287.846s relative to the call; 2 pre-call appearances.
+- `Dk1rLGgMhdCvV4c5LsCuPTJSbejAbtnHbifrct9Uj3aU`: 2 tokens; average 9.500s after launch and -543.225s relative to the call; 2 pre-call appearances.
+- `Dqv8whmAjdC4EtQ22AEgaYymfaD4mCPvyz5Uy3ghE67c`: 2 tokens; average 0.000s after launch and -534.932s relative to the call; 2 pre-call appearances.
+- `DsGJkPzFEQZuwy7JjZzPcJEyEfdC6StV7rarXG4ftRSA`: 2 tokens; average 0.000s after launch and -142.550s relative to the call; 2 pre-call appearances.
+- `Dv7pbcYGrYGFuZ4XGAEFYZvCstvZUa8yXJeZnUxv2DMC`: 2 tokens; average 0.000s after launch and -426.235s relative to the call; 2 pre-call appearances.
+- `DwTxH8MM2HwYGMzAGuQLSTi4JXYPHnbgipetHke3pfir`: 2 tokens; average 3.500s after launch and -120.861s relative to the call; 2 pre-call appearances.
+- `E5j2karHHQZpRQHxPPfSbnaSrbW4hPijv2wV5JNUj9K1`: 2 tokens; average 10.000s after launch and -263.092s relative to the call; 2 pre-call appearances.
+- `EB5tsAi9wN1Rp43TgXdADpyKoAgwD1PqYhyJKvBuVQUF`: 2 tokens; average 6.000s after launch and -1555.543s relative to the call; 2 pre-call appearances.
+- `EBNpfTHHU3bJdxHA3ktiKs2MUA66UwEFsmhNGDJbkaPb`: 2 tokens; average 19.500s after launch and -458.671s relative to the call; 2 pre-call appearances.
+- `EDXHdSFdadFbYFFjxPXBqMe1kCEDFqpPu552uvp48HR8`: 2 tokens; average 10.500s after launch and -134.438s relative to the call; 2 pre-call appearances.
+- `EHFGraJiDaWnxYHVu1s9sFx1oeMKieWVhTiDRezqZXCj`: 2 tokens; average 6.000s after launch and -241.672s relative to the call; 2 pre-call appearances.
+- `EMPvzc2iYeGtrb7EKVezn2ctnBQUs3pykyktTUbmqXwK`: 2 tokens; average 4.000s after launch and -482.077s relative to the call; 2 pre-call appearances.
+- `EN99z91jxRDqrDEgXN61XkWEaVB4p9yugy8ZKvz92kb5`: 2 tokens; average 5.000s after launch and -817.781s relative to the call; 2 pre-call appearances.
+- `EXitjPp2zEW1gNCHsM4KSCffn9igdM7APXjgRtd8pUmP`: 2 tokens; average 6.500s after launch and -148.875s relative to the call; 2 pre-call appearances.
+- `EXueF6jatgRR3Dneof9ipvNxKnuAGM5HKZefUs8Ue3zJ`: 2 tokens; average 13.500s after launch and -534.711s relative to the call; 2 pre-call appearances.
+- `EZbw9MrMwGKE3PCYDos7Y7cQsaqoRAby9i18MjGjzxMk`: 2 tokens; average 23.500s after launch and -73.528s relative to the call; 2 pre-call appearances.
+- `EZijEsAErJ2nr3i9RiJxvzRqyDV1Vu6tARfqt2mYh1gy`: 2 tokens; average 2.500s after launch and -195.519s relative to the call; 2 pre-call appearances.
+- `Ec1ppyYrai72DM5B8wqYmQU7HrS1kk1xQDx8DUxEFnSL`: 2 tokens; average 6.000s after launch and -640.197s relative to the call; 2 pre-call appearances.
+- `EeYUvv1GDpNn7PRiD8KpsHPLG7zSWN4PhBPZ9gZm1Yjv`: 2 tokens; average 0.500s after launch and -485.577s relative to the call; 2 pre-call appearances.
+- `EiY6RowjfgN1LZvstQUSyLxvDGT6rmmWi3YggpMKtX6Z`: 2 tokens; average 20.000s after launch and -229.756s relative to the call; 2 pre-call appearances.
+- `EoUPdmrcLvio9fc4iLGY32uJVRydvntoz2EMJuELqVQz`: 2 tokens; average 2.000s after launch and -757.532s relative to the call; 2 pre-call appearances.
+- `Epysd8fSF29gduUthcD58n2ZC1KZnzhBKvHZydch2rUG`: 2 tokens; average 4.000s after launch and -904.165s relative to the call; 2 pre-call appearances.
+- `EqiFgyNw6kgrmYstWyrP8VjKhka7XEmKTZzHSmwpr1Zb`: 2 tokens; average 28.500s after launch and -1437.266s relative to the call; 2 pre-call appearances.
+- `EsqRAayVCtJ9yDECWK6BArY9Dy1eyKYXdyN8GbZ5AXsL`: 2 tokens; average 5.500s after launch and -150.749s relative to the call; 2 pre-call appearances.
+- `Etgb4nx83tpHNohttTqUGvSj6LZhPjEczF6WGbEdeshX`: 2 tokens; average 0.000s after launch and -190.486s relative to the call; 2 pre-call appearances.
+- `F7kLu2M9389jaGUsrvdiK2hErhkMNDA7mRZzjE5zYsB1`: 2 tokens; average 3.000s after launch and -518.858s relative to the call; 2 pre-call appearances.
+- `F9SEMEmwVhGF31AQjfY4RE32sU1wQP6oPfWxxSg31hDm`: 2 tokens; average 3.500s after launch and -120.465s relative to the call; 2 pre-call appearances.
+- `F9piwRXjLM8tV5rpzsKzPmUSySuejJQtSAhivVytAo2K`: 2 tokens; average 3.000s after launch and -294.737s relative to the call; 2 pre-call appearances.
+- `FAFKKrWCpP3ayUnvuDCFUXroE8C63c4sbNDaGJbouC62`: 2 tokens; average 2.000s after launch and -319.264s relative to the call; 2 pre-call appearances.
+- `FSnJeGY9XfqucAsNh1h1niKfkvaHX1pjL2yVfR2axf3z`: 2 tokens; average 1.000s after launch and -778.174s relative to the call; 2 pre-call appearances.
+- `FSz6mptAxKrjDjaJYQiGiCGGwsxL4WgWjsh9sGhw4BZX`: 2 tokens; average 99.001s after launch and -427.265s relative to the call; 2 pre-call appearances.
+- `FaVx2mNoF8JnceueE1brj4W44a6EBPWpSVbLmJPw4LYx`: 2 tokens; average 0.000s after launch and -393.791s relative to the call; 2 pre-call appearances.
+- `FgjaLJirojug4baAqdaVyDqXFMWPTeZ3348xBLm5hno8`: 2 tokens; average 2.500s after launch and -189.912s relative to the call; 2 pre-call appearances.
+- `FiFawHqxeTVBhv6YbqbLwDVuvokRpPUM1bNwAyxhGc6W`: 2 tokens; average 13.500s after launch and -140.123s relative to the call; 2 pre-call appearances.
+- `FjeaKDFAgexEPZbAFHwE4cL1MFvn1o6EL1qehcmVStCX`: 2 tokens; average 11.000s after launch and -149.368s relative to the call; 2 pre-call appearances.
+- `Fm4KUVJzB5W9B996Wm9vTTr2EHtwjKTx3yeP81TgmiJf`: 2 tokens; average 2.500s after launch and -187.986s relative to the call; 2 pre-call appearances.
+- `FsbbAcDUJmhRjPWbLTB5p3UEJpYBHwq47ngwAZYn2u4F`: 2 tokens; average 3.500s after launch and -79.430s relative to the call; 2 pre-call appearances.
+- `FwgLvbYGNyL9XpUijAP3pq1PZLbifW5myr7jb2NcojnD`: 2 tokens; average 11.500s after launch and -179.914s relative to the call; 2 pre-call appearances.
+- `FxN3VZ4BosL5urG2yoeQ156JSdmavm9K5fdLxjkPmaMR`: 2 tokens; average 4.500s after launch and -409.214s relative to the call; 2 pre-call appearances.
+- `Fzo9V7Qe8u2RLJ6o8Jhm2SyzNF1LQohnKvCEL4wzQBWK`: 2 tokens; average 7.500s after launch and -210.964s relative to the call; 2 pre-call appearances.
+- `G2mgnzpr59vYjKpwU9q5zVfS9yQ9HezMwjuqF7LACvR4`: 2 tokens; average 17.500s after launch and -755.686s relative to the call; 2 pre-call appearances.
+- `G3N7YcrcQV52nYanjkq1WAnTkM8TvuKsJ7Rxf5Btit14`: 2 tokens; average 3.500s after launch and -686.386s relative to the call; 2 pre-call appearances.
+- `G3ouJNKDPGXNUU1qtbZ3bwzqnnphMEB2qQjBiDfCbm4x`: 2 tokens; average 4.500s after launch and -602.948s relative to the call; 2 pre-call appearances.
+- `G4MyDutoQReMgKd2m2TGTxzjobuRuUKxQv7X2SfMkrK1`: 2 tokens; average 8.500s after launch and -537.683s relative to the call; 2 pre-call appearances.
+- `G7nE2WwhA7KcxHDwsXUt51y1RMW63bXc5AAWzV3rsY5q`: 2 tokens; average 0.000s after launch and -178.569s relative to the call; 2 pre-call appearances.
+- `G8doyrGMYpFreq9J851E233T11tqi1ms6hPkaqnb5UPy`: 2 tokens; average 3.500s after launch and -147.819s relative to the call; 2 pre-call appearances.
+- `G8gTguf7EUwqfwdRhiZ3KCBEgPURVB7LXoDzHif4p6oh`: 2 tokens; average 1.000s after launch and -151.372s relative to the call; 2 pre-call appearances.
+- `G9tBh7m1rnT95unrThTYvzVkud3Y9ZYctMjbx7AZH8Gh`: 2 tokens; average 9.000s after launch and -273.784s relative to the call; 2 pre-call appearances.
+- `GB3RScLih8EgPavY4KTNSitH3xdaQHUmxeCEsAfUahEP`: 2 tokens; average 11.000s after launch and -457.471s relative to the call; 2 pre-call appearances.
+- `GBRTiNiiRexYESkgfadjrQEwiKdx8SkzThojCQYT4u5i`: 2 tokens; average 5.000s after launch and -477.332s relative to the call; 2 pre-call appearances.
+- `GCJc1n9ts1e6Ld9n9kxahMTFJitE4Q2eR7t6t6Zppvyj`: 2 tokens; average 8.000s after launch and -486.968s relative to the call; 2 pre-call appearances.
+- `GGDSj1kKoDE7kNy7Cgukcetb17fdEJBzvZuTysyERW95`: 2 tokens; average 17.000s after launch and -137.763s relative to the call; 2 pre-call appearances.
+- `GMwXfLtKhgtWdLqq29pF4JbUUQA6asUeEaXtjQSB7gpN`: 2 tokens; average 0.000s after launch and -572.787s relative to the call; 2 pre-call appearances.
+- `GfKbU932R9CFbBkJJ6HmqMDUgyXv49iJ7VuNzLvvoaJX`: 2 tokens; average 3.500s after launch and -46726.844s relative to the call; 2 pre-call appearances.
+- `GodFDUQDtv4BVnXm9prTpVUeXaP3yarrrHq9fGsV9GKQ`: 2 tokens; average 282.000s after launch and -688.512s relative to the call; 2 pre-call appearances.
+- `GpZempPUKKRw8rK1uVf4tG9UkKddw25FZhkm1DLXQAfJ`: 2 tokens; average 2.500s after launch and -195.519s relative to the call; 2 pre-call appearances.
+- `H72df73SCEBXb7z9gxwu1aFryqQ4FQu3Znbp1heWvMBX`: 2 tokens; average 76.001s after launch and -69.268s relative to the call; 2 pre-call appearances.
+- `H8bgvrbb1E6WWiyFtKSrWZomkuf54LPcNjVGwoH449bz`: 2 tokens; average 0.500s after launch and -164.328s relative to the call; 2 pre-call appearances.
+- `HH5VrgQ881sauinjP67Qwzj4kfSTTi1RABDc7AtFXQ6e`: 2 tokens; average 1.500s after launch and -772.870s relative to the call; 2 pre-call appearances.
+- `HLkfGShrk6cw4FAMcdUaSzm4rryzfkQLHrEo7jL1H3GG`: 2 tokens; average 7.000s after launch and -722.112s relative to the call; 2 pre-call appearances.
+- `HQ7CdnWhG2jZoJMvKNkHaM3dW6hQrYDvkCrtV6XmWGbE`: 2 tokens; average 1.500s after launch and -287.346s relative to the call; 2 pre-call appearances.
+- `HQEyUHwDgKhQxhhM3Biu4rP4yuxNft7zumiGu8jWKXAq`: 2 tokens; average 3.500s after launch and -120.861s relative to the call; 2 pre-call appearances.
+- `HV4ZT4QpEW54rywbnigQUadJ4aK1JgieQjXSZ6o7Jy1y`: 2 tokens; average 3.500s after launch and -560.593s relative to the call; 2 pre-call appearances.
+- `HVM33jghRtEgqEqA6q9tEqt6FZ6Uhr6AXjiR9qUDopwv`: 2 tokens; average 5.500s after launch and -152.226s relative to the call; 2 pre-call appearances.
+- `HWZMSFCy2u7jc6UZi8KBonVSMhyQedaRsdiGAsMSRaRX`: 2 tokens; average 8.500s after launch and -474.256s relative to the call; 2 pre-call appearances.
+- `HZDX7xyAqe8XFNr8KyzFSNutmfW5TFRFp9RKSfzdKz6f`: 2 tokens; average 4.500s after launch and -568.430s relative to the call; 2 pre-call appearances.
+- `HaanfQaVw3DK6WQv4P2h1ts277E3qtqQ7tSyXzEqUeuW`: 2 tokens; average 0.000s after launch and -242.600s relative to the call; 2 pre-call appearances.
+- `Hdf39tQJj7qZqKdkcob5emd5fhtqjnHmThc8LfXdsXXU`: 2 tokens; average 5.500s after launch and -1155.812s relative to the call; 2 pre-call appearances.
+- `Hhfo4dnimWSsdu1wGDJK7koPr9nPhBWumUDkMeQKGzrD`: 2 tokens; average 6.500s after launch and -901.665s relative to the call; 2 pre-call appearances.
+- `HtvyWRnxhkm8GwdDQZuqHbf6ZR8Pi99aGjxCsbke43Gd`: 2 tokens; average 13.500s after launch and -140.123s relative to the call; 2 pre-call appearances.
+- `HwaGu4jQuKPy6KVq3nEX6J7SNCwhxjyGgFVYvwgQUBx8`: 2 tokens; average 9.000s after launch and -891.824s relative to the call; 2 pre-call appearances.
+- `HxcdEi6CWzQtPCmM8E2maEZ3oYVGZxESqCWU1iPzmhVW`: 2 tokens; average 0.500s after launch and -170.577s relative to the call; 2 pre-call appearances.
+- `J6mE1hRVPbouz86YDAMDU1MWRNFdgWccuLBwMTKH2u3j`: 2 tokens; average 0.000s after launch and -242.600s relative to the call; 2 pre-call appearances.
+- `J83WbsufwAqtVBiCyDrVot4sYp3JkxrUjtnuCR5zHTZL`: 2 tokens; average 1.000s after launch and -293.348s relative to the call; 2 pre-call appearances.
+- `PVCp3xUM2bJm8DJUj7zQhkiD645fNm7bR34TRwU3bjc`: 2 tokens; average 11.500s after launch and -88.487s relative to the call; 2 pre-call appearances.
+- `QfTTEgDyXsKQkNFzNMzRPwijjZ92PBJmqU8YVn2cB2k`: 2 tokens; average 4.000s after launch and -186.452s relative to the call; 2 pre-call appearances.
+- `WFfNqe2ZCAaksBKqSjFjBjXkEovGQ8QgqQD9QKsToTF`: 2 tokens; average 2.000s after launch and -417.793s relative to the call; 2 pre-call appearances.
+- `XbHv4kgcziEwQZpNnXtjtLmZkEgLudU6mvvEr5VHx2K`: 2 tokens; average 3.000s after launch and -461.959s relative to the call; 2 pre-call appearances.
+- `ajqWb4sYX58tJ7Cf1tW5XPj2Jf5FirsB3375gBYhVJp`: 2 tokens; average 4.000s after launch and -186.486s relative to the call; 2 pre-call appearances.
+- `ayaCRDLwYRqAvPnrpwnkUsxrqx4hniVaWAGHYG5DGBD`: 2 tokens; average 15.500s after launch and -71.652s relative to the call; 2 pre-call appearances.
+- `eodZ9GfuSkhsYaaRhn7XcZjMXnbYtpFU5vxjNfN2ikU`: 2 tokens; average 0.000s after launch and -157.863s relative to the call; 2 pre-call appearances.
+- `j55cFXJM5nifacBhvg7us9ouKie9PkHqiKHTXAvFjDj`: 2 tokens; average 2.000s after launch and -304.370s relative to the call; 2 pre-call appearances.
+- `kBWCyHmjagiqL3HSLatfmPWGUx3V7KeHVjQWemdX4dZ`: 2 tokens; average 4.500s after launch and -659.035s relative to the call; 2 pre-call appearances.
+- `kW4Y4wP1HGjLXFN5GfSv3vKCb5NYYGBR2cR3uWpbMdT`: 2 tokens; average 9.500s after launch and -248.210s relative to the call; 2 pre-call appearances.
+- `kmeJKiAsgcwksTRdnWCKifULG2K16Cue33hfefv9YQC`: 2 tokens; average 11.500s after launch and -88.487s relative to the call; 2 pre-call appearances.
+- `mJxgiGFDS9ZJttWgVaayMki1eH2XkUBfaWrCZmkCYsU`: 2 tokens; average 0.000s after launch and -277.935s relative to the call; 2 pre-call appearances.
+- `owoJY4E7X5j3QxAXeGsk6g6iD36MkSuhshq8BwGQh6B`: 2 tokens; average 5.500s after launch and -1239.805s relative to the call; 2 pre-call appearances.
+- `sagiiWi9RADqXxHtEwTjFxQNA7CeFyDtgu9iWj3zAPH`: 2 tokens; average 4.000s after launch and -199.975s relative to the call; 2 pre-call appearances.
+- `suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK`: 2 tokens; average 4.500s after launch and -409.214s relative to the call; 2 pre-call appearances.
+- `tBVFi3uhRxDtn4C5Sxy7D6yUQ2qUfp2qkjcoL6ttmFt`: 2 tokens; average 16.000s after launch and -129.948s relative to the call; 2 pre-call appearances.
+- `timeworn2X1EwMLSzeVhdVTbVSzSCKuibKd2kQ2Lsyn`: 2 tokens; average 0.000s after launch and -99.987s relative to the call; 2 pre-call appearances.
+- `wqAJrtcXPYPwxoRKV2uni5dDc9ySzEoBBVhLrqXsayD`: 2 tokens; average 5.500s after launch and -224.053s relative to the call; 2 pre-call appearances.
+- `z3y344it8bDgUJKYjPb6fnFbqQh7EwGw7DwTcRkwkzB`: 2 tokens; average 3.000s after launch and -362.209s relative to the call; 2 pre-call appearances.
+
+## Recurring Callout Snipers
+
+No recurring call-window buyer met the current sniper heuristic.
+
+## Recurring Consolidation Wallets
+
+UNKNOWN: consolidation analysis requires complete post-sale transfer evidence.
+
+## Highest Confidence Coordinated Launches
+
+- **SPEEDRUN** (`4sjtHGeAKP6DoMUdvFqQuiYKhhPpwa9XCxUyuFD2pump`): CONFIRMED; 44 linked early wallets; 2 early wallets share direct funder C4eNLxxC7XLUivghMi35YUeSfvACgnvKB18115uPUqjg; 4 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 9 early wallets were brand-new or very fresh; 4 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **Memes** (`7dACCWZXF4Lr9ftxFpi7TJk7a3hcPpUwGPAcTuXDpump`): HIGH; 42 linked early wallets; 2 early wallets share direct funder 4kAsV9ZBCZV6dvgpxxf5Yes2ZKUQ42nJvbwYUeUR9PhS; 3 broad exchange/service-like funding groups excluded from ownership score; 3 early wallets bought in the same transaction; 4 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **HOPE** (`Ajz86fyiygsv8kZkUyDxogxkz5VfKRs4HTEABVTfpump`): CONFIRMED; 41 linked early wallets; 4 early wallets share direct funder 8bpe4gWuAvniwHt8mxtzrKn7ixLviePa8ymb6PP8ftXc; 4 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 6 early wallets were brand-new or very fresh; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **feecat** (`omskHvyNvQSn3PFak3E8JHQJeSVJFsrc6izWT12pump`): CONFIRMED; 41 linked early wallets; 2 early wallets share direct funder 4kAsV9ZBCZV6dvgpxxf5Yes2ZKUQ42nJvbwYUeUR9PhS; 4 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 4 early wallets were brand-new or very fresh; 3 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **chimp** (`CSLP8Vp7u9hrXQi7crPXqCp7BaJaG4JrNxqvR3jDpump`): HIGH; 34 linked early wallets; 2 early wallets share direct funder CJCUQo5EV7QGgWhG1RmgdYAFCWeXSAPKr4LMU6nqBqwT; 4 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 3 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **ACTX** (`GfqKCwNeAdHHi97AmgCLP5qrwcSJRDdyZ1huiU6xUXTz`): CONFIRMED; 27 linked early wallets; 2 early wallets share direct funder Hmc2dLxZZ4xfHqn2wFCTBu11oCpYiuwsj23JBjJmD4ni; 6 broad exchange/service-like funding groups excluded from ownership score; 3 early wallets bought in the same transaction; 4 early wallets were brand-new or very fresh; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **KIRK** (`JAqRn24FuQ5MFReXNgXb8uFej5vHJDxhVtebpQvHTQZy`): CONFIRMED; 20 linked early wallets; 2 early wallets share direct funder FcZ2LoVNYvdva15Wkg3FbRHrbTma2UrW8B5eDQc4WJre; 3 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 3 early wallets were brand-new or very fresh; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **CONDOM** (`7aLLQRBpGCaSLmmHGf34MGtbdtTumiB14d14TtDnpump`): MEDIUM; 49 linked early wallets; 5 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 3 early wallets were brand-new or very fresh; 4 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **ASSTRA** (`AmWCcDf6tG7zB3VPeDVjeXL5N567fXAiHcTKw3xXpump`): MEDIUM; 48 linked early wallets; 2 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 3 early wallets were brand-new or very fresh; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **MARTIN** (`49aM4HrGABwG9F8iAn385zzcsS6mxHEFY8YN3H7y1Cd9`): MEDIUM; 48 linked early wallets; 4 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 4 early wallets were brand-new or very fresh; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **Adam** (`GL7M1C4QeLoURyexYgdhuP8SvaPh5LHQLRqKha3epump`): MEDIUM; 47 linked early wallets; 4 broad exchange/service-like funding groups excluded from ownership score; 9 early wallets bought in the same slot; 3 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **Drake** (`AgB5SxiP1DFZbW9uDAH7s8Mhv1HF21nJv67tnAAYpump`): HIGH; 47 linked early wallets; 2 early wallets share direct funder suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK; 4 broad exchange/service-like funding groups excluded from ownership score; 12 early wallets bought in the same slot; 3 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **rollie** (`DQ2H7qcj262RAKfSxGYeL7cYJq54mVdXe4gYxUwxpump`): MEDIUM; 46 linked early wallets; 3 broad exchange/service-like funding groups excluded from ownership score; 8 early wallets bought in the same slot; 6 early wallets were brand-new or very fresh; 4 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **MARIO** (`7Q9VxTczrzgvjXWbJJZibR7hbYAohngsNsuEhdEcpump`): MEDIUM; 45 linked early wallets; 4 broad exchange/service-like funding groups excluded from ownership score; 13 early wallets bought in the same slot; 4 early wallets were brand-new or very fresh; 50 early wallets bought before the callout
+- **puter** (`4GRTznsfLTRqaB2uMAFmmgaWtvfVyBb4qCsTjskUpump`): MEDIUM; 44 linked early wallets; 4 broad exchange/service-like funding groups excluded from ownership score; 11 early wallets bought in the same slot; 6 early wallets were brand-new or very fresh; 6 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **HOME** (`EoKqyKksc4ekiPVuBD9FiztYQHkV59x8KTcZ3ReLpump`): CONFIRMED; 43 linked early wallets; 2 early wallets share direct funder suqh5sHtr8HyJ7q8scBimULPkPpA557prMG47xCHQfK; 6 broad exchange/service-like funding groups excluded from ownership score; 19 early wallets bought in the same slot; 3 early wallets were brand-new or very fresh; 4 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **POOP** (`BUPNYwndVGfzVb6RG6q2PX53VdAimw2Mi98QxqeWpump`): HIGH; 43 linked early wallets; 2 early wallets share direct funder 7uqNU9d8KPRFATwkxMySWwyQUEjxuuxNRCYoTSej8KYp; 4 broad exchange/service-like funding groups excluded from ownership score; 16 early wallets bought in the same slot; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **WATCHING** (`5o9sE9FEVC12zWBd2zqPXAhoVyRiNjGfaYX6hS3Ppump`): MEDIUM; 43 linked early wallets; 3 broad exchange/service-like funding groups excluded from ownership score; 2 early wallets bought in the same transaction; 3 early wallets were brand-new or very fresh; 5 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **casino** (`2BucyGvsg9wwTwsaFsEUFgdphrCtp94pDRtHowJUpump`): HIGH; 43 linked early wallets; 2 early wallets share direct funder DsMFNuYhbHP6m4x3XEHV36SjXQV68WLgXPwqmPLDRsAN; 9 broad exchange/service-like funding groups excluded from ownership score; 11 early wallets bought in the same slot; 6 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+- **Knox** (`6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ`): HIGH; 43 linked early wallets; 2 early wallets share direct funder G83xr8WJL8BTvWVwSmmcnwvEbjitD8ZDZVKAVHi6tian; 4 broad exchange/service-like funding groups excluded from ownership score; 16 early wallets bought in the same slot; 3 early buys had near-identical SOL sizes (0.001 SOL rounding); 50 early wallets bought before the callout
+
+## Tokens With No Detected Link
+
+- Bliss (`67afrnTxo8DVc52Uev61Yo4Yr9BGQpRw1RpPMWcx42La`)
+
+## Unknown / Insufficient Data
+
+No token is wholly unknown, although unavailable funding/consolidation fields remain UNKNOWN.
+
+## Evidence and methodology
+
+- Canonical call records: Pump.fun `GET /callout/list/{userId}` with page-token pagination.
+- Token identity and launch time: Pump.fun public coin endpoint, cross-checkable with Solscan when authorized.
+- Early buys: Pump.fun swap trade history, cursor-paginated back to launch; signatures and slots are retained.
+- Funding: Helius `getTransfersByAddress`, filtered to oldest inbound native SOL before the earliest observed buy and traced up to three hops.
+- Exchanges and shared infrastructure are not treated as common ownership without additional evidence.

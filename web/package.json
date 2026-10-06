@@ -1,0 +1,14 @@
+{
+  "name": "pump-callout-evidence-atlas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "data": "node scripts/prepare-data.mjs",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

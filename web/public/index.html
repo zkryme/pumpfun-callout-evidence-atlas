@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Evidence-first analysis of 97 Pump.fun callouts, early buyers, and recurring wallets." />
+    <title>Pump Callout Evidence Atlas</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to analysis</a>
+    <header class="topbar">
+      <a class="brand" href="#overview" aria-label="Evidence Atlas home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span><strong>Evidence Atlas</strong><small>Pump.fun callout analysis</small></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#overview">Overview</a>
+        <a href="#network">Network</a>
+        <a href="#tokens">Tokens</a>
+        <a href="#wallets">Wallets</a>
+        <a href="#case-study">CHONK</a>
+        <a href="#methodology">Method</a>
+      </nav>
+      <span class="status-chip"><i></i> Static snapshot</span>
+    </header>
+
+    <main id="main">
+      <section id="overview" class="section overview" aria-labelledby="overview-title">
+        <div class="section-kicker"><span>01</span> Investigation summary</div>
+        <div class="overview-grid">
+          <div class="headline-block">
+            <p class="eyebrow">PROFILE UNDER REVIEW</p>
+            <h1 id="overview-title">Pre-call networks found.<br /><em>No caller funding.</em></h1>
+            <p class="lede">Across 97 callouts, 3,098 of 3,102 unique early-buyer wallets were traced to their first inbound SOL funding. The evidence reveals concentrated linked-wallet clusters, but no buyer funding path from the caller wallet.</p>
+            <div class="finding">
+              <span class="finding-label">BOTTOM LINE</span>
+              <p><strong>42 tokens cross the bundle-evidence threshold</strong> after excluding broad exchange and service hubs: 7 confirmed multi-signal bundles and 35 suspected bundles. Creator-linked funding appears on six tokens.</p>
+            </div>
+          </div>
+          <aside class="scope-card">
+            <div class="scope-top"><span>ANALYSIS SCOPE</span><span id="generated-date">—</span></div>
+            <p class="address" id="profile-address">Loading…</p>
+            <dl>
+              <div><dt>Calls reviewed</dt><dd data-stat="calls">—</dd></div>
+              <div><dt>Buyer records</dt><dd data-stat="buyers">—</dd></div>
+              <div><dt>Recurring wallets</dt><dd data-stat="wallets">—</dd></div>
+              <div><dt>Collection failures</dt><dd>0</dd></div>
+            </dl>
+            <a class="text-link" href="#downloads">Download evidence <span>↘</span></a>
+          </aside>
+        </div>
+
+        <div class="metric-grid" aria-label="Key metrics">
+          <article class="metric"><span class="metric-index">A</span><strong data-stat="preRate">—</strong><p>of first-50 buyer records occurred before the callout</p></article>
+          <article class="metric"><span class="metric-index">B</span><strong data-stat="bundleTokens">—</strong><p>tokens cross the multi-signal bundle threshold</p></article>
+          <article class="metric"><span class="metric-index">C</span><strong data-stat="resolved">—</strong><p>unique wallets with first-in funding resolved</p></article>
+          <article class="metric muted"><span class="metric-index">D</span><strong data-stat="callerLinks">—</strong><p>early buyers funded by the caller wallet</p></article>
+        </div>
+
+        <div class="timing-panel">
+          <div>
+            <div class="section-kicker"><span>Timing</span> First 50 buyers per token</div>
+            <h2>Nearly every observed early trade predates the call.</h2>
+          </div>
+          <div class="timing-chart" aria-label="Buyer timing distribution">
+            <div class="bar" role="img" aria-label="Timing proportions"><span class="pre" id="bar-pre"></span><span class="window" id="bar-window"></span><span class="post" id="bar-post"></span></div>
+            <div class="legend">
+              <p><i class="pre-dot"></i><strong data-stat="pre">—</strong> pre-call</p>
+              <p><i class="window-dot"></i><strong data-stat="window">—</strong> call window</p>
+              <p><i class="post-dot"></i><strong data-stat="post">—</strong> post-call</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="network" class="section network" aria-labelledby="network-title">
+        <div class="section-heading">
+          <div><div class="section-kicker"><span>02</span> Funding network</div><h2 id="network-title">Explore the linked-wallet map</h2></div>
+          <p>Green hubs are concentrated funding sources. Gray hubs are broad exchange or service origins retained for context but excluded from ownership scoring.</p>
+        </div>
+        <div class="network-toolbar">
+          <label class="select-label">Focus token<select id="network-token"><option value="all">Strongest clusters</option></select></label>
+          <label class="toggle"><input id="network-services" type="checkbox" /><span></span> Include service hubs</label>
+          <button id="network-reset" type="button">Reset view</button>
+        </div>
+        <div class="network-grid">
+          <div class="graph-shell"><svg id="bubblemap" viewBox="0 0 900 620" role="img" aria-label="Interactive funding relationship graph"></svg></div>
+          <aside class="network-detail" id="network-detail">
+            <span class="badge green">SELECT A NODE</span>
+            <h3>Funding relationships</h3>
+            <p>Click a funder, buyer, or token to inspect its role. Lines connect first-in SOL funders to buyers and buyers to called tokens.</p>
+            <dl>
+              <div><dt>Resolved wallets</dt><dd data-stat="resolvedFraction">—</dd></div>
+              <div><dt>Concentrated groups</dt><dd data-stat="suspiciousGroups">—</dd></div>
+              <div><dt>Service-like groups</dt><dd data-stat="serviceGroups">—</dd></div>
+              <div><dt>Creator-linked buyers</dt><dd data-stat="creatorLinks">—</dd></div>
+            </dl>
+          </aside>
+        </div>
+        <div class="network-legend"><span><i class="token-node"></i>Token</span><span><i class="funder-node"></i>Concentrated funder</span><span><i class="buyer-node"></i>Buyer wallet</span><span><i class="service-node"></i>Exchange/service</span></div>
+      </section>
+
+      <section id="tokens" class="section explorer" aria-labelledby="tokens-title">
+        <div class="section-heading">
+          <div><div class="section-kicker"><span>03</span> Token explorer</div><h2 id="tokens-title">Inspect all 97 callouts</h2></div>
+          <p>Timing-cluster labels are investigative signals. They are not declarations that wallets share an owner.</p>
+        </div>
+        <div class="toolbar">
+          <label class="search"><span aria-hidden="true">⌕</span><input id="token-search" type="search" placeholder="Search symbol, name, or mint…" autocomplete="off" /></label>
+          <label class="select-label">Classification<select id="token-filter"><option value="all">All tokens</option><option value="CONFIRMED_BUNDLE">Confirmed bundle</option><option value="SUSPECTED_BUNDLE">Suspected bundle</option><option value="COORDINATED_EARLY_BUYERS">Timing cluster</option><option value="NO_MULTI_SIGNAL_EVIDENCE">No multi-signal evidence</option></select></label>
+          <span class="result-count" id="token-count">—</span>
+        </div>
+        <div class="table-shell">
+          <table>
+            <thead><tr><th data-sort="symbol">Token</th><th data-sort="secondsToCall">Launch → call</th><th data-sort="wallet_count">Cluster wallets</th><th data-sort="supply_percent">First buys / supply</th><th data-sort="score">Score</th><th>Assessment</th></tr></thead>
+            <tbody id="token-table"></tbody>
+          </table>
+        </div>
+        <div class="pagination"><button id="tokens-prev" type="button">← Previous</button><span id="tokens-page">—</span><button id="tokens-next" type="button">Next →</button></div>
+      </section>
+
+      <section id="wallets" class="section explorer" aria-labelledby="wallets-title">
+        <div class="section-heading">
+          <div><div class="section-kicker"><span>04</span> Recurring buyers</div><h2 id="wallets-title">Wallets appearing across tokens</h2></div>
+          <p>Ranked by recurrence. Negative call-relative timing means the wallet bought before the public call.</p>
+        </div>
+        <div class="toolbar">
+          <label class="search"><span aria-hidden="true">⌕</span><input id="wallet-search" type="search" placeholder="Search wallet address…" autocomplete="off" /></label>
+          <label class="select-label">Minimum tokens<select id="wallet-filter"><option value="2">2+</option><option value="5">5+</option><option value="10">10+</option><option value="20">20+</option></select></label>
+          <span class="result-count" id="wallet-count">—</span>
+        </div>
+        <div class="table-shell">
+          <table>
+            <thead><tr><th>Wallet</th><th>Tokens</th><th>Avg. after launch</th><th>Avg. vs. call</th><th>Pre-call buys</th></tr></thead>
+            <tbody id="wallet-table"></tbody>
+          </table>
+        </div>
+        <div class="pagination"><button id="wallets-prev" type="button">← Previous</button><span id="wallets-page">—</span><button id="wallets-next" type="button">Next →</button></div>
+      </section>
+
+      <section id="case-study" class="section case-study" aria-labelledby="case-title">
+        <div class="case-label">CASE STUDY / 01</div>
+        <div class="case-grid">
+          <div>
+            <div class="section-kicker"><span>CHONK</span> 5pSE…UVZd</div>
+            <h2 id="case-title">A compressed launch window with no proven common funder.</h2>
+            <p class="lede">All first 50 observed buyers entered before the call. The largest same-slot group contained six trades, while 29 wallets formed timing clusters. This is consistent with coordinated early access, but the evidence does not establish common control.</p>
+          </div>
+          <div class="case-stats">
+            <div><span>Launch to call</span><strong>152.328s</strong></div>
+            <div><span>Timing-cluster wallets</span><strong>29</strong></div>
+            <div><span>Largest same-slot group</span><strong>6</strong></div>
+            <div><span>First buys / supply</span><strong>78.549%</strong></div>
+            <div><span>Evidence score</span><strong>35 / 100</strong></div>
+            <div><span>Confidence</span><strong class="amber">Medium</strong></div>
+          </div>
+        </div>
+        <div class="verdict"><span>CLASSIFICATION</span><strong>COORDINATED_EARLY_BUYERS</strong><p>Timing-only finding. Not classified as a confirmed bundle.</p></div>
+      </section>
+
+      <section id="methodology" class="section methodology" aria-labelledby="method-title">
+        <div class="section-heading">
+          <div><div class="section-kicker"><span>05</span> Method & boundaries</div><h2 id="method-title">What the evidence can—and cannot—say</h2></div>
+        </div>
+        <div class="method-grid">
+          <article><span>01</span><h3>Collect calls</h3><p>Normalize 97 profile activity records and resolve each token’s mint, creator, launch time, and call time.</p></article>
+          <article><span>02</span><h3>Read early trades</h3><p>Capture the first 50 buyers per token, measuring seconds from launch and seconds relative to the call.</p></article>
+          <article><span>03</span><h3>Detect patterns</h3><p>Score same-transaction, same-slot, near-identical-size, supply concentration, and repeat-buyer signals.</p></article>
+          <article><span>04</span><h3>Separate proof</h3><p>Report timing clusters separately from corroborated funding or ownership evidence. Unknown evidence remains unknown.</p></article>
+        </div>
+        <div class="caveat-grid">
+          <div><span class="badge green">AVAILABLE</span><h3>Pump.fun trade evidence</h3><p>Call timing, launch timing, creators, first trades, sizes, slots, signatures, and recurring buyers.</p></div>
+          <div><span class="badge green">99.9% COVERAGE</span><h3>Wallet ancestry evidence</h3><p>First-in SOL funding was resolved for 3,098 of 3,102 unique early-buyer wallets through Helius parsed transfer history.</p></div>
+        </div>
+      </section>
+
+      <section id="downloads" class="section downloads" aria-labelledby="downloads-title">
+        <div><div class="section-kicker"><span>06</span> Evidence files</div><h2 id="downloads-title">Take the underlying records with you.</h2><p>CSV and graph exports are included with the static dashboard for independent review.</p></div>
+        <div class="download-list">
+          <a href="/downloads/calls.csv" download><span>calls.csv<small>97 normalized callouts</small></span><b>↓</b></a>
+          <a href="/downloads/early_buyers.csv" download><span>early_buyers.csv<small>4,850 buyer records</small></span><b>↓</b></a>
+          <a href="/downloads/recurring_buyers.csv" download><span>recurring_buyers.csv<small>639 recurring wallets</small></span><b>↓</b></a>
+          <a href="/downloads/suspected_bundles.csv" download><span>suspected_bundles.csv<small>classification evidence</small></span><b>↓</b></a>
+          <a href="/downloads/shared_funding_groups.csv" download><span>shared_funding_groups.csv<small>concentrated and service-like hubs</small></span><b>↓</b></a>
+          <a href="/downloads/caller_creator_links.csv" download><span>caller_creator_links.csv<small>direct and upstream attribution checks</small></span><b>↓</b></a>
+          <a href="/data/analysis.json" download><span>analysis.json<small>complete structured snapshot</small></span><b>↓</b></a>
+        </div>
+      </section>
+    </main>
+
+    <footer><p>Pump Callout Evidence Atlas</p><p>Investigative signals, not attribution. Built from public on-chain trade data.</p><a href="#overview">Back to top ↑</a></footer>
+    <noscript>This dashboard requires JavaScript to render the data tables.</noscript>
+  </body>
+</html>
