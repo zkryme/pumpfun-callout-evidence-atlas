@@ -175,102 +175,54 @@ function initializeNetwork() {
 }
 
 function renderNetwork() {
-  const svg = document.querySelector("#bubblemap");
   const selectedMint = document.querySelector("#network-token").value;
   const includeServices = document.querySelector("#network-services").checked;
-  let groups = state.graph.groups.filter(group => includeServices || !group.service_like);
+  let groups = state.graph.groups
+    .filter(group => includeServices || !group.service_like)
+    .sort((a, b) => b.pre_call_count - a.pre_call_count || b.buyer_count - a.buyer_count);
   if (selectedMint !== "all") {
     groups = groups.filter(group => group.mint === selectedMint);
   } else {
-    const concentrated = groups.filter(group => !group.service_like).slice(0, 12);
-    const services = includeServices ? groups.filter(group => group.service_like).slice(0, 4) : [];
+    const concentrated = groups.filter(group => !group.service_like).slice(0, 10);
+    const services = includeServices ? groups.filter(group => group.service_like).slice(0, 3) : [];
     groups = [...concentrated, ...services];
   }
-  const groupKeys = new Set(groups.map(group => `${group.mint}|${group.funder}`));
-  const fundedEdges = state.graph.edges.filter(edge => edge.type === "FUNDED" && groupKeys.has(`${edge.mint}|${edge.source}`));
-  const buyers = new Set(fundedEdges.map(edge => edge.target));
-  const boughtEdges = state.graph.edges.filter(edge => edge.type === "BOUGHT" && buyers.has(edge.source) && groups.some(group => group.mint === edge.target));
-  const edges = [...fundedEdges, ...boughtEdges];
-  const nodeIds = new Set(edges.flatMap(edge => [edge.source, edge.target]));
-  const nodes = state.graph.nodes.filter(node => nodeIds.has(node.id)).map(node => ({ ...node }));
-  layoutGraph(nodes, edges);
-  const byId = new Map(nodes.map(node => [node.id, node]));
-  svg.innerHTML = [
-    ...edges.map(edge => {
-      const source = byId.get(edge.source), target = byId.get(edge.target);
-      if (!source || !target) return "";
-      return `<line class="edge ${edge.pre_call ? "pre-call" : ""}" x1="${source.x}" y1="${source.y}" x2="${target.x}" y2="${target.y}"></line>`;
-    }),
-    ...nodes.map(node => {
-      const radius = node.type === "TOKEN" ? 14 : node.type === "FUNDER" || node.type === "SERVICE" ? 11 : 4;
-      const label = node.type === "BUYER" ? "" : `<text x="${node.x + radius + 4}" y="${node.y + 4}">${escapeHtml(node.label)}</text>`;
-      return `<g data-node="${escapeHtml(node.id)}"><circle class="node ${node.type}" cx="${node.x}" cy="${node.y}" r="${radius}"><title>${escapeHtml(node.label)} · ${node.type}</title></circle>${label}</g>`;
-    })
-  ].join("");
-  svg.querySelectorAll("g[data-node]").forEach(element => element.addEventListener("click", () => {
-    showNodeDetail(byId.get(element.dataset.node), edges, groups);
-  }));
-  const detail = document.querySelector("#network-detail");
-  detail.querySelector("h3").textContent = selectedMint === "all" ? "Strongest concentrated clusters" : (groups[0]?.token || "No matching cluster");
-  detail.querySelector(":scope > p").textContent = groups.length
-    ? `${groups.length} shared-funding group${groups.length === 1 ? "" : "s"}; ${buyers.size} linked buyer wallets shown. Click a node for details.`
-    : "No shared-funding group matches the current filter.";
-}
+  const allBuyerWallets = new Set(groups.flatMap(group => String(group.wallets || "").split(";").filter(Boolean)));
+  document.querySelector("#network-summary").textContent = groups.length
+    ? `${groups.length} funding path${groups.length === 1 ? "" : "s"} shown · ${allBuyerWallets.size} unique early-buyer wallets · every identifier opens in Solscan`
+    : "No funding path matches the current filter.";
 
-function layoutGraph(nodes, edges) {
-  const width = 900, height = 620;
-  const hash = value => [...value].reduce((total, char) => (total * 31 + char.charCodeAt(0)) >>> 0, 7);
-  nodes.forEach(node => {
-    const seed = hash(node.id);
-    node.x = 80 + seed % 740;
-    node.y = 70 + Math.floor(seed / 997) % 480;
-    node.vx = 0; node.vy = 0;
-  });
-  const byId = new Map(nodes.map(node => [node.id, node]));
-  for (let tick = 0; tick < 140; tick++) {
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        let dx = a.x - b.x, dy = a.y - b.y;
-        const distance2 = Math.max(80, dx * dx + dy * dy);
-        const force = 220 / distance2;
-        a.vx += dx * force; a.vy += dy * force;
-        b.vx -= dx * force; b.vy -= dy * force;
-      }
-    }
-    edges.forEach(edge => {
-      const a = byId.get(edge.source), b = byId.get(edge.target);
-      if (!a || !b) return;
-      const dx = b.x - a.x, dy = b.y - a.y;
-      const distance = Math.max(1, Math.hypot(dx, dy));
-      const desired = edge.type === "FUNDED" ? 62 : 82;
-      const force = (distance - desired) * .004;
-      a.vx += dx / distance * force; a.vy += dy / distance * force;
-      b.vx -= dx / distance * force; b.vy -= dy / distance * force;
-    });
-    nodes.forEach(node => {
-      node.vx += (width / 2 - node.x) * .0007;
-      node.vy += (height / 2 - node.y) * .0007;
-      node.x = Math.max(25, Math.min(width - 130, node.x + node.vx));
-      node.y = Math.max(25, Math.min(height - 25, node.y + node.vy));
-      node.vx *= .82; node.vy *= .82;
-    });
-  }
-}
-
-function showNodeDetail(node, edges, groups) {
-  if (!node) return;
-  const connected = new Set(edges.filter(edge => edge.source === node.id || edge.target === node.id)
-    .flatMap(edge => [edge.source, edge.target]).filter(id => id !== node.id));
-  const relatedGroups = groups.filter(group => group.mint === node.id || group.funder === node.id ||
-    edges.some(edge => edge.source === node.id && edge.mint === group.mint));
-  const detail = document.querySelector("#network-detail");
-  detail.querySelector(".badge").textContent = node.type;
-  const linkType = node.type === "TOKEN" ? "token" : "account";
-  detail.querySelector("h3").innerHTML = solscanLink(node.id, node.label || short(node.id, 10, 8), linkType);
-  detail.querySelector(":scope > p").innerHTML = node.type === "SERVICE"
-    ? `Broad exchange/service origin. Shown as funding context but excluded from common-ownership scoring. ${solscanLink(node.id, short(node.id, 10, 8), linkType)}`
-    : `${connected.size} visible connection${connected.size === 1 ? "" : "s"}. ${relatedGroups.length} related funding group${relatedGroups.length === 1 ? "" : "s"}. ${solscanLink(node.id, short(node.id, 10, 8), linkType)}`;
+  document.querySelector("#relationship-map").innerHTML = groups.map(group => {
+    const wallets = String(group.wallets || "").split(";").filter(Boolean);
+    const visibleWallets = wallets.slice(0, selectedMint === "all" ? 6 : 12);
+    const fundingEdges = state.graph.edges.filter(edge => edge.type === "FUNDED" && edge.mint === group.mint && edge.source === group.funder);
+    const fundingTotal = fundingEdges.reduce((sum, edge) => sum + Number(edge.amount || 0), 0);
+    const firstTiming = Number(group.first_seconds_relative_to_call);
+    const lastTiming = Number(group.last_seconds_relative_to_call);
+    const timingText = Number.isFinite(firstTiming) && Number.isFinite(lastTiming)
+      ? `${duration(Math.abs(firstTiming))}–${duration(Math.abs(lastTiming))} before call`
+      : "Pre-call timing unavailable";
+    return `
+      <article class="path-row ${group.service_like ? "service-path" : ""}">
+        <div class="path-node path-origin">
+          <span>${group.service_like ? "SERVICE-LIKE ORIGIN" : "CONCENTRATED FUNDER"}</span>
+          <strong>${solscanLink(group.funder, short(group.funder, 10, 8))}</strong>
+          <small>${group.global_token_count} called token${group.global_token_count === 1 ? "" : "s"} in dataset</small>
+        </div>
+        <div class="path-connector"><i></i><span>funded${fundingTotal ? ` · ${fmt(fundingTotal, 4)} SOL` : ""}</span><b>→</b></div>
+        <div class="path-buyers">
+          <span class="path-label">${wallets.length} EARLY BUYER${wallets.length === 1 ? "" : "S"}</span>
+          <div>${visibleWallets.map(wallet => solscanLink(wallet, short(wallet, 6, 4))).join("")}${wallets.length > visibleWallets.length ? `<span class="more-buyers">+${wallets.length - visibleWallets.length} more</span>` : ""}</div>
+          <small>${group.pre_call_count} pre-call · ${timingText}</small>
+        </div>
+        <div class="path-connector"><i></i><span>bought</span><b>→</b></div>
+        <div class="path-node path-token">
+          <span>CALLED TOKEN</span>
+          <strong>${solscanLink(group.mint, group.token || short(group.mint), "token")}</strong>
+          <small>${short(group.mint, 8, 6)}</small>
+        </div>
+      </article>`;
+  }).join("") || `<div class="path-empty">No matching funding paths.</div>`;
 }
 
 initialize();

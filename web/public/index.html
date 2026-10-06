@@ -19,7 +19,7 @@
       <nav aria-label="Primary navigation">
         <a href="#overview">Overview</a>
         <a href="#profit-link">Profit link</a>
-        <a href="#network">Network</a>
+        <a href="#network">Wallet paths</a>
         <a href="#tokens">Tokens</a>
         <a href="#wallets">Wallets</a>
         <a href="#case-study">CHONK</a>
@@ -136,29 +136,19 @@
 
       <section id="network" class="section network" aria-labelledby="network-title">
         <div class="section-heading">
-          <div><div class="section-kicker"><span>03</span> Funding network</div><h2 id="network-title">Explore the linked-wallet map</h2></div>
-          <p>Green hubs are concentrated funding sources. Gray hubs are broad exchange or service origins retained for context but excluded from ownership scoring.</p>
+          <div><div class="section-kicker"><span>03</span> Funding paths</div><h2 id="network-title">Read each wallet path from left to right</h2></div>
+          <p>Every row is fixed and labeled: funding source → early-buyer wallets → called token. No floating nodes, overlaps, or ambiguous lines.</p>
         </div>
         <div class="network-toolbar">
-          <label class="select-label">Focus token<select id="network-token"><option value="all">Strongest clusters</option></select></label>
+          <label class="select-label">Focus token<select id="network-token"><option value="all">Strongest funding paths</option></select></label>
           <label class="toggle"><input id="network-services" type="checkbox" /><span></span> Include service hubs</label>
           <button id="network-reset" type="button">Reset view</button>
         </div>
-        <div class="network-grid">
-          <div class="graph-shell"><svg id="bubblemap" viewBox="0 0 900 620" role="img" aria-label="Interactive funding relationship graph"></svg></div>
-          <aside class="network-detail" id="network-detail">
-            <span class="badge green">SELECT A NODE</span>
-            <h3>Funding relationships</h3>
-            <p>Click a funder, buyer, or token to inspect its role. Lines connect first-in SOL funders to buyers and buyers to called tokens.</p>
-            <dl>
-              <div><dt>Resolved wallets</dt><dd data-stat="resolvedFraction">—</dd></div>
-              <div><dt>Concentrated groups</dt><dd data-stat="suspiciousGroups">—</dd></div>
-              <div><dt>Service-like groups</dt><dd data-stat="serviceGroups">—</dd></div>
-              <div><dt>Creator-linked buyers</dt><dd data-stat="creatorLinks">—</dd></div>
-            </dl>
-          </aside>
+        <div class="path-key" aria-hidden="true">
+          <span>Funding source</span><i>→ funded →</i><span>Early buyers</span><i>→ bought →</i><span>Called token</span>
         </div>
-        <div class="network-legend"><span><i class="token-node"></i>Token</span><span><i class="funder-node"></i>Concentrated funder</span><span><i class="buyer-node"></i>Buyer wallet</span><span><i class="service-node"></i>Exchange/service</span></div>
+        <p class="path-summary" id="network-summary" aria-live="polite"></p>
+        <div class="relationship-map" id="relationship-map" aria-label="Readable wallet funding paths" aria-live="polite"></div>
       </section>
 
       <section id="tokens" class="section explorer" aria-labelledby="tokens-title">
