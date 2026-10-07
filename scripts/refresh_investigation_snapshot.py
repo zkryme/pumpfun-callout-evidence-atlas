@@ -56,7 +56,9 @@ def main() -> None:
             if not row:
                 continue
             slot_delta = int(row["first_buy_slot"]) - int(caller_row["first_buy_slot"])
-            if abs(slot_delta) <= 10:
+            # Look further before the caller than after it: the investigative
+            # question is whether linked wallets positioned ahead of a callout.
+            if -50 <= slot_delta <= 25:
                 nearby_slot_rows.append({"mint": mint, "linked_wallet": wallet,
                                          "caller_slot": caller_row["first_buy_slot"],
                                          "linked_slot": row["first_buy_slot"],
@@ -78,7 +80,7 @@ def main() -> None:
         "findings": [
             {"status": "SUPPORTED_FINDING", "finding": "Four-wallet operational cluster", "evidence": "CLiX directly funded the caller, GKM, and 1chd; the caller, GKM, and 1chd bought 13 called tokens in the same slot.", "limitations": "Direct funding and repeated coordination do not identify the real-world key holder."},
             {"status": "SUPPORTED_FINDING", "finding": "Same-slot purchases with the caller", "evidence": f"{sum(r['wallets_same_slot'] == 4 for r in same_slot_rows)} tokens have all four linked wallets in the caller’s exact slot; the other {sum(r['wallets_same_slot'] == 3 for r in same_slot_rows)} have the caller/GKM/1chd trio in that slot.", "limitations": "Same-slot execution is a coordination signal; it is not by itself proof of a bundled transaction or common ownership."},
-            {"status": "SCOPED_NEGATIVE", "finding": "No additional linked-wallet first buys within ±10 slots", "evidence": f"{len(nearby_slot_rows)} linked-wallet first buys fall within ten slots of a caller first buy; all have a slot delta of zero.", "limitations": "This compares the first observed buy per wallet/token in the collected early-buyer dataset, not every subsequent trade or activity outside the 97 calls."},
+            {"status": "SCOPED_NEGATIVE", "finding": "No additional linked-wallet first buys within −50 / +25 slots", "evidence": f"{len(nearby_slot_rows)} linked-wallet first buys fall from 50 slots before through 25 slots after a caller first buy; all have a slot delta of zero.", "limitations": "This compares the first observed buy per wallet/token in the collected early-buyer dataset, not every subsequent trade or activity outside the 97 calls."},
             {"status": "SUPPORTED_FINDING", "finding": "13 direct SOL transfers reached the caller", "evidence": f"{len(dedup)} unique cleanup signatures total {sum(float(r['amount_sol']) for r in dedup.values()):.9f} SOL.", "limitations": "Transfers are separate from token-position cash flow and do not establish profit attribution."},
             {"status": "SUPPORTED_FINDING", "finding": "Caller transferred inventory to CLiX before CLiX exits", "evidence": f"{len(caller_token_transfers)} token-only transfers across {len(set(r['mint'] for r in caller_token_transfers))} tokens moved from the caller to CLiX, followed by matching CLiX sales.", "limitations": "The observed transfers establish token flow. They do not establish who controls either wallet or the original acquisition cost."},
             {"status": "SCOPED_NEGATIVE", "finding": "No caller-to-founder link found within analyzed scope", "evidence": "97 calls; first-in funding traces up to three hops; 30-day pre-launch founder funding review.", "limitations": "Four early-buyer wallets have unresolved first-in funding; service-like ancestry is not ownership evidence."},
