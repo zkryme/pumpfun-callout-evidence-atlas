@@ -2,6 +2,7 @@ import unittest
 
 from pump_analyzer.analysis import freshness_class, slot_from_trade, timing_class
 from pump_analyzer.clients import SolanaRpcClient, timestamp_ms
+from pump_analyzer.reconciliation import reconcile_events
 
 
 class AnalysisHelpersTest(unittest.TestCase):
@@ -57,6 +58,22 @@ class AnalysisHelpersTest(unittest.TestCase):
         self.assertEqual(result["funder"], "funder")
         self.assertEqual(result["amount_sol"], 0.003)
         self.assertEqual(result["timestamp"], 100_000)
+
+    def test_reconciliation_marks_oversold_position_incomplete(self):
+        result = reconcile_events([
+            {"event_type": "PURCHASE", "token_amount": 10, "sol_delta": -1},
+            {"event_type": "SALE", "token_amount": -12, "sol_delta": 2},
+        ])
+        self.assertEqual(result["reconciliation_status"], "INCOMPLETE_OPENING_OR_MISSING_INVENTORY")
+        self.assertFalse(result["profit_determined"])
+        self.assertEqual(result["observed_net_sol_cash_flow"], 1)
+
+    def test_reconciliation_marks_token_transfer_incomplete(self):
+        result = reconcile_events([
+            {"event_type": "PURCHASE", "token_amount": 10, "sol_delta": -1},
+            {"event_type": "TOKEN_OUT", "token_amount": -1, "sol_delta": 0},
+        ])
+        self.assertEqual(result["reconciliation_status"], "INCOMPLETE_TOKEN_TRANSFERS")
 
 
 if __name__ == "__main__":
