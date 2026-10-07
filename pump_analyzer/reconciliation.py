@@ -39,7 +39,11 @@ def reconcile_events(events: Iterable[dict[str, Any]]) -> dict[str, Any]:
     net_cash_flow = received - spent
     tolerance = max(1e-9, bought * 1e-9)
     oversold = sold > bought + tolerance
-    if oversold:
+    inbound_transfers = sum(float(row["token_amount"]) for row in transfers if float(row["token_amount"]) > 0)
+    if oversold and inbound_transfers >= sold - bought - tolerance:
+        status = "INCOMPLETE_TRANSFERRED_INVENTORY"
+        limitation = "Inbound token-only transfers explain the extra sold inventory, but the senders' cost basis and control relationship are not reconciled."
+    elif oversold:
         status = "INCOMPLETE_OPENING_OR_MISSING_INVENTORY"
         limitation = "Observed sales exceed purchases in this window; opening inventory, transfers, or missing purchases must be reconciled."
     elif transfers:

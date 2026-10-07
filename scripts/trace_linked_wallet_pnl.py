@@ -32,6 +32,8 @@ def main() -> None:
     # Kept under the existing public download name; this is now a complete
     # event ledger, not the former one-sale-per-token sample.
     parser.add_argument("--ledger-output", default="caller_funder_sales.csv")
+    parser.add_argument("--full-history", action="store_true",
+                        help="Use available mint history before the position window to reconcile opening inventory.")
     args = parser.parse_args()
 
     load_dotenv(ROOT / ".env")
@@ -53,7 +55,13 @@ def main() -> None:
         call_time = parse_timestamp(call["call_timestamp"])
         end = call_time + int(args.hours_after_call * 3600)
         print(f"[{position}/{len(positions)}] {call['symbol']}", flush=True)
-        records = api.transfers(args.wallet, mint=buy["mint"], start=start, end=end)
+        records = api.transfers(
+            args.wallet, mint=buy["mint"],
+            start=None if args.full_history else start, end=end,
+        )
+        records_by_signature: dict[str, list[dict]] = {}
+        for record in records:
+            records_by_signature.setdefault(record.get("signature", ""), []).append(record)
         signatures = list(dict.fromkeys(record["signature"] for record in records))
         events: list[dict[str, object]] = []
         decimals = max((int(record.get("decimals") or 0) for record in records), default=0)
@@ -68,12 +76,22 @@ def main() -> None:
             event_type = classify_event(token_delta, sol_delta)
             if event_type == "OTHER":
                 continue
+            matching = records_by_signature.get(signature, [])
+            counterparties = set()
+            for record in matching:
+                sender, recipient = record.get("fromUserAccount"), record.get("toUserAccount")
+                if event_type == "TOKEN_IN" and sender and sender != args.wallet:
+                    counterparties.add(sender)
+                if event_type == "TOKEN_OUT" and recipient and recipient != args.wallet:
+                    counterparties.add(recipient)
             event = {
                 "wallet": args.wallet, "mint": buy["mint"], "token": call["token_name"],
                 "symbol": call["symbol"], "call_timestamp": call["call_timestamp"],
                 "window_start": iso_timestamp(start), "window_end": iso_timestamp(end),
+                "history_scope": "available_mint_history_to_window_end" if args.full_history else "position_window",
                 "timestamp": iso_timestamp(int(tx.get("blockTime") or 0)), "signature": signature,
                 "event_type": event_type, "token_amount": token_delta, "sol_delta": sol_delta,
+                "counterparty": ";".join(sorted(counterparties)),
                 "fee_sol": "", "fee_coverage": "unavailable",
             }
             events.append(event)
@@ -105,7 +123,7 @@ def main() -> None:
     ]
     write_csv(ROOT / "output" / args.output, output, fields)
     ledger_fields = ["wallet", "mint", "token", "symbol", "call_timestamp", "window_start", "window_end",
-                     "timestamp", "signature", "event_type", "token_amount", "sol_delta", "fee_sol", "fee_coverage"]
+                     "history_scope", "timestamp", "signature", "event_type", "token_amount", "sol_delta", "counterparty", "fee_sol", "fee_coverage"]
     write_csv(ROOT / "output" / args.ledger_output, ledger, ledger_fields)
     print(f"Positions: {len(output)}")
     print(f"Ledger events: {len(ledger)}")
