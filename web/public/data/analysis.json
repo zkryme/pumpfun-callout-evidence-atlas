@@ -54653,6 +54653,12 @@
         "limitations": "Recent activity is complete only for CLiX in this export; caller, GKM and 1chd each reached the 1,000-record monitoring cap."
       },
       {
+        "status": "SUPPORTED_FINDING",
+        "finding": "Caller-signed recent inventory fan-outs",
+        "evidence": "12 transaction/mint groups in 9 caller signatures sent the same asset to two or more linked wallets.",
+        "limitations": "This is a direct transfer-flow observation in the monitored interval; it does not establish beneficial ownership or the asset’s original cost basis."
+      },
+      {
         "status": "SCOPED_NEGATIVE",
         "finding": "No caller-to-founder link found within analyzed scope",
         "evidence": "97 calls; first-in funding traces up to three hops; 30-day pre-launch founder funding review.",
@@ -56765,6 +56771,204 @@
     ],
     "nearby_slot_execution": [
       {
+        "mint": "69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH",
+        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
+        "caller_slot": "450677849",
+        "linked_slot": "450677849",
+        "slot_delta": 0,
+        "caller_signature": "Hj3HByMqvJVrsStqMasaQgcEKENiYS3NLp5U5DHWWQyDrAnYkkd929kLbdAMjFhg6pSMVNubHA2bPqnR7pqi2Rf",
+        "linked_signature": "5Hg597bpVhWMmmTiB1cKwkP6XLRv3xySSfB4U6ru3TzSQ4n3DHoEqgXs67hZcF64GKrt9Dec9v7nefCKvUDv5FwX"
+      },
+      {
+        "mint": "69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "450677849",
+        "linked_slot": "450677849",
+        "slot_delta": 0,
+        "caller_signature": "Hj3HByMqvJVrsStqMasaQgcEKENiYS3NLp5U5DHWWQyDrAnYkkd929kLbdAMjFhg6pSMVNubHA2bPqnR7pqi2Rf",
+        "linked_signature": "3s19ugJ3BFg83wePdheot4HUwwNmdqNpzFmmrBjp52nhf2sXbN6sfLCpDu7gCyZ8ypvaaUko6byTMXVXzoH2NTvC"
+      },
+      {
+        "mint": "69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "450677849",
+        "linked_slot": "450677849",
+        "slot_delta": 0,
+        "caller_signature": "Hj3HByMqvJVrsStqMasaQgcEKENiYS3NLp5U5DHWWQyDrAnYkkd929kLbdAMjFhg6pSMVNubHA2bPqnR7pqi2Rf",
+        "linked_signature": "5zFkfB9Su9hjS4MJmfeHHKeXVgno2EYnX4wvkfzW9gfMwgPCs5m6vZ6by2dpphi9mXX1M57vAjitGLVhZ5h38fx7"
+      },
+      {
+        "mint": "DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump",
+        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
+        "caller_slot": "452008224",
+        "linked_slot": "452008224",
+        "slot_delta": 0,
+        "caller_signature": "4AYTQm7qDvezqXZeuGqQd5rfApTCwcGd1Rg5VZdoWtBc5Qwy9Uk33LWZCSkjs4a8rLiz7AFPfhzySH5eiRuvZFD5",
+        "linked_signature": "EzwKH9pc7cHqbsSqry1NAxWqQmHJ9RZCmyEQLsNBzRnxnGHnvBjBxBX42afWgzBtowP6iWwVtTHeeXVS9tdhpGY"
+      },
+      {
+        "mint": "DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "452008224",
+        "linked_slot": "452008224",
+        "slot_delta": 0,
+        "caller_signature": "4AYTQm7qDvezqXZeuGqQd5rfApTCwcGd1Rg5VZdoWtBc5Qwy9Uk33LWZCSkjs4a8rLiz7AFPfhzySH5eiRuvZFD5",
+        "linked_signature": "g3hEMbFKE2S9WRKuSSojvbkHmmaixX91jG3avPYNB9vhcDjohVnRxYHpXzXmc2GjHq8gAx6NYEQaCtoypHjccrd"
+      },
+      {
+        "mint": "DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "452008224",
+        "linked_slot": "452008224",
+        "slot_delta": 0,
+        "caller_signature": "4AYTQm7qDvezqXZeuGqQd5rfApTCwcGd1Rg5VZdoWtBc5Qwy9Uk33LWZCSkjs4a8rLiz7AFPfhzySH5eiRuvZFD5",
+        "linked_signature": "5cDo73V9vfRPQaotVi5cUmNSzg4AVc6sBtgu1QSaUJKQ43mnyUdC3D2Ea6SDWEUsfcVfy8zcVdcGma7xSSZyNCut"
+      },
+      {
+        "mint": "BZYpLHhui3qRNokWFg2JcX8CYtMqzWHR5R4xowjcbPqh",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "448436325",
+        "linked_slot": "448436325",
+        "slot_delta": 0,
+        "caller_signature": "5LmfCA6VvVXAcAGe1Wc5MHvDduweeahqQZuRoXTGhCgH9MDV6H6R322vc6NkWV66H58rQUxNdwPNGxdsAZrYamRr",
+        "linked_signature": "3yVq2NWqKcjUz8tQwCyeV9y8eGAyoqBRMVBuHuq3tTi5UMBFL69mBeag1ZmAZ8PB6oNaNgnzKTACCRQ4oYzjnfox"
+      },
+      {
+        "mint": "BZYpLHhui3qRNokWFg2JcX8CYtMqzWHR5R4xowjcbPqh",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "448436325",
+        "linked_slot": "448436325",
+        "slot_delta": 0,
+        "caller_signature": "5LmfCA6VvVXAcAGe1Wc5MHvDduweeahqQZuRoXTGhCgH9MDV6H6R322vc6NkWV66H58rQUxNdwPNGxdsAZrYamRr",
+        "linked_signature": "2qZ4rSmwMtdAEaSf5HoQXiEjUPyjEA7SP84iYMo16wqRj5Pe1spBdkdFmA7YsFbtR5rbct9uUVrr4EcEPuCJgFJj"
+      },
+      {
+        "mint": "6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ",
+        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
+        "caller_slot": "452966740",
+        "linked_slot": "452966740",
+        "slot_delta": 0,
+        "caller_signature": "taYXPgtR7EG7bEjX7rfkARnmaYoxiuaQ7KVWDLgJMY4FpkmEMUkFC6QhKNpyL57mexV7XdvTMBudHdYeLEssSdJ",
+        "linked_signature": "3jsNgPYcitArJa48W186iKMqjFuDdkKUPC5EqC6RqbG5AkB4izWcYYNJu3C1gRQgrjo176DXipX4PqvD9Y6R9CNT"
+      },
+      {
+        "mint": "6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "452966740",
+        "linked_slot": "452966740",
+        "slot_delta": 0,
+        "caller_signature": "taYXPgtR7EG7bEjX7rfkARnmaYoxiuaQ7KVWDLgJMY4FpkmEMUkFC6QhKNpyL57mexV7XdvTMBudHdYeLEssSdJ",
+        "linked_signature": "sK47qfxzEoL4Dtkgc5DMj7L5uoTGRihpQXSCyeLQSrT1pgajQJVAbs6guh8DNdBBACUq7RF2iMyRA3SRcwNCSTP"
+      },
+      {
+        "mint": "6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "452966740",
+        "linked_slot": "452966740",
+        "slot_delta": 0,
+        "caller_signature": "taYXPgtR7EG7bEjX7rfkARnmaYoxiuaQ7KVWDLgJMY4FpkmEMUkFC6QhKNpyL57mexV7XdvTMBudHdYeLEssSdJ",
+        "linked_signature": "22C9jFPXcgX62jhYekECvKQAnrkNrF5GE6y5zftqpMckXVwUuWkX7z4YLNSWckRwyTXKDuUEqnKtdyhNef5FHng4"
+      },
+      {
+        "mint": "H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U",
+        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
+        "caller_slot": "453552220",
+        "linked_slot": "453552220",
+        "slot_delta": 0,
+        "caller_signature": "3tn2NzDEahGkeTdGkxkF9eWKSWcayj69Bu5QGsiEPiHaSDsJivFijYWnrZhuKcLKjx1xyzvX5gBj6LbcbAYfzyAs",
+        "linked_signature": "aMPsMrdwwHyudGu2rb9nvXTHqFsiWpNtXcu1PTor4HRdQPE3QrkDWavZuUhZUMMdVGfzXrxeZohRrCuNxbuiRRF"
+      },
+      {
+        "mint": "H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "453552220",
+        "linked_slot": "453552220",
+        "slot_delta": 0,
+        "caller_signature": "3tn2NzDEahGkeTdGkxkF9eWKSWcayj69Bu5QGsiEPiHaSDsJivFijYWnrZhuKcLKjx1xyzvX5gBj6LbcbAYfzyAs",
+        "linked_signature": "5npayeNK442qMxSSMTyzTEnXqDFAGRV6DWFDK3a5J68CW95LWkLsWViQEtXevi3CEQvH2gkG2cK6VDCuUTkjDypf"
+      },
+      {
+        "mint": "H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "453552220",
+        "linked_slot": "453552220",
+        "slot_delta": 0,
+        "caller_signature": "3tn2NzDEahGkeTdGkxkF9eWKSWcayj69Bu5QGsiEPiHaSDsJivFijYWnrZhuKcLKjx1xyzvX5gBj6LbcbAYfzyAs",
+        "linked_signature": "5CtDpjv88UBs8YVh8T5Hy2bkU9PWapzUewb1wuZrGckhMW7j6UD8qbGFRcExfxedsbDfq3bHGX5hPkiF7DaYPp79"
+      },
+      {
+        "mint": "3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN",
+        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
+        "caller_slot": "450402431",
+        "linked_slot": "450402431",
+        "slot_delta": 0,
+        "caller_signature": "7pxZyWTYd9yQmS9ah41tY9BVVpJj5kYwhHjCiD7rQD1q9b8a21C7kEVdGQzHWECBvwQpFDKPUP9uzEX5opigM8V",
+        "linked_signature": "3iAfa5FDpww81fFbKFwu14QJ88tEVWKaBRSi7Sa5oPFV1LXEgSyfsswzxJpDsjs8pgZPt1wd9D8jkySFsdYMJX7n"
+      },
+      {
+        "mint": "3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "450402431",
+        "linked_slot": "450402431",
+        "slot_delta": 0,
+        "caller_signature": "7pxZyWTYd9yQmS9ah41tY9BVVpJj5kYwhHjCiD7rQD1q9b8a21C7kEVdGQzHWECBvwQpFDKPUP9uzEX5opigM8V",
+        "linked_signature": "5Z11AHBNpNjD2h1ZFMxXxwZRsTsod2HfcYXqmyYTMHf8efjFG7SgpZGPDpZpik2mxU81z6KbrwaNAwbMzdP11cuK"
+      },
+      {
+        "mint": "3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "450402431",
+        "linked_slot": "450402431",
+        "slot_delta": 0,
+        "caller_signature": "7pxZyWTYd9yQmS9ah41tY9BVVpJj5kYwhHjCiD7rQD1q9b8a21C7kEVdGQzHWECBvwQpFDKPUP9uzEX5opigM8V",
+        "linked_signature": "3MMNNM9Vh66J11ZiM1PSx5bxE1mian3K91jVbbfrWP1k8HL5DHexWHhpeVZop6xqqnkLvQzBDJCtgYf9oYaebaiN"
+      },
+      {
+        "mint": "GfqKCwNeAdHHi97AmgCLP5qrwcSJRDdyZ1huiU6xUXTz",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "449757966",
+        "linked_slot": "449757966",
+        "slot_delta": 0,
+        "caller_signature": "3Z7vW3fdQqf4UqyJQwm16memYvDR9mpUWJ7Ro8HZ4iU5Dgc1KEhWeY2JAfEdJgt5wr1k1UQm1HYoPK132J2hG3j1",
+        "linked_signature": "RToniHBPLhshZdUjG2d4gzGDuMj4bphBhfS7iKAj3UzXv3Zkk5DxLxxXskoiqPBAhjDYcnhHinTxYqFWfFs7ecP"
+      },
+      {
+        "mint": "GfqKCwNeAdHHi97AmgCLP5qrwcSJRDdyZ1huiU6xUXTz",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "449757966",
+        "linked_slot": "449757966",
+        "slot_delta": 0,
+        "caller_signature": "3Z7vW3fdQqf4UqyJQwm16memYvDR9mpUWJ7Ro8HZ4iU5Dgc1KEhWeY2JAfEdJgt5wr1k1UQm1HYoPK132J2hG3j1",
+        "linked_signature": "KP2FrRShSH1whQ9bsAUot2rhbStiRteAMVfooTTM9ZR1TrSmJAJtjVBuUxgiua6qcZ4CKZDwjjQ4CBE7wVKNQBg"
+      },
+      {
+        "mint": "UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR",
+        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
+        "caller_slot": "452653216",
+        "linked_slot": "452653216",
+        "slot_delta": 0,
+        "caller_signature": "3bv9VCB3W66zJbvQRPzersyKMQDhHz8A23NMdXZxzLG7NXc3gv4GZ2VUA7eJJyXDGmZCtDirazF9riDcy3DVJ7u8",
+        "linked_signature": "22XaYVfimNYWxrVZPufoJH41xUot2mCnUxan9XCRmhTdvASMgr9gMZ14NS2qBFgGjjShy2pX2e7qJqQ8b554d4ZC"
+      },
+      {
+        "mint": "UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR",
+        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "caller_slot": "452653216",
+        "linked_slot": "452653216",
+        "slot_delta": 0,
+        "caller_signature": "3bv9VCB3W66zJbvQRPzersyKMQDhHz8A23NMdXZxzLG7NXc3gv4GZ2VUA7eJJyXDGmZCtDirazF9riDcy3DVJ7u8",
+        "linked_signature": "3g63Z3pU1QuYD4pKuD61i7KLAkw2sJCBbtEvHcGMwvgSqwwBrSHBsudCAMknGjAJTNu9rhagLuR8EQRg45KoDX6q"
+      },
+      {
+        "mint": "UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR",
+        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
+        "caller_slot": "452653216",
+        "linked_slot": "452653216",
+        "slot_delta": 0,
+        "caller_signature": "3bv9VCB3W66zJbvQRPzersyKMQDhHz8A23NMdXZxzLG7NXc3gv4GZ2VUA7eJJyXDGmZCtDirazF9riDcy3DVJ7u8",
+        "linked_signature": "8up7X3ZnRgkWT43RuUVr2gyegMybp5tmFxYNhGSzm5TZPW1eCaT3p7nPgXvvvrh91rw2i6XGGPFjUejgkEVpNRq"
+      },
+      {
         "mint": "7HiD5rzoZxAYXEJ8Z4t3WgM8VE1iSKWJdxPPyEdDNzwN",
         "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
         "caller_slot": "453652767",
@@ -56819,105 +57023,6 @@
         "linked_signature": "4sJcFcqpMfprjSBYHeM7sZWUdvd5w3UtYdPFf2owPX1EC1jHXtV4Hcj2P2EWD3tf3eSfBBuewzngDPgYsE7Zr8Zi"
       },
       {
-        "mint": "6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva",
-        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "453023370",
-        "linked_slot": "453023370",
-        "slot_delta": 0,
-        "caller_signature": "4AaJZvS4dMJjP4j8s8R9E591n1fs8sYUT5bvQTMk9oeqeNDQdv5QoUy8qhV6fupcfS1CDpQTkhJJxpNd5bHb2Cy4",
-        "linked_signature": "2hCTCUFNBAsnHXEsJP9uWJHCnBnzUSdA3Bp333MV8yS6vmYEoYydCiaGinC5s5Da8DLAWHwjuPYRJeB4S7koTA9Z"
-      },
-      {
-        "mint": "6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "453023370",
-        "linked_slot": "453023370",
-        "slot_delta": 0,
-        "caller_signature": "4AaJZvS4dMJjP4j8s8R9E591n1fs8sYUT5bvQTMk9oeqeNDQdv5QoUy8qhV6fupcfS1CDpQTkhJJxpNd5bHb2Cy4",
-        "linked_signature": "AxU1Pe4GegTFb3tAKdZWKSHXx7EbKDxhkmHhXxvApuy6Lis3C7pfmXT8Tho2AxvWW473cdJUudep8wGzZA4hzwt"
-      },
-      {
-        "mint": "6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "453023370",
-        "linked_slot": "453023370",
-        "slot_delta": 0,
-        "caller_signature": "4AaJZvS4dMJjP4j8s8R9E591n1fs8sYUT5bvQTMk9oeqeNDQdv5QoUy8qhV6fupcfS1CDpQTkhJJxpNd5bHb2Cy4",
-        "linked_signature": "3dqkBBc8V5zj7BaTWw5zgrFy2dkJv4KyeF1UhtfuPYAa9Yo61JC9zuzDHZABQw2cLuGk1fJY2CZCgPcGjjScd6BV"
-      },
-      {
-        "mint": "3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN",
-        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "450402431",
-        "linked_slot": "450402431",
-        "slot_delta": 0,
-        "caller_signature": "7pxZyWTYd9yQmS9ah41tY9BVVpJj5kYwhHjCiD7rQD1q9b8a21C7kEVdGQzHWECBvwQpFDKPUP9uzEX5opigM8V",
-        "linked_signature": "3iAfa5FDpww81fFbKFwu14QJ88tEVWKaBRSi7Sa5oPFV1LXEgSyfsswzxJpDsjs8pgZPt1wd9D8jkySFsdYMJX7n"
-      },
-      {
-        "mint": "3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "450402431",
-        "linked_slot": "450402431",
-        "slot_delta": 0,
-        "caller_signature": "7pxZyWTYd9yQmS9ah41tY9BVVpJj5kYwhHjCiD7rQD1q9b8a21C7kEVdGQzHWECBvwQpFDKPUP9uzEX5opigM8V",
-        "linked_signature": "5Z11AHBNpNjD2h1ZFMxXxwZRsTsod2HfcYXqmyYTMHf8efjFG7SgpZGPDpZpik2mxU81z6KbrwaNAwbMzdP11cuK"
-      },
-      {
-        "mint": "3f8CKfznVUGrFfhcq8ZBY9M1xyDeEQGrh6iH372h3ebN",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "450402431",
-        "linked_slot": "450402431",
-        "slot_delta": 0,
-        "caller_signature": "7pxZyWTYd9yQmS9ah41tY9BVVpJj5kYwhHjCiD7rQD1q9b8a21C7kEVdGQzHWECBvwQpFDKPUP9uzEX5opigM8V",
-        "linked_signature": "3MMNNM9Vh66J11ZiM1PSx5bxE1mian3K91jVbbfrWP1k8HL5DHexWHhpeVZop6xqqnkLvQzBDJCtgYf9oYaebaiN"
-      },
-      {
-        "mint": "DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump",
-        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "452008224",
-        "linked_slot": "452008224",
-        "slot_delta": 0,
-        "caller_signature": "4AYTQm7qDvezqXZeuGqQd5rfApTCwcGd1Rg5VZdoWtBc5Qwy9Uk33LWZCSkjs4a8rLiz7AFPfhzySH5eiRuvZFD5",
-        "linked_signature": "EzwKH9pc7cHqbsSqry1NAxWqQmHJ9RZCmyEQLsNBzRnxnGHnvBjBxBX42afWgzBtowP6iWwVtTHeeXVS9tdhpGY"
-      },
-      {
-        "mint": "DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "452008224",
-        "linked_slot": "452008224",
-        "slot_delta": 0,
-        "caller_signature": "4AYTQm7qDvezqXZeuGqQd5rfApTCwcGd1Rg5VZdoWtBc5Qwy9Uk33LWZCSkjs4a8rLiz7AFPfhzySH5eiRuvZFD5",
-        "linked_signature": "g3hEMbFKE2S9WRKuSSojvbkHmmaixX91jG3avPYNB9vhcDjohVnRxYHpXzXmc2GjHq8gAx6NYEQaCtoypHjccrd"
-      },
-      {
-        "mint": "DJejJn1iJntJVTAixy4VRgqJFF3NMKPEMgVzbJFmpump",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "452008224",
-        "linked_slot": "452008224",
-        "slot_delta": 0,
-        "caller_signature": "4AYTQm7qDvezqXZeuGqQd5rfApTCwcGd1Rg5VZdoWtBc5Qwy9Uk33LWZCSkjs4a8rLiz7AFPfhzySH5eiRuvZFD5",
-        "linked_signature": "5cDo73V9vfRPQaotVi5cUmNSzg4AVc6sBtgu1QSaUJKQ43mnyUdC3D2Ea6SDWEUsfcVfy8zcVdcGma7xSSZyNCut"
-      },
-      {
-        "mint": "BZYpLHhui3qRNokWFg2JcX8CYtMqzWHR5R4xowjcbPqh",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "448436325",
-        "linked_slot": "448436325",
-        "slot_delta": 0,
-        "caller_signature": "5LmfCA6VvVXAcAGe1Wc5MHvDduweeahqQZuRoXTGhCgH9MDV6H6R322vc6NkWV66H58rQUxNdwPNGxdsAZrYamRr",
-        "linked_signature": "3yVq2NWqKcjUz8tQwCyeV9y8eGAyoqBRMVBuHuq3tTi5UMBFL69mBeag1ZmAZ8PB6oNaNgnzKTACCRQ4oYzjnfox"
-      },
-      {
-        "mint": "BZYpLHhui3qRNokWFg2JcX8CYtMqzWHR5R4xowjcbPqh",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "448436325",
-        "linked_slot": "448436325",
-        "slot_delta": 0,
-        "caller_signature": "5LmfCA6VvVXAcAGe1Wc5MHvDduweeahqQZuRoXTGhCgH9MDV6H6R322vc6NkWV66H58rQUxNdwPNGxdsAZrYamRr",
-        "linked_signature": "2qZ4rSmwMtdAEaSf5HoQXiEjUPyjEA7SP84iYMo16wqRj5Pe1spBdkdFmA7YsFbtR5rbct9uUVrr4EcEPuCJgFJj"
-      },
-      {
         "mint": "25GrKYrc3y4LZmmuhppYgFRCKb7JyZ6grum4WhLYvA1z",
         "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
         "caller_slot": "451644859",
@@ -56945,31 +57050,31 @@
         "linked_signature": "4DmHkf9Hwej8PHGkxgeveV58KGgjc1v2moNtGHELwfn5MTyUbfQv4zmcVA1LuPBEhHhGVPzhxfVo1ZTFE9nE7hET"
       },
       {
-        "mint": "H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U",
+        "mint": "6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva",
         "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "453552220",
-        "linked_slot": "453552220",
+        "caller_slot": "453023370",
+        "linked_slot": "453023370",
         "slot_delta": 0,
-        "caller_signature": "3tn2NzDEahGkeTdGkxkF9eWKSWcayj69Bu5QGsiEPiHaSDsJivFijYWnrZhuKcLKjx1xyzvX5gBj6LbcbAYfzyAs",
-        "linked_signature": "aMPsMrdwwHyudGu2rb9nvXTHqFsiWpNtXcu1PTor4HRdQPE3QrkDWavZuUhZUMMdVGfzXrxeZohRrCuNxbuiRRF"
+        "caller_signature": "4AaJZvS4dMJjP4j8s8R9E591n1fs8sYUT5bvQTMk9oeqeNDQdv5QoUy8qhV6fupcfS1CDpQTkhJJxpNd5bHb2Cy4",
+        "linked_signature": "2hCTCUFNBAsnHXEsJP9uWJHCnBnzUSdA3Bp333MV8yS6vmYEoYydCiaGinC5s5Da8DLAWHwjuPYRJeB4S7koTA9Z"
       },
       {
-        "mint": "H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U",
+        "mint": "6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva",
         "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "453552220",
-        "linked_slot": "453552220",
+        "caller_slot": "453023370",
+        "linked_slot": "453023370",
         "slot_delta": 0,
-        "caller_signature": "3tn2NzDEahGkeTdGkxkF9eWKSWcayj69Bu5QGsiEPiHaSDsJivFijYWnrZhuKcLKjx1xyzvX5gBj6LbcbAYfzyAs",
-        "linked_signature": "5npayeNK442qMxSSMTyzTEnXqDFAGRV6DWFDK3a5J68CW95LWkLsWViQEtXevi3CEQvH2gkG2cK6VDCuUTkjDypf"
+        "caller_signature": "4AaJZvS4dMJjP4j8s8R9E591n1fs8sYUT5bvQTMk9oeqeNDQdv5QoUy8qhV6fupcfS1CDpQTkhJJxpNd5bHb2Cy4",
+        "linked_signature": "AxU1Pe4GegTFb3tAKdZWKSHXx7EbKDxhkmHhXxvApuy6Lis3C7pfmXT8Tho2AxvWW473cdJUudep8wGzZA4hzwt"
       },
       {
-        "mint": "H8oe2SCksJcYzhPeS4TsbteusgZW5k7QaZ4boKyq8C7U",
+        "mint": "6XD1vorwquLXjTSL5W4MJMGewZBeiEcPFmZw527TSwva",
         "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "453552220",
-        "linked_slot": "453552220",
+        "caller_slot": "453023370",
+        "linked_slot": "453023370",
         "slot_delta": 0,
-        "caller_signature": "3tn2NzDEahGkeTdGkxkF9eWKSWcayj69Bu5QGsiEPiHaSDsJivFijYWnrZhuKcLKjx1xyzvX5gBj6LbcbAYfzyAs",
-        "linked_signature": "5CtDpjv88UBs8YVh8T5Hy2bkU9PWapzUewb1wuZrGckhMW7j6UD8qbGFRcExfxedsbDfq3bHGX5hPkiF7DaYPp79"
+        "caller_signature": "4AaJZvS4dMJjP4j8s8R9E591n1fs8sYUT5bvQTMk9oeqeNDQdv5QoUy8qhV6fupcfS1CDpQTkhJJxpNd5bHb2Cy4",
+        "linked_signature": "3dqkBBc8V5zj7BaTWw5zgrFy2dkJv4KyeF1UhtfuPYAa9Yo61JC9zuzDHZABQw2cLuGk1fJY2CZCgPcGjjScd6BV"
       },
       {
         "mint": "BE5ciZmcADAX78u2a1GrFiPMPC3rNXtdPGUrhzWB4k5d",
@@ -56997,105 +57102,6 @@
         "slot_delta": 0,
         "caller_signature": "AxDsdCnsxAoWf7rL3HUz5NgVQGL8oAwyCTx5kbMvqCUH1D2WMdmhoq22obBcVUE9WeowXaggKKHCKZvCRK9eKa4",
         "linked_signature": "2TUvrQPHN1Cfwv7di36udGWAmYzH7bpp8UsE3cdq93YxMTzu11QJbwQh99uzHMVw3FEtBGtE3Z7ELv3DDM8fMQNd"
-      },
-      {
-        "mint": "GfqKCwNeAdHHi97AmgCLP5qrwcSJRDdyZ1huiU6xUXTz",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "449757966",
-        "linked_slot": "449757966",
-        "slot_delta": 0,
-        "caller_signature": "3Z7vW3fdQqf4UqyJQwm16memYvDR9mpUWJ7Ro8HZ4iU5Dgc1KEhWeY2JAfEdJgt5wr1k1UQm1HYoPK132J2hG3j1",
-        "linked_signature": "RToniHBPLhshZdUjG2d4gzGDuMj4bphBhfS7iKAj3UzXv3Zkk5DxLxxXskoiqPBAhjDYcnhHinTxYqFWfFs7ecP"
-      },
-      {
-        "mint": "GfqKCwNeAdHHi97AmgCLP5qrwcSJRDdyZ1huiU6xUXTz",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "449757966",
-        "linked_slot": "449757966",
-        "slot_delta": 0,
-        "caller_signature": "3Z7vW3fdQqf4UqyJQwm16memYvDR9mpUWJ7Ro8HZ4iU5Dgc1KEhWeY2JAfEdJgt5wr1k1UQm1HYoPK132J2hG3j1",
-        "linked_signature": "KP2FrRShSH1whQ9bsAUot2rhbStiRteAMVfooTTM9ZR1TrSmJAJtjVBuUxgiua6qcZ4CKZDwjjQ4CBE7wVKNQBg"
-      },
-      {
-        "mint": "69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH",
-        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "450677849",
-        "linked_slot": "450677849",
-        "slot_delta": 0,
-        "caller_signature": "Hj3HByMqvJVrsStqMasaQgcEKENiYS3NLp5U5DHWWQyDrAnYkkd929kLbdAMjFhg6pSMVNubHA2bPqnR7pqi2Rf",
-        "linked_signature": "5Hg597bpVhWMmmTiB1cKwkP6XLRv3xySSfB4U6ru3TzSQ4n3DHoEqgXs67hZcF64GKrt9Dec9v7nefCKvUDv5FwX"
-      },
-      {
-        "mint": "69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "450677849",
-        "linked_slot": "450677849",
-        "slot_delta": 0,
-        "caller_signature": "Hj3HByMqvJVrsStqMasaQgcEKENiYS3NLp5U5DHWWQyDrAnYkkd929kLbdAMjFhg6pSMVNubHA2bPqnR7pqi2Rf",
-        "linked_signature": "3s19ugJ3BFg83wePdheot4HUwwNmdqNpzFmmrBjp52nhf2sXbN6sfLCpDu7gCyZ8ypvaaUko6byTMXVXzoH2NTvC"
-      },
-      {
-        "mint": "69N7rm9nnp6sVoULtp5toD26F25rYum8593GupxkUYvH",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "450677849",
-        "linked_slot": "450677849",
-        "slot_delta": 0,
-        "caller_signature": "Hj3HByMqvJVrsStqMasaQgcEKENiYS3NLp5U5DHWWQyDrAnYkkd929kLbdAMjFhg6pSMVNubHA2bPqnR7pqi2Rf",
-        "linked_signature": "5zFkfB9Su9hjS4MJmfeHHKeXVgno2EYnX4wvkfzW9gfMwgPCs5m6vZ6by2dpphi9mXX1M57vAjitGLVhZ5h38fx7"
-      },
-      {
-        "mint": "UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR",
-        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "452653216",
-        "linked_slot": "452653216",
-        "slot_delta": 0,
-        "caller_signature": "3bv9VCB3W66zJbvQRPzersyKMQDhHz8A23NMdXZxzLG7NXc3gv4GZ2VUA7eJJyXDGmZCtDirazF9riDcy3DVJ7u8",
-        "linked_signature": "22XaYVfimNYWxrVZPufoJH41xUot2mCnUxan9XCRmhTdvASMgr9gMZ14NS2qBFgGjjShy2pX2e7qJqQ8b554d4ZC"
-      },
-      {
-        "mint": "UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "452653216",
-        "linked_slot": "452653216",
-        "slot_delta": 0,
-        "caller_signature": "3bv9VCB3W66zJbvQRPzersyKMQDhHz8A23NMdXZxzLG7NXc3gv4GZ2VUA7eJJyXDGmZCtDirazF9riDcy3DVJ7u8",
-        "linked_signature": "3g63Z3pU1QuYD4pKuD61i7KLAkw2sJCBbtEvHcGMwvgSqwwBrSHBsudCAMknGjAJTNu9rhagLuR8EQRg45KoDX6q"
-      },
-      {
-        "mint": "UsrcsZMqw6p53Fohu16UCBjsbjqc73XmoRFZDcnCtMR",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "452653216",
-        "linked_slot": "452653216",
-        "slot_delta": 0,
-        "caller_signature": "3bv9VCB3W66zJbvQRPzersyKMQDhHz8A23NMdXZxzLG7NXc3gv4GZ2VUA7eJJyXDGmZCtDirazF9riDcy3DVJ7u8",
-        "linked_signature": "8up7X3ZnRgkWT43RuUVr2gyegMybp5tmFxYNhGSzm5TZPW1eCaT3p7nPgXvvvrh91rw2i6XGGPFjUejgkEVpNRq"
-      },
-      {
-        "mint": "6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ",
-        "linked_wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
-        "caller_slot": "452966740",
-        "linked_slot": "452966740",
-        "slot_delta": 0,
-        "caller_signature": "taYXPgtR7EG7bEjX7rfkARnmaYoxiuaQ7KVWDLgJMY4FpkmEMUkFC6QhKNpyL57mexV7XdvTMBudHdYeLEssSdJ",
-        "linked_signature": "3jsNgPYcitArJa48W186iKMqjFuDdkKUPC5EqC6RqbG5AkB4izWcYYNJu3C1gRQgrjo176DXipX4PqvD9Y6R9CNT"
-      },
-      {
-        "mint": "6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ",
-        "linked_wallet": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
-        "caller_slot": "452966740",
-        "linked_slot": "452966740",
-        "slot_delta": 0,
-        "caller_signature": "taYXPgtR7EG7bEjX7rfkARnmaYoxiuaQ7KVWDLgJMY4FpkmEMUkFC6QhKNpyL57mexV7XdvTMBudHdYeLEssSdJ",
-        "linked_signature": "sK47qfxzEoL4Dtkgc5DMj7L5uoTGRihpQXSCyeLQSrT1pgajQJVAbs6guh8DNdBBACUq7RF2iMyRA3SRcwNCSTP"
-      },
-      {
-        "mint": "6akNLpNd11oq4q5zxhXGwr5jwUi6Ke4CvKmF6QeUwJCQ",
-        "linked_wallet": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56",
-        "caller_slot": "452966740",
-        "linked_slot": "452966740",
-        "slot_delta": 0,
-        "caller_signature": "taYXPgtR7EG7bEjX7rfkARnmaYoxiuaQ7KVWDLgJMY4FpkmEMUkFC6QhKNpyL57mexV7XdvTMBudHdYeLEssSdJ",
-        "linked_signature": "22C9jFPXcgX62jhYekECvKQAnrkNrF5GE6y5zftqpMckXVwUuWkX7z4YLNSWckRwyTXKDuUEqnKtdyhNef5FHng4"
       }
     ],
     "recent_cluster_internal_transfers": [
@@ -58070,6 +58076,104 @@
         "coverage": "capped_at_max_pages"
       }
     ],
+    "recent_caller_fanouts": [
+      {
+        "timestamp": "2026-10-08T17:20:07Z",
+        "signature": "suuDSAaNaHaB9Dk6T6JBrLWo4cCweZHr8aFWhKGsaTAiw3wsQy9P9V39m8CQAwgoNzddnrEsfiGWjhqG3b5UMLz",
+        "mint": "Ehzk6j3Q7V5L7rLp62CmE7csxiivSKUmq92vKtd7fg1a",
+        "recipient_count": 2,
+        "recipients": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 2
+      },
+      {
+        "timestamp": "2026-10-08T17:20:07Z",
+        "signature": "suuDSAaNaHaB9Dk6T6JBrLWo4cCweZHr8aFWhKGsaTAiw3wsQy9P9V39m8CQAwgoNzddnrEsfiGWjhqG3b5UMLz",
+        "mint": "So11111111111111111111111111111111111111111",
+        "recipient_count": 2,
+        "recipients": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 2
+      },
+      {
+        "timestamp": "2026-10-08T17:07:56Z",
+        "signature": "4u6WcorwkiPDg9sLwLuKjBy1ZC9xyoi7XAHKjWVd9zvZNatMxgEL1SusQfdbyy14pWVLgBpzfWPcQPVX47Y61t1n",
+        "mint": "3EWMexcsBXppoP7svixypPszpQXv7gta8YRLr5gd4fAb",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      },
+      {
+        "timestamp": "2026-10-08T17:07:06Z",
+        "signature": "5P3w3NHfVyNkAnrq4twyTFco6nBWNWRGXv1na13nD6Wa5tY6dYhbrZjoZpLQkf4exZTzeWAFj5sP7gG2cuatuUDN",
+        "mint": "3EWMexcsBXppoP7svixypPszpQXv7gta8YRLr5gd4fAb",
+        "recipient_count": 2,
+        "recipients": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 2
+      },
+      {
+        "timestamp": "2026-10-07T18:51:07Z",
+        "signature": "8EWrQYB1J73qAqmca7pB3k1bDNgG5gboVCwYZJFS4Cor65vbutAHp7Hi7AnR69ESYn8syoUDhB7m3L6EsKMVuHs",
+        "mint": "2ASQn3RCrLH4U1uR8JCgDkD3cDgrnUcr7SfBxJbw57wz",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      },
+      {
+        "timestamp": "2026-10-07T15:29:26Z",
+        "signature": "264bSzkmzEQZW69HnfuUd59bjTuVHurpvKep89ZJnt7NzfjGHTacbTkNLGWzorA2sLnSTyCEHiq3HJiMkogs3vWt",
+        "mint": "9BCAKN5au1TBHDwCiWjG2mi2s8rKEfKCfeTQv8U4BHVm",
+        "recipient_count": 2,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 2
+      },
+      {
+        "timestamp": "2026-10-07T15:28:39Z",
+        "signature": "XKPXjv88mFUEAhHzASTWKEujGocBCw3XJR8u9nHUfpxjPfZXsDsFLQtGWN4UJvMNMyPEH8z2JovZTD9eFJE8TkT",
+        "mint": "9BCAKN5au1TBHDwCiWjG2mi2s8rKEfKCfeTQv8U4BHVm",
+        "recipient_count": 2,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 2
+      },
+      {
+        "timestamp": "2026-10-07T12:22:21Z",
+        "signature": "4C7L3uYeTU6qW31T6sLZEnM7HtY16rgPHUW9H8YQHzCrT25hb7mJPFS7yBsvPU2dnJkjrsSF3z5wzAoJhnkgif8i",
+        "mint": "AjbabVhvwkFhveiWXJtgDqz6oimEu9ySAzn6ZYT1XNb2",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      },
+      {
+        "timestamp": "2026-10-07T12:22:21Z",
+        "signature": "4C7L3uYeTU6qW31T6sLZEnM7HtY16rgPHUW9H8YQHzCrT25hb7mJPFS7yBsvPU2dnJkjrsSF3z5wzAoJhnkgif8i",
+        "mint": "So11111111111111111111111111111111111111111",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      },
+      {
+        "timestamp": "2026-10-06T17:52:53Z",
+        "signature": "37r11knTQqxkczN64xr7ptMc1ef1G4yDGQAgKGkwBoge1WTJXgLykxvEWtKtkwt43ofr25VyiNcaPGUk9o1pBY3z",
+        "mint": "96ssJEednGhFeGHfrCX3T475w9epKjCDQ14ZiG8VqEH",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      },
+      {
+        "timestamp": "2026-10-06T17:52:53Z",
+        "signature": "37r11knTQqxkczN64xr7ptMc1ef1G4yDGQAgKGkwBoge1WTJXgLykxvEWtKtkwt43ofr25VyiNcaPGUk9o1pBY3z",
+        "mint": "So11111111111111111111111111111111111111111",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      },
+      {
+        "timestamp": "2026-10-06T15:29:51Z",
+        "signature": "ouYEjaLxYT2aRh15uqJXiSrGkgbdxZUQ6AwKWssusoT8yjYXDTcP1h51fXWdsERpz6NhvzFXUedn42Ndwiya6jA",
+        "mint": "9mgdJ57uz8DygASchY3NPQK59QgtAdJ9jfYU1KCwSp24",
+        "recipient_count": 3,
+        "recipients": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56;CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X;GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
+        "transfer_instruction_count": 3
+      }
+    ],
     "direct_caller_transfers": [
       {
         "wallet": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
@@ -58338,7 +58442,8 @@
       "same_slot_execution": "caller_linked_same_slot_buys.csv",
       "recent_internal_transfers": "cluster_recent_internal_transfers.csv",
       "recent_activity_coverage": "cluster_recent_activity_coverage.csv",
-      "recent_activity_raw": "cluster_recent_activity.csv"
+      "recent_activity_raw": "cluster_recent_activity.csv",
+      "recent_caller_fanouts": "cluster_recent_caller_fanouts.csv"
     }
   }
 }

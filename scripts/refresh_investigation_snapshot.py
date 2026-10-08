@@ -28,6 +28,23 @@ def main() -> None:
                               and row.get("counterparty") == CALLER]
     recent_signatures = {row["signature"] for row in recent_internal}
     recent_complete = all(row.get("coverage") == "complete" for row in recent_coverage)
+    fanout_groups: dict[tuple[str, str], list[dict[str, str]]] = {}
+    for row in recent_internal:
+        if row.get("from_wallet") == CALLER:
+            fanout_groups.setdefault((row["signature"], row["mint"]), []).append(row)
+    fanouts = []
+    for (signature, mint), rows in fanout_groups.items():
+        recipients = sorted({row["to_wallet"] for row in rows})
+        if len(recipients) >= 2:
+            fanouts.append({"timestamp": rows[0]["timestamp"], "signature": signature, "mint": mint,
+                            "recipient_count": len(recipients), "recipients": ";".join(recipients),
+                            "transfer_instruction_count": len(rows)})
+    fanouts.sort(key=lambda row: row["timestamp"], reverse=True)
+    fanout_path = ROOT / "web" / "public" / "downloads" / "cluster_recent_caller_fanouts.csv"
+    with fanout_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(fanouts[0]))
+        writer.writeheader()
+        writer.writerows(fanouts)
     linked = {"caller": CALLER, "clix": "CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X",
               "gkm": "GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61",
               "onechd": "1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56"}
@@ -92,6 +109,7 @@ def main() -> None:
             {"status": "SUPPORTED_FINDING", "finding": "13 direct SOL transfers reached the caller", "evidence": f"{len(dedup)} unique cleanup signatures total {sum(float(r['amount_sol']) for r in dedup.values()):.9f} SOL.", "limitations": "Transfers are separate from token-position cash flow and do not establish profit attribution."},
             {"status": "SUPPORTED_FINDING", "finding": "Caller transferred inventory to CLiX before CLiX exits", "evidence": f"{len(caller_token_transfers)} token-only transfers across {len(set(r['mint'] for r in caller_token_transfers))} tokens moved from the caller to CLiX, followed by matching CLiX sales.", "limitations": "The observed transfers establish token flow. They do not establish who controls either wallet or the original acquisition cost."},
             {"status": "SUPPORTED_FINDING", "finding": "Recent direct activity continues across the four-wallet cluster", "evidence": f"{len(recent_internal)} deduplicated direct transfer instructions across {len(recent_signatures)} recent signatures were observed after the last collected callout.", "limitations": "Recent activity is complete only for CLiX in this export; caller, GKM and 1chd each reached the 1,000-record monitoring cap." if not recent_complete else "The interval was fully paginated for all four wallets."},
+            {"status": "SUPPORTED_FINDING", "finding": "Caller-signed recent inventory fan-outs", "evidence": f"{len(fanouts)} transaction/mint groups in {len({row['signature'] for row in fanouts})} caller signatures sent the same asset to two or more linked wallets.", "limitations": "This is a direct transfer-flow observation in the monitored interval; it does not establish beneficial ownership or the asset’s original cost basis."},
             {"status": "SCOPED_NEGATIVE", "finding": "No caller-to-founder link found within analyzed scope", "evidence": "97 calls; first-in funding traces up to three hops; 30-day pre-launch founder funding review.", "limitations": "Four early-buyer wallets have unresolved first-in funding; service-like ancestry is not ownership evidence."},
             {"status": "NEEDS_VERIFICATION", "finding": "CHONK inbound activity", "evidence": "91.44 SOL of unclassified inbound/cleanup activity appears in the retained raw investigation data.", "limitations": "Swap proceeds, funding, and other transaction types have not been separated; it is not a funding or ownership finding."},
             {"status": "INCOMPLETE", "finding": "CLiX position cash-flow reconstruction", "evidence": f"{len(positions)} positions and {len(ledger)} observed token events were reconstructed. Five positions contain inbound token-only transfers that explain the excess sold inventory.", "limitations": "The senders' cost basis and control relationship are not reconciled, so realized profit is not asserted."},
@@ -102,6 +120,7 @@ def main() -> None:
         "nearby_slot_execution": nearby_slot_rows,
         "recent_cluster_internal_transfers": recent_internal,
         "recent_cluster_coverage": recent_coverage,
+        "recent_caller_fanouts": fanouts,
         "direct_caller_transfers": list(dedup.values()),
         "coverage": {
             "pump_fun": "available: calls, launch times, first-50 trades and slots",
@@ -119,6 +138,7 @@ def main() -> None:
             "recent_internal_transfers": "cluster_recent_internal_transfers.csv",
             "recent_activity_coverage": "cluster_recent_activity_coverage.csv",
             "recent_activity_raw": "cluster_recent_activity.csv",
+            "recent_caller_fanouts": "cluster_recent_caller_fanouts.csv",
         },
     }
     for source in (recent_path, coverage_path, recent_raw_path):
