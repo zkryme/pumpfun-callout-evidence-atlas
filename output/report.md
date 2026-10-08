@@ -13,7 +13,7 @@
 
 The report distinguishes same-slot or same-transaction launch activity from shared funding. A launch cluster is not described as a confirmed bundle unless multiple independent signals support it.
 
-**Solscan status:** Solscan Pro unavailable (None): solscan monitor/usage: <urlopen error [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions>
+**Solscan status:** Solscan Pro unavailable (401): solscan monitor/usage: {"success":false,"errors":{"code":401,"message":"Unauthorized: Please upgrade your api key level."}}
 
 Where transaction-level funding evidence could not be retrieved, the result is **UNKNOWN**, not clean. Every available signature is retained in the CSV, SQLite database, raw cache, and graph exports.
 

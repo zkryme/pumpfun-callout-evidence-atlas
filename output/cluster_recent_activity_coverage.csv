@@ -1,0 +1,5 @@
+wallet_label,wallet,since,records_returned,pages_read,record_cap,sort_order,coverage
+caller,6yVb4pxNwDfr6rovwNnBg3SyKSvDcHGD4WdFPN1JJBqm,2026-10-06T12:47:37.481000Z,1000,10,1000,desc,capped_at_max_pages
+clix,CLiXvfYSJtG5SJTCWyLvXKtDag9pJiA4vSWZGgSKP19X,2026-10-06T12:47:37.481000Z,975,10,1000,desc,complete
+gkm,GKMJwv2AEWVcfFXUMtxokMYy5ADkjwJa89DtP8LzoA61,2026-10-06T12:47:37.481000Z,1000,10,1000,desc,capped_at_max_pages
+onechd,1chdHBRNu9dB7E5McJKFDsbPvfpmANdmeR7BHavhi56,2026-10-06T12:47:37.481000Z,1000,10,1000,desc,capped_at_max_pages

@@ -118,6 +118,21 @@ class Helius:
         result = self.call("getTransfersByAddress", [address, options]) or {}
         return result.get("data") or []
 
+    def transfers_page(self, address: str, *, pagination_token: str | None = None,
+                       mint: str | None = None, start: int | None = None,
+                       end: int | None = None, sort_order: str = "asc") -> tuple[list[dict[str, Any]], str | None]:
+        """Read one Helius transfer page with its explicit continuation token."""
+        options: dict[str, Any] = {"sortOrder": sort_order, "limit": 100, "solMode": "merged"}
+        if pagination_token:
+            options["paginationToken"] = pagination_token
+        if mint:
+            options["mint"] = mint
+        if start is not None or end is not None:
+            options["filters"] = {"blockTime": {key: value for key, value in
+                                  (("gte", start), ("lte", end)) if value is not None}}
+        result = self.call("getTransfersByAddress", [address, options]) or {}
+        return result.get("data") or [], result.get("paginationToken")
+
     def transaction(self, signature: str) -> dict[str, Any] | None:
         return self.call("getTransaction", [signature, {
             "encoding": "jsonParsed", "commitment": "finalized",
