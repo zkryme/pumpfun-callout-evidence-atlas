@@ -18,8 +18,10 @@ def main() -> None:
     recent_path = ROOT / "output" / "cluster_recent_internal_transfers.csv"
     coverage_path = ROOT / "output" / "cluster_recent_activity_coverage.csv"
     recent_raw_path = ROOT / "output" / "cluster_recent_activity.csv"
+    fanout_exits_path = ROOT / "output" / "cluster_recent_fanout_exits.csv"
     recent_internal = read_csv(recent_path) if recent_path.exists() else []
     recent_coverage = read_csv(coverage_path) if coverage_path.exists() else []
+    fanout_exits = read_csv(fanout_exits_path) if fanout_exits_path.exists() else []
     early = read_csv(ROOT / "output" / "early_buyers.csv")
     calls = {row["mint"]: row for row in read_csv(ROOT / "output" / "calls.csv")}
     direct = [row for row in cleanup if row.get("destination") == CALLER]
@@ -110,6 +112,7 @@ def main() -> None:
             {"status": "SUPPORTED_FINDING", "finding": "Caller transferred inventory to CLiX before CLiX exits", "evidence": f"{len(caller_token_transfers)} token-only transfers across {len(set(r['mint'] for r in caller_token_transfers))} tokens moved from the caller to CLiX, followed by matching CLiX sales.", "limitations": "The observed transfers establish token flow. They do not establish who controls either wallet or the original acquisition cost."},
             {"status": "SUPPORTED_FINDING", "finding": "Recent direct activity continues across the four-wallet cluster", "evidence": f"{len(recent_internal)} deduplicated direct transfer instructions across {len(recent_signatures)} recent signatures were observed after the last collected callout.", "limitations": "Recent activity is complete only for CLiX in this export; caller, GKM and 1chd each reached the 1,000-record monitoring cap." if not recent_complete else "The interval was fully paginated for all four wallets."},
             {"status": "SUPPORTED_FINDING", "finding": "Caller-signed recent inventory fan-outs", "evidence": f"{len(fanouts)} transaction/mint groups in {len({row['signature'] for row in fanouts})} caller signatures sent the same asset to two or more linked wallets.", "limitations": "This is a direct transfer-flow observation in the monitored interval; it does not establish beneficial ownership or the asset’s original cost basis."},
+            {"status": "SUPPORTED_FINDING", "finding": "Observed post-fan-out disposals with SOL receipts", "evidence": f"{len(fanout_exits)} unique wallet/mint disposal transactions occurred within six hours after a caller fan-out, with {sum(float(row['net_native_sol']) for row in fanout_exits):.9f} SOL in observed wallet-level native-SOL deltas.", "limitations": "These are sale/proceeds signals, not proven profit: acquisition cost, fees, full wallet history, and beneficial ownership are not established. Each exit is assigned once to its closest prior fan-out to avoid double counting."} if fanout_exits else {"status": "INCOMPLETE", "finding": "Post-fan-out disposal trace", "evidence": "No refreshed exit trace is available yet.", "limitations": "Run the monitored post-fan-out trace before drawing any conclusion about proceeds."},
             {"status": "SCOPED_NEGATIVE", "finding": "No caller-to-founder link found within analyzed scope", "evidence": "97 calls; first-in funding traces up to three hops; 30-day pre-launch founder funding review.", "limitations": "Four early-buyer wallets have unresolved first-in funding; service-like ancestry is not ownership evidence."},
             {"status": "NEEDS_VERIFICATION", "finding": "CHONK inbound activity", "evidence": "91.44 SOL of unclassified inbound/cleanup activity appears in the retained raw investigation data.", "limitations": "Swap proceeds, funding, and other transaction types have not been separated; it is not a funding or ownership finding."},
             {"status": "INCOMPLETE", "finding": "CLiX position cash-flow reconstruction", "evidence": f"{len(positions)} positions and {len(ledger)} observed token events were reconstructed. Five positions contain inbound token-only transfers that explain the excess sold inventory.", "limitations": "The senders' cost basis and control relationship are not reconciled, so realized profit is not asserted."},
@@ -139,9 +142,10 @@ def main() -> None:
             "recent_activity_coverage": "cluster_recent_activity_coverage.csv",
             "recent_activity_raw": "cluster_recent_activity.csv",
             "recent_caller_fanouts": "cluster_recent_caller_fanouts.csv",
+            "recent_fanout_exits": "cluster_recent_fanout_exits.csv",
         },
     }
-    for source in (recent_path, coverage_path, recent_raw_path):
+    for source in (recent_path, coverage_path, recent_raw_path, fanout_exits_path):
         if source.exists():
             shutil.copy2(source, ROOT / "web" / "public" / "downloads" / source.name)
     rendered = json.dumps(snapshot, ensure_ascii=False, indent=2)
