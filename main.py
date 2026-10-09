@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import sys
 
 from pump_analyzer.analysis import Analyzer
@@ -35,6 +36,8 @@ def parser() -> argparse.ArgumentParser:
     chonk.add_argument("--rpc-funding-limit", type=int, default=0)
     result.add_argument("--force", action="store_true", help="Ignore completed checkpoints")
     result.add_argument("--verbose", action="store_true")
+    result.add_argument("--profile", help="Pump.fun profile wallet to investigate")
+    result.add_argument("--analysis-root", help="Separate directory for this investigation's database and exports")
     return result
 
 
@@ -73,6 +76,10 @@ def make_report(settings, db, analyzer):
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
+    if args.profile:
+        os.environ["PUMP_PROFILE"] = args.profile
+    if args.analysis_root:
+        os.environ["ANALYSIS_ROOT"] = args.analysis_root
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",

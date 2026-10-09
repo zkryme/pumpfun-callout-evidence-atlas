@@ -12,3 +12,5 @@ analysis.sqlite3
 web/dist/
 web/node_modules/
 .vercel/
+investigations/
+output/cluster_recent_fanout_exits.csv

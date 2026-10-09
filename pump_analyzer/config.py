@@ -65,6 +65,7 @@ class Settings:
 
 def get_settings() -> Settings:
     load_dotenv(ROOT / ".env")
+    analysis_root = Path(os.getenv("ANALYSIS_ROOT", str(ROOT))).expanduser().resolve()
     helius_api_key = os.getenv("HELIUS_API_KEY", "").strip()
     explicit_rpc_url = os.getenv("SOLANA_RPC_URL", "").strip()
     rpc_url = explicit_rpc_url or (
@@ -73,7 +74,7 @@ def get_settings() -> Settings:
         else "https://api.mainnet-beta.solana.com"
     )
     settings = Settings(
-        root=ROOT,
+        root=analysis_root,
         solscan_api_key=os.getenv("SOLSCAN_API_KEY", "").strip(),
         pump_profile=os.getenv(
             "PUMP_PROFILE", "6yVb4pxNwDfr6rovwNnBg3SyKSvDcHGD4WdFPN1JJBqm"
