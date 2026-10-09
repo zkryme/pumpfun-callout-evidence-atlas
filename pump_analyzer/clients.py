@@ -222,7 +222,7 @@ class SolanaRpcClient:
 
     def get_transaction(self, signature: str) -> dict[str, Any] | None:
         return self.call("getTransaction", [signature, {
-            "encoding": "jsonParsed", "maxSupportedTransactionVersion": 0,
+            "encoding": "jsonParsed", "maxSupportedTransactionVersion": 1,
             "commitment": "finalized",
         }])
 
